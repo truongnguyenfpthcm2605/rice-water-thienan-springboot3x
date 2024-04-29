@@ -62,6 +62,22 @@ public class Account extends BaseEntity {
     @JsonManagedReference
     List<Orders> orders;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
+    List<Categories> categories;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
+    List<Post> posts;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
+    List<Type> types;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
+    List<CategoriesPost> categoriesPosts;
+
 
 
 

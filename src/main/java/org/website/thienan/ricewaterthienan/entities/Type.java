@@ -1,5 +1,6 @@
 package org.website.thienan.ricewaterthienan.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,5 +45,10 @@ public class Type extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "post_id")
     )
     Set<Post> posts = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JsonBackReference
+    Account account;
 
 }

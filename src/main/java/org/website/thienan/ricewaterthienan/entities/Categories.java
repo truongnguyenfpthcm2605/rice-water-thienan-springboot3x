@@ -1,5 +1,7 @@
 package org.website.thienan.ricewaterthienan.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,5 +48,10 @@ public class Categories extends  BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "post_id")
     )
     Set<Post> posts = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JsonBackReference
+    Account account;
 
 }

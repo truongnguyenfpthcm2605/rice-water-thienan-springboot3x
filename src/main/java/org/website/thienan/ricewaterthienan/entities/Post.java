@@ -43,5 +43,10 @@ public class Post extends BaseEntity {
     @JsonBackReference
     CategoriesPost categoryPost;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JsonBackReference
+    Account account;
+
 
 }

@@ -1,5 +1,6 @@
 package org.website.thienan.ricewaterthienan.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,11 @@ public class CategoriesPost extends  BaseEntity{
 
     @OneToMany(mappedBy = "categoryPost",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Post> posts;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JsonBackReference
+    Account account;
 
 
 }
