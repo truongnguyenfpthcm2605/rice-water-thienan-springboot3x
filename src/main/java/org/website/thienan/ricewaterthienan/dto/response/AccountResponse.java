@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 import org.website.thienan.ricewaterthienan.dto.request.BranchRequest;
 import org.website.thienan.ricewaterthienan.dto.request.BrandRequest;
 import org.website.thienan.ricewaterthienan.entities.*;
-import org.website.thienan.ricewaterthienan.enums.RoleEnum;
 
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +25,7 @@ public class AccountResponse extends BaseResponse {
     String password;
     String email;
     String avatar;
-    RoleEnum role;
+    String role;
     Set<RoleDetailResponse> roleDetails = new HashSet<>();
     List<BranchRequest> branches;
     List<BrandRequest> brands;

@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.exception;
+package org.website.thienan.ricewaterthienan.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -85,7 +85,8 @@ public class GlobalExceptionHandling {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MessageResponse> methodHandleExceptionValidation(MethodArgumentNotValidException e){
         log.info("Validation Exception :", e.getMessage());
-        List<String> fieldsErrors = e.getBindingResult().getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+       List<String> fieldsErrors = e.getBindingResult().getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+     //   String enumMessageValid = e.getFieldError().getDefaultMessage();
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(500)
                 .message("Error Validation")

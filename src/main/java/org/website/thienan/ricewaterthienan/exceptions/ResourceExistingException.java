@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.exception;
+package org.website.thienan.ricewaterthienan.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import org.website.thienan.ricewaterthienan.enums.MessagesHanlderEnum;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResourceNotFoundException extends  RuntimeException{
+public class ResourceExistingException extends  RuntimeException {
     private MessagesHanlderEnum messagesHanlderEnum;
 }

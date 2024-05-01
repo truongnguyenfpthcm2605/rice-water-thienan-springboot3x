@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.exception;
+package org.website.thienan.ricewaterthienan.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
