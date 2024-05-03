@@ -25,6 +25,7 @@ public class AccountResponse extends BaseResponse {
     String password;
     String email;
     String avatar;
+    Long views;
     String role;
     Set<RoleDetailResponse> roleDetails = new HashSet<>();
     List<BranchRequest> branches;

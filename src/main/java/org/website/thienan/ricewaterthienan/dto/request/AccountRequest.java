@@ -20,6 +20,7 @@ public class AccountRequest extends BaseRequest {
     String password;
     String email;
     String avatar;
+    Long views;
     RoleEnum role;
     Set<String> roleDetail = new HashSet<>();
 }

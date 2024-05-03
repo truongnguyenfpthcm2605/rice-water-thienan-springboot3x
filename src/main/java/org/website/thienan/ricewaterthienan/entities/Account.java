@@ -34,6 +34,9 @@ public class Account extends BaseEntity {
     @Column(length = 999)
     String avatar;
 
+    @Column(columnDefinition= "BIGINT", nullable = false)
+    Long views;
+
 
     @Enumerated(EnumType.STRING)
     @NaturalId
