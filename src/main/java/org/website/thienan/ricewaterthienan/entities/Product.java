@@ -44,6 +44,9 @@ public class Product extends BaseEntity {
     @Column(columnDefinition = "TINYTEXT", nullable = false)
     String description;
 
+    @Column(columnDefinition= "BIGINT", nullable = false)
+    Long views;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonBackReference

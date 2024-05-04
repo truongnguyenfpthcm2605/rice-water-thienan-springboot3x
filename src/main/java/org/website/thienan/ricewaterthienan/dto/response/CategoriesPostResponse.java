@@ -18,6 +18,7 @@ public class CategoriesPostResponse extends  BaseResponse {
     Integer id;
     String name;
     String link;
+    Long views;
     AccountResponse accountResponse;
     List<PostResponse> posts;
 }

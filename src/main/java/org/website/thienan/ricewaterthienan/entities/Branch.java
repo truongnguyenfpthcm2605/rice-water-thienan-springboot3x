@@ -25,6 +25,9 @@ public class Branch extends  BaseEntity {
     @Column(length = 100, nullable = false, unique = true)
     String name;
 
+    @Column(columnDefinition= "BIGINT", nullable = false)
+    Long views;
+
     String link;
 
     @ManyToOne(fetch = FetchType.LAZY)

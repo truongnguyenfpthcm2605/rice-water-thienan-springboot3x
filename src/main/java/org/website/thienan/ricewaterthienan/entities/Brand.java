@@ -28,6 +28,9 @@ public class Brand extends  BaseEntity {
     @Column(length = 999)
     String avatar;
 
+    @Column(columnDefinition= "BIGINT", nullable = false)
+    Long views;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonBackReference

@@ -1,6 +1,7 @@
 package org.website.thienan.ricewaterthienan.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -93,6 +94,17 @@ public class GlobalExceptionHandling {
                 .timeStamp(LocalDateTime.now())
                 .data(fieldsErrors).build(), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<MessageResponse> handlingSQLQueryException(FileException ex){
+        log.info("Permission Exception :", ex.getMessage());
+        return new ResponseEntity<>(MessageResponse.builder().
+                code(MessagesHanlderEnum.SQL_EXCEPTION.getCode())
+                .message(MessagesHanlderEnum.SQL_EXCEPTION.getMessage())
+                .timeStamp(LocalDateTime.now())
+                .build(), MessagesHanlderEnum.SQL_EXCEPTION.getStatusCode()
+        );
+    }
+
 
 
 

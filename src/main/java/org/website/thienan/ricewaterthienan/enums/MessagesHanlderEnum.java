@@ -20,16 +20,17 @@ public enum MessagesHanlderEnum {
     MAIL_EXCEPTION(1010,"Mail Exception ",HttpStatus.INTERNAL_SERVER_ERROR),
     RESOURCE_EXIT(1011, "Resource Exit Error", HttpStatus.INTERNAL_SERVER_ERROR),
     NOTFOUND(1012, "The Data not Found", HttpStatus.NOT_FOUND),
-    PERMISSION(1013,"Access Denied",HttpStatus.UNAUTHORIZED )
-    ;
+    PERMISSION(1013,"Access Denied",HttpStatus.UNAUTHORIZED),
+    SQL_EXCEPTION(1014, "SQL ERROR INJECTION", HttpStatus.BAD_REQUEST);
+
+    private int code;
+    private String message;
+    private HttpStatus statusCode;
 
     MessagesHanlderEnum(int code, String message, HttpStatus httpStatus) {
         this.code = code;
         this.message = message;
         this.statusCode = httpStatus;
     }
-
-    private int code;
-    private String message;
-    private HttpStatusCode statusCode;
 }
+

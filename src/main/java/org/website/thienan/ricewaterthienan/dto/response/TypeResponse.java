@@ -23,6 +23,7 @@ public class TypeResponse extends BaseResponse {
     String introduction;
     String avatar;
     String imageHeader;
+    Long views;
     Set<PostResponse> postResponses = new HashSet<>();
     AccountResponse accountResponse;
 }

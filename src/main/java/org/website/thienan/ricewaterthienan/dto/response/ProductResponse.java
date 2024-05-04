@@ -25,6 +25,7 @@ public class ProductResponse extends  BaseResponse {
     String avatar;
     String content;
     String description;
+    Long views;
     AccountResponse accountResponse;
     BranchResponse branchResponse;
     BrandResponse brandResponse;

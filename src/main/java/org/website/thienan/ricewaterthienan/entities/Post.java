@@ -37,6 +37,8 @@ public class Post extends BaseEntity {
 
     @Column(length = 999, name = "imageheader")
     String imageHeader;
+    @Column(columnDefinition= "BIGINT", nullable = false)
+    Long views;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categorypost_id", referencedColumnName = "id")

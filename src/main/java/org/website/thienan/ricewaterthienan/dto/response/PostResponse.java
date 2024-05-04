@@ -20,6 +20,7 @@ public class PostResponse extends BaseResponse{
     String introduction;
     String avatar;
     String imageHeader;
+    Long views;
     AccountResponse accountResponse;
     CategoriesPostResponse categoriesPostResponse;
 }

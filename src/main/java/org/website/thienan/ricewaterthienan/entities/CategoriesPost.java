@@ -26,6 +26,9 @@ public class CategoriesPost extends  BaseEntity{
 
     String link;
 
+    @Column(columnDefinition= "BIGINT", nullable = false)
+    Long views;
+
     @OneToMany(mappedBy = "categoryPost",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Post> posts;
 

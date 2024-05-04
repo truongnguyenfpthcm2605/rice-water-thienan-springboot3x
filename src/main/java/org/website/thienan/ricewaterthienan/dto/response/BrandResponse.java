@@ -18,6 +18,7 @@ public class BrandResponse extends BaseResponse {
     Integer id;
     String name;
     String avatar;
+    Long views;
     AccountResponse accountResponse;
     List<ProductResponse> productResponses;
 }

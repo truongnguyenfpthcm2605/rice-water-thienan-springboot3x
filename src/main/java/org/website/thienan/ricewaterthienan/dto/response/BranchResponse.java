@@ -19,6 +19,7 @@ public class BranchResponse extends BaseResponse {
     Integer id;
     String name;
     String link;
+    Long views;
     AccountResponse accountResponse;
     List<ProductResponse> productResponses;
 

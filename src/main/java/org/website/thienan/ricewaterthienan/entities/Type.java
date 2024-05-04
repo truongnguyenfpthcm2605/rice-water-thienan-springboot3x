@@ -39,6 +39,9 @@ public class Type extends BaseEntity {
     @Column(length = 999, name = "imageheader")
     String imageHeader;
 
+    @Column(columnDefinition= "BIGINT", nullable = false)
+    Long views;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "type_post",
             joinColumns = @JoinColumn(name = "type_id"),

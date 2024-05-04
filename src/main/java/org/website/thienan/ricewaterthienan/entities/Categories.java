@@ -42,6 +42,9 @@ public class Categories extends  BaseEntity {
     @Column(length = 999, name = "imageheader")
     String imageHeader;
 
+    @Column(columnDefinition= "BIGINT", nullable = false)
+    Long views;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "category_post",
             joinColumns = @JoinColumn(name = "category_id"),
