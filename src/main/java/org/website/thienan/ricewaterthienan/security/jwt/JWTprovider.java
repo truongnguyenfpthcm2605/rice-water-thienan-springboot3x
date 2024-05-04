@@ -1,17 +1,18 @@
 package org.website.thienan.ricewaterthienan.security.jwt;
 
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.website.thienan.ricewaterthienan.dto.request.AccountRequest;
+import org.website.thienan.ricewaterthienan.dto.response.MessageResponse;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceExistingException;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
@@ -21,6 +22,8 @@ public class JWTprovider {
 
     @Value("${spring.jwt.signature.key}")
     private String sgiNatureKey;
+
+
     public String generateToken(AccountRequest account){
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -41,5 +44,18 @@ public class JWTprovider {
             throw  new ResourceExistingException("Jwt Generation Fail");
         }
 
+    }
+
+    public MessageResponse checkValidToken(String token) throws Exception{
+        JWSVerifier verifier = new MACVerifier(sgiNatureKey.getBytes());
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        Date expirationDate = signedJWT.getJWTClaimsSet().getExpirationTime();
+        Boolean check =   signedJWT.verify(verifier) && expirationDate.before(new Date());
+        return MessageResponse.builder()
+                .message("Check Token")
+                .code(100)
+                .timeStamp(LocalDateTime.now())
+                .data(check)
+                .build();
     }
 }
