@@ -6,12 +6,16 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.logging.Logger;
 
 @Configuration
-public class AsynConfiguration implements AsyncConfigurer {
+public class AsyncConfiguration implements AsyncConfigurer {
+
+    private  final Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
     public Executor getAsyncExecutor() {
+        logger.info("getAsyncExecutor");
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(4);
         taskExecutor.setMaxPoolSize(4);
@@ -22,6 +26,7 @@ public class AsynConfiguration implements AsyncConfigurer {
     }
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        logger.info("getAsyncUncaughtExceptionHandler");
         return AsyncConfigurer.super.getAsyncUncaughtExceptionHandler();
     }
 }

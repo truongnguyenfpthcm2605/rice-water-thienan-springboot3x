@@ -26,11 +26,14 @@ public class AccountMapper {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
     public Account account(AccountRequest accountRequest){
         Account account = new Account();
+        if(accountRequest.getId() != null){
+            account.setId(accountRequest.getId());
+        }
         account.setAvatar(accountRequest.getAvatar());
         account.setEmail(accountRequest.getEmail());
         account.setName(accountRequest.getName());
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
-        account.setViews(1L);
+        account.setViews(account.getViews());
         account.setRole(getRole(accountRequest.getRole()));
 
         Set<RoleDetail> roleDetailSet = new HashSet<>();
@@ -39,6 +42,7 @@ public class AccountMapper {
             roleDetailSet.add(roleDetailMapper.roleDetail(roleDetailResponse));
         });
         account.setRoles(roleDetailSet);
+        account.setActive(accountRequest.getActive());
         return  account;
 
     }
@@ -55,7 +59,11 @@ public class AccountMapper {
                 .name(account.getName())
                 .views(account.getViews())
                 .role(account.getRole().name())
-                .roleDetails(roleDetailResponses).build();
+                .roleDetails(roleDetailResponses)
+                .active(account.getActive())
+                .createAt(account.getCreateAt())
+                .updateAt(account.getUpdateAt())
+                .build();
 
     }
 

@@ -13,8 +13,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BranchRequest {
+public class BranchRequest extends BaseRequest {
+    Integer id;
     String name;
     String link;
+    Long views;
     String accountId;
 }

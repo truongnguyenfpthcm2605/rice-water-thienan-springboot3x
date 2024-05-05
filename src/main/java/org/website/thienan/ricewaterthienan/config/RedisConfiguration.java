@@ -10,9 +10,11 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
+import java.util.logging.Logger;
 
 @Configuration
 public class RedisConfiguration {
+    private final Logger log = Logger.getLogger(this.getClass().getName());
     @Value("${spring.data.redis.host}")
     private String redisHost;
     @Value("${spring.data.redis.port}")
@@ -20,6 +22,7 @@ public class RedisConfiguration {
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
+        log.info("Connecting to Redis");
         JedisConnectionFactory jedisConFactory
                 = new JedisConnectionFactory();
         jedisConFactory.setHostName(redisHost);
@@ -29,6 +32,7 @@ public class RedisConfiguration {
 
     @Bean
     RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+        log.info("RedisTemplate");
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory);
         return redisTemplate;
@@ -36,6 +40,7 @@ public class RedisConfiguration {
 
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+        log.info("Creating Redis cache manager");
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10))
                 .disableCachingNullValues();

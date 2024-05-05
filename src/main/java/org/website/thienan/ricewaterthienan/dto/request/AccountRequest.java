@@ -16,10 +16,12 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountRequest extends BaseRequest {
+    String id;
     String name;
     String password;
     String email;
     String avatar;
     String role;
+    Long views;
     Set<String> roleDetail = new HashSet<>();
 }

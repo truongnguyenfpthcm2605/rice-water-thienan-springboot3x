@@ -17,6 +17,7 @@ import java.util.Set;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoriesRequest extends  BaseRequest {
+    Integer id;
     String name;
     String link;
     String content;
@@ -24,6 +25,7 @@ public class CategoriesRequest extends  BaseRequest {
     String avatar;
     String imageHeader;
     String accountId;
+    Long views;
     Set<Integer> categoryPost = new HashSet<>();
 
 }

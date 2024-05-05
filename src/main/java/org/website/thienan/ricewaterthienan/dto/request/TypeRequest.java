@@ -22,6 +22,7 @@ public class TypeRequest {
     String introduction;
     String avatar;
     String imageHeader;
+    Long views;
     Set<Integer> typePost = new HashSet<>();
     String accountId;
 

@@ -19,7 +19,6 @@ public class PerformanceAspect {
     @Around("controllerMethods()")
     public Object measureControllerMethodExecutionTime(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         long start = System.nanoTime();
-        // thực thi phương thức
         Object returnValue = proceedingJoinPoint.proceed();
         long end = System.nanoTime();
         String methodName = proceedingJoinPoint.getSignature().getName();

@@ -17,6 +17,7 @@ import org.website.thienan.ricewaterthienan.dto.response.BaseResponse;
 public class CategoryPostRequest  extends BaseResponse {
     String name;
     String link;
+    Long views;
     String accountId;
 
 }

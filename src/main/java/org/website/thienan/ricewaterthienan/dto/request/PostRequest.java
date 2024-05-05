@@ -19,6 +19,7 @@ public class PostRequest {
     String introduction;
     String avatar;
     String imageHeader;
+    Long views;
     String categoriesPostId;
     String accountId;
 

@@ -14,7 +14,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrandRequest extends  BaseRequest{
+    Integer id;
     String name;
     String avatar;
+    Long views;
     String accountId;
 }

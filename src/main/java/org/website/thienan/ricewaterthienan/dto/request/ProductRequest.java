@@ -22,6 +22,7 @@ public class ProductRequest {
     Double cost;
     String avatar;
     String description;
+    Long views;
     String content;
     String accountId;
     Integer branchId;

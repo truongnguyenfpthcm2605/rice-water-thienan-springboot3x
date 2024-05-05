@@ -95,8 +95,8 @@ public class GlobalExceptionHandling {
                 .data(fieldsErrors).build(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<MessageResponse> handlingSQLQueryException(FileException ex){
-        log.info("Permission Exception :", ex.getMessage());
+    public ResponseEntity<MessageResponse> handlingSQLQueryException(DataAccessException ex){
+        log.info("DataAccessException Exception :", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.SQL_EXCEPTION.getCode())
                 .message(MessagesHanlderEnum.SQL_EXCEPTION.getMessage())
