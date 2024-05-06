@@ -6,15 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.website.thienan.ricewaterthienan.dto.response.BaseResponse;
+
 
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderDetailRequest {
-    Double quantity;
-    Double price;
-    String productId;
-    String orderId;
+public class CategoriesPostRequest extends BaseResponse {
+    Integer id;
+    String name;
+    String link;
+    Long views;
+    String accountId;
+
 }

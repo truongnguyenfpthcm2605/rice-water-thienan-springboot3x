@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -22,5 +25,7 @@ public class PostRequest {
     Long views;
     String categoriesPostId;
     String accountId;
+
+    Set<Integer> categoryPost = new HashSet<>();
 
 }

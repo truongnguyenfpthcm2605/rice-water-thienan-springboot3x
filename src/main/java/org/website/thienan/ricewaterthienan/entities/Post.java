@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "post")
@@ -39,6 +42,13 @@ public class Post extends BaseEntity {
     String imageHeader;
     @Column(columnDefinition= "BIGINT", nullable = false)
     Long views;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "category_post",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    Set<Categories> categories = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categorypost_id", referencedColumnName = "id")

@@ -26,6 +26,6 @@ public class CategoriesRequest extends  BaseRequest {
     String imageHeader;
     String accountId;
     Long views;
-    Set<Integer> categoryPost = new HashSet<>();
+
 
 }

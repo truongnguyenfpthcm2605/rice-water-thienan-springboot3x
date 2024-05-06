@@ -23,6 +23,7 @@ public class BrandMapper {
         brand.setName(brandRequest.getName());
         brand.setAvatar(brandRequest.getAvatar());
         brand.setViews(brandRequest.getViews());
+        brand.setActive(brandRequest.getActive());
         Account account = accountRepository.findById(brandRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not Found Account - Branch Id: " + brandRequest.getAccountId()));
         brand.setAccount(account);
         return brand;
@@ -32,6 +33,9 @@ public class BrandMapper {
                 .id(brand.getId())
                 .name(brand.getName())
                 .views(brand.getViews())
+                .active(brand.getActive())
+                .createAt(brand.getCreateAt())
+                .updateAt(brand.getUpdateAt())
                 .accountResponse(accountMapper.accountResponse(brand.getAccount()))
                 .build();
     }

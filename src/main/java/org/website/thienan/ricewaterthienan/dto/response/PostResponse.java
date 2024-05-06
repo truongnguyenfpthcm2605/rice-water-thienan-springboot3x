@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class PostResponse extends BaseResponse{
     String avatar;
     String imageHeader;
     Long views;
+    List<CategoriesResponse> categoriesResponses;
     AccountResponse accountResponse;
     CategoriesPostResponse categoriesPostResponse;
 }

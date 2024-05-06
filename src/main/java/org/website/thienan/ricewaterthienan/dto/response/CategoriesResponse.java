@@ -24,5 +24,4 @@ public class CategoriesResponse extends  BaseResponse {
     String imageHeader;
     Long views;
     AccountResponse accountResponse;
-    List<PostResponse> postResponses;
 }

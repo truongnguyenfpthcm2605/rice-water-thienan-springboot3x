@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrdersRequest extends  BaseRequest {
+    String id;
     String phone;
     String name;
     String address;
