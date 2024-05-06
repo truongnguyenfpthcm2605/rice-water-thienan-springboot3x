@@ -3,6 +3,7 @@ package org.website.thienan.ricewaterthienan.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.website.thienan.ricewaterthienan.dto.request.OrdersRequest;
+import org.website.thienan.ricewaterthienan.dto.response.OrdersResponse;
 import org.website.thienan.ricewaterthienan.entities.Account;
 import org.website.thienan.ricewaterthienan.entities.Orders;
 import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
@@ -30,6 +31,20 @@ public class OrdersMapper {
         orders.setActive(true);
         return  orders;
 
+    }
+
+    public OrdersResponse ordersResponse(Orders orders){
+        return OrdersResponse.builder().id(orders.getId())
+                .phone(orders.getPhone())
+                .name(orders.getName())
+                .address(orders.getAddress())
+                .notes(orders.getNotes())
+                .status(orders.getStatus().name())
+                .active(orders.getActive())
+                .createAt(orders.getCreateAt())
+                .updateAt(orders.getUpdateAt())
+                .accountResponse(accountMapper.accountResponse(orders.getAccount()))
+                .build();
     }
 
     private StatusOrderEnum getOrderEnum(String status) {

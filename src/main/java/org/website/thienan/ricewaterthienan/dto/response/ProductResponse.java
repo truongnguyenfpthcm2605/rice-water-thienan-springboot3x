@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.website.thienan.ricewaterthienan.entities.Categories;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ProductResponse extends  BaseResponse {
     AccountResponse accountResponse;
     BranchResponse branchResponse;
     BrandResponse brandResponse;
-    Set<CategoriesResponse> categoriesResponseSet = new HashSet<>();
+    Set<Categories> categories = new HashSet<>();
     List<OrderdetailResponse> orderdetailResponses;
 
 }

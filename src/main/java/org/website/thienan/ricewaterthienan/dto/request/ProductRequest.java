@@ -15,7 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductRequest {
+public class ProductRequest extends BaseRequest {
+    String id;
     String name;
     String link;
     Double price;
