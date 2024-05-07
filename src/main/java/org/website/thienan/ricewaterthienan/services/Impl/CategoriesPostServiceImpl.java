@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.website.thienan.ricewaterthienan.dto.request.CategoriesPostRequest;
 import org.website.thienan.ricewaterthienan.dto.response.CategoriesPostResponse;
-import org.website.thienan.ricewaterthienan.dto.response.CategoriesResponse;
-import org.website.thienan.ricewaterthienan.entities.Categories;
 import org.website.thienan.ricewaterthienan.entities.CategoriesPost;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.mapper.CategoriesPostMapper;

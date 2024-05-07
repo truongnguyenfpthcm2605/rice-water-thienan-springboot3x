@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 
 
 @Entity
@@ -42,9 +43,12 @@ public class Categories extends  BaseEntity {
     @Column(columnDefinition= "BIGINT", nullable = false)
     Long views;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonBackReference
     Account account;
+
+
 
 }

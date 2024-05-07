@@ -28,13 +28,13 @@ public class AccountResponse extends BaseResponse {
     Long views;
     String role;
     Set<RoleDetailResponse> roleDetails = new HashSet<>();
-    List<BranchRequest> branches;
-    List<BrandRequest> brands;
-    List<Product> products;
-    List<Orders> orders;
-    List<Categories> categories;
-    List<Post> posts;
-    List<Type> types;
-    List<CategoriesPost> categoriesPosts;
+    List<BranchResponse> branches;
+    List<BrandResponse> brands;
+    List<ProductResponse> products;
+    List<OrdersResponse> orders;
+    List<CategoriesResponse> categories;
+    List<PostResponse> posts;
+    List<TypeResponse> types;
+    List<CategoriesPostResponse> categoriesPosts;
 
 }

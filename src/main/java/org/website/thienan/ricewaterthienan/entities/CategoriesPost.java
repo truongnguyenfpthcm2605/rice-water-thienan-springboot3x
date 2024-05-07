@@ -32,6 +32,7 @@ public class CategoriesPost extends  BaseEntity{
     @OneToMany(mappedBy = "categoryPost",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Post> posts;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonBackReference

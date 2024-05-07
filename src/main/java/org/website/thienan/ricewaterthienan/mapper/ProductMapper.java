@@ -59,7 +59,6 @@ public class ProductMapper {
 
         return  product;
 
-
     }
 
 
@@ -73,6 +72,9 @@ public class ProductMapper {
                 .description(product.getDescription())
                 .views(product.getViews())
                 .link(product.getLink())
+                .active(product.getActive())
+                .createAt(product.getCreateAt())
+                .updateAt(product.getUpdateAt())
                 .accountResponse(accountMapper.accountResponse(product.getAccount()))
                 .branchResponse(branchMapper.branchResponse(product.getBranch()))
                 .brandResponse(brandMapper.brandResponse(product.getBrand()))

@@ -15,7 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PostRequest {
+public class PostRequest extends  BaseRequest {
+    Integer id;
     String title;
     String link;
     String content;
@@ -23,9 +24,9 @@ public class PostRequest {
     String avatar;
     String imageHeader;
     Long views;
-    String categoriesPostId;
+    Integer categoriesPostId;
     String accountId;
 
-    Set<Integer> categoryPost = new HashSet<>();
+    Set<Integer> categories = new HashSet<>();
 
 }

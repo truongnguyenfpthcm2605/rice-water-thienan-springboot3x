@@ -15,7 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TypeRequest {
+public class TypeRequest extends BaseRequest {
+    Integer id;
     String title;
     String link;
     String content;
