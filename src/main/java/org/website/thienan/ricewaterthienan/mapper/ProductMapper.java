@@ -42,19 +42,19 @@ public class ProductMapper {
         product.setContent(productRequest.getContent());
         product.setDescription(productRequest.getDescription());
         product.setActive(productRequest.getActive());
-        log.info(this.getClass().getName() + ": "+ "Add account for product");
+        log.info("{}: Add account for product", this.getClass().getName());
         Account account = accountRepository.findById(productRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not Found Account Id: " + productRequest.getAccountId()));
         product.setAccount(account);
 
-        log.info(this.getClass().getName() + ": "+ "Add brand for product");
+        log.info("{}: Add brand for product", this.getClass().getName());
         Brand brand = brandRepository.findById(productRequest.getBrandId()).orElseThrow(() -> new ResourceNotFoundException("Not Found Brand Product Id: " + productRequest.getBrandId()));
         product.setBrand(brand);
 
-        log.info(this.getClass().getName() + ": "+ "Add branch for product");
+        log.info("{}: Add branch for product", this.getClass().getName());
         Branch branch = branchRepository.findById(productRequest.getBrandId()).orElseThrow(() -> new ResourceNotFoundException("Not Found Branch Product Id: " + productRequest.getBranchId()));
         product.setBranch(branch);
 
-        log.info(this.getClass().getName() + ": "+ "Add categories for product");
+        log.info("{}: Add categories for product", this.getClass().getName());
         product.setCategories(categories(productRequest.getCategories()));
 
         return  product;

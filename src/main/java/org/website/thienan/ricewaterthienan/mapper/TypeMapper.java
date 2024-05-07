@@ -59,10 +59,9 @@ public class TypeMapper {
                 .active(type.getActive())
                 .createAt(type.getCreateAt())
                 .updateAt(type.getUpdateAt())
+                .postResponses(getPostResponses(type.getPosts()))
                 .accountResponse(accountMapper.accountResponse(type.getAccount()))
                 .build();
-
-
     }
 
     private Set<Post> getPosts(Set<Integer> postIds) {
@@ -70,8 +69,6 @@ public class TypeMapper {
             Post post = postRepository.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found Post Id in Type Mapper : " + e));
             return post;
         }).collect(Collectors.toSet());
-
-
     }
 
     private Set<PostResponse> getPostResponses(Set<Post> posts) {
