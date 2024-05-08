@@ -9,24 +9,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.website.thienan.ricewaterthienan.dto.request.BranchRequest;
-import org.website.thienan.ricewaterthienan.dto.response.BranchResponse;
 import org.website.thienan.ricewaterthienan.entities.Branch;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
-import org.website.thienan.ricewaterthienan.mapper.BranchMapper;
 import org.website.thienan.ricewaterthienan.repositories.BranchRepository;
 import org.website.thienan.ricewaterthienan.services.BranchService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
-public class BranchServiceImpl implements BranchService<BranchResponse, BranchRequest> {
+public class BranchServiceImpl implements BranchService{
     private final BranchRepository branchRepository;
-    private final BranchMapper branchMapper;
 
 
     @Override
@@ -36,9 +31,8 @@ public class BranchServiceImpl implements BranchService<BranchResponse, BranchRe
                     @CacheEvict(cacheNames = "branchsActive", allEntries = true)
             }
     )
-    public BranchResponse save(BranchRequest branchRequest) {
-        Branch branch = branchMapper.branch(branchRequest);
-        return branchMapper.branchResponse(branchRepository.save(branch));
+    public Branch save(Branch branchRequest) {
+        return branchRepository.save(branchRequest);
     }
 
     @Override
@@ -51,23 +45,22 @@ public class BranchServiceImpl implements BranchService<BranchResponse, BranchRe
                     @CacheEvict(cacheNames = "branchsActive", allEntries = true)
             }
     )
-    public BranchResponse update(BranchRequest branchRequest) {
-        Branch branch = branchMapper.branch(branchRequest);
-        return branchMapper.branchResponse(branchRepository.save(branch));
+    public Branch update(Branch branchRequest) {
+        return  branchRepository.save(branchRequest);
     }
 
     @Override
     @Cacheable(cacheNames = "branch", key = "#id", unless = "#result==null")
-    public Optional<BranchResponse> findById(Integer id) {
+    public Optional<Branch> findById(Integer id) {
         Branch branch = branchRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Not found Branch"));
-        return Optional.of(branchMapper.branchResponse(branch));
+        return Optional.of(branch);
     }
 
     @Override
     @Cacheable(cacheNames = "branch", key = "#name", unless = "#result==null")
-    public Optional<BranchResponse> findByName(String name) {
+    public Optional<Branch> findByName(String name) {
         Branch branch = branchRepository.findByName(name).orElseThrow(()-> new ResourceNotFoundException("Not found Branch"));
-        return Optional.of(branchMapper.branchResponse(branch));
+        return Optional.of(branch);
     }
 
     @Override
@@ -83,19 +76,13 @@ public class BranchServiceImpl implements BranchService<BranchResponse, BranchRe
 
     @Override
     @Cacheable(cacheNames = "branchs")
-    public List<BranchResponse> findAll() {
-        return branchRepository.findAll().stream().map( branch -> {
-            BranchResponse branch1 = branchMapper.branchResponse(branch);
-            return branch1;
-        }).collect(Collectors.toList());
+    public List<Branch> findAll() {
+        return branchRepository.findAll();
     }
 
     @Override
     @Cacheable(cacheNames = "branchsActive")
-    public List<BranchResponse> findByActive(Boolean active) {
-        return branchRepository.findByActive(active).stream().map( branch -> {
-            BranchResponse branch1 = branchMapper.branchResponse(branch);
-            return branch1;
-        }).collect(Collectors.toList());
+    public List<Branch> findByActive(Boolean active) {
+        return branchRepository.findByActive(active);
     }
 }

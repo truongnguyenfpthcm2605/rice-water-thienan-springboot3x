@@ -1,14 +1,16 @@
 package org.website.thienan.ricewaterthienan.services;
 
+import org.website.thienan.ricewaterthienan.entities.CategoriesPost;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface CategoriesPostService<T,R> {
-    T save(R branchRequest);
-    T update(R branchRequest);
-    Optional<T> findById(Integer id);
-    Optional<T> findByName(String name);
+public interface CategoriesPostService {
+    CategoriesPost save(CategoriesPost branchRequest);
+    CategoriesPost update(CategoriesPost branchRequest);
+    Optional<CategoriesPost> findById(Integer id);
+    Optional<CategoriesPost> findByName(String name);
     void deleteById(Integer id);
-    List<T> findAll();
-    List<T> findByActive(Boolean active);
+    List<CategoriesPost> findAll();
+    List<CategoriesPost> findByActive(Boolean active);
 }

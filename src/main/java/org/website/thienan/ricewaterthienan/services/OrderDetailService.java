@@ -1,22 +1,21 @@
 package org.website.thienan.ricewaterthienan.services;
 
-import org.website.thienan.ricewaterthienan.dto.response.OrderdetailResponse;
 import org.website.thienan.ricewaterthienan.entities.OrderDetail;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface OrderDetailService {
-    OrderdetailResponse save(OrderDetail orderDetail);
-    OrderdetailResponse update(OrderDetail orderDetail);
+    OrderDetail save(OrderDetail orderDetail);
+    OrderDetail update(OrderDetail orderDetail);
 
-    Optional<OrderdetailResponse> findById(Integer id);
+    Optional<OrderDetail> findById(Integer id);
 
     void deleteById(Integer id);
 
-    List<OrderdetailResponse> findAll();
+    List<OrderDetail> findAll();
 
-    List<OrderdetailResponse> findByProductId(String productId);
-    List<OrderdetailResponse> findByOrdersId(String ordersId);
+    List<OrderDetail> findByProductId(String productId);
+    List<OrderDetail> findByOrdersId(String ordersId);
 
 }

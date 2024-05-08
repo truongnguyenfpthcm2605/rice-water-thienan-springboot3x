@@ -9,23 +9,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.website.thienan.ricewaterthienan.dto.response.OrderdetailResponse;
 import org.website.thienan.ricewaterthienan.entities.OrderDetail;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
-import org.website.thienan.ricewaterthienan.mapper.OrderDetailMapper;
 import org.website.thienan.ricewaterthienan.repositories.OrderDetailRepository;
 import org.website.thienan.ricewaterthienan.services.OrderDetailService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
-    private final OrderDetailMapper orderDetailMapper;
     @Override
     @Caching(
             evict = {
@@ -34,8 +30,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                     @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
             }
     )
-    public OrderdetailResponse save(OrderDetail orderDetail) {
-        return orderDetailMapper.orderdetailResponse(orderDetailRepository.save(orderDetail));
+    public OrderDetail save(OrderDetail orderDetail) {
+        return orderDetailRepository.save(orderDetail);
     }
 
     @Override
@@ -49,15 +45,15 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                     @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
             }
     )
-    public OrderdetailResponse update(OrderDetail orderDetail) {
-        return orderDetailMapper.orderdetailResponse(orderDetailRepository.saveAndFlush(orderDetail));
+    public OrderDetail update(OrderDetail orderDetail) {
+        return orderDetailRepository.save(orderDetail);
     }
 
     @Override
     @Cacheable(cacheNames = "orderDetail", key = "#id", unless = "#result==null")
-    public Optional<OrderdetailResponse> findById(Integer id) {
+    public Optional<OrderDetail> findById(Integer id) {
        OrderDetail orderDetail = orderDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found OrderDetail Id : " + id));
-       return Optional.of(orderDetailMapper.orderdetailResponse(orderDetail));
+       return Optional.of(orderDetail);
     }
 
     @Override
@@ -75,28 +71,19 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     @Cacheable(cacheNames = "orderDetails")
-    public List<OrderdetailResponse> findAll() {
-        return orderDetailRepository.findAll().stream().map( orderDetail -> {
-            OrderdetailResponse orderdetailResponse = orderDetailMapper.orderdetailResponse(orderDetail);
-            return  orderdetailResponse;
-        }).collect(Collectors.toList());
+    public List<OrderDetail> findAll() {
+        return orderDetailRepository.findAll();
     }
 
     @Override
     @Cacheable(cacheNames = "ordersDetailProduct")
-    public List<OrderdetailResponse> findByProductId(String productId) {
-        return orderDetailRepository.findByProductId(productId).stream().map(ords -> {
-            OrderdetailResponse orderDetailResponse1 = orderDetailMapper.orderdetailResponse(ords);
-            return  orderDetailResponse1;
-        }).collect(Collectors.toList());
+    public List<OrderDetail> findByProductId(String productId) {
+        return orderDetailRepository.findByProductId(productId);
     }
 
     @Override
     @Cacheable(cacheNames = "ordersDetailOrders")
-    public List<OrderdetailResponse> findByOrdersId(String ordersId) {
-        return orderDetailRepository.findByOrdersId(ordersId).stream().map(ords -> {
-            OrderdetailResponse orderDetailResponse1 = orderDetailMapper.orderdetailResponse(ords);
-            return  orderDetailResponse1;
-        }).collect(Collectors.toList());
+    public List<OrderDetail> findByOrdersId(String ordersId) {
+        return orderDetailRepository.findByOrdersId(ordersId);
     }
 }

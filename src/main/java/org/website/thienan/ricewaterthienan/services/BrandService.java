@@ -1,15 +1,18 @@
 package org.website.thienan.ricewaterthienan.services;
 
+import org.website.thienan.ricewaterthienan.entities.Branch;
+import org.website.thienan.ricewaterthienan.entities.Brand;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface BrandService<T,R> {
-    T save(R branchRequest);
-    T update(R branchRequest);
-    Optional<T> findById(Integer id);
-    Optional<T> findByName(String name);
+public interface BrandService {
+    Brand save(Brand branchRequest);
+    Brand update(Brand branchRequest);
+    Optional<Brand> findById(Integer id);
+    Optional<Brand> findByName(String name);
     void deleteById(Integer id);
-    List<T> findAll();
-    List<T> findByActive(Boolean active);
+    List<Brand> findAll();
+    List<Brand> findByActive(Boolean active);
 
 }

@@ -9,24 +9,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.website.thienan.ricewaterthienan.dto.request.CategoriesPostRequest;
-import org.website.thienan.ricewaterthienan.dto.response.CategoriesPostResponse;
 import org.website.thienan.ricewaterthienan.entities.CategoriesPost;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
-import org.website.thienan.ricewaterthienan.mapper.CategoriesPostMapper;
 import org.website.thienan.ricewaterthienan.repositories.CategoriesPostRepository;
 import org.website.thienan.ricewaterthienan.services.CategoriesPostService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
-public class CategoriesPostServiceImpl implements CategoriesPostService<CategoriesPostResponse, CategoriesPostRequest> {
+public class CategoriesPostServiceImpl implements CategoriesPostService {
     private final CategoriesPostRepository categoriesPostRepository;
-    private final CategoriesPostMapper categoriesMapper;
+
     @Override
     @Caching(
             evict = {
@@ -34,9 +30,8 @@ public class CategoriesPostServiceImpl implements CategoriesPostService<Categori
                     @CacheEvict(cacheNames = "categoriesPostActive", allEntries = true)
             }
     )
-    public CategoriesPostResponse save(CategoriesPostRequest categoriesRequest) {
-        CategoriesPost categories = categoriesMapper.categoriesPost(categoriesRequest);
-        return categoriesMapper.categoriesPostResponse(categoriesPostRepository.save(categories));
+    public CategoriesPost save(CategoriesPost categoriesRequest) {
+        return categoriesPostRepository.save(categoriesRequest);
     }
 
     @Override
@@ -49,23 +44,22 @@ public class CategoriesPostServiceImpl implements CategoriesPostService<Categori
                     @CacheEvict(cacheNames = "categoriesPostActive", allEntries = true)
             }
     )
-    public CategoriesPostResponse update(CategoriesPostRequest categoriesRequest) {
-        CategoriesPost categories = categoriesMapper.categoriesPost(categoriesRequest);
-        return categoriesMapper.categoriesPostResponse(categoriesPostRepository.saveAndFlush(categories));
+    public CategoriesPost update(CategoriesPost categoriesRequest) {
+        return categoriesPostRepository.save(categoriesRequest);
     }
 
     @Override
     @Cacheable(cacheNames = "categoryPost", key="#id", unless = "#result==null")
-    public Optional<CategoriesPostResponse> findById(Integer id) {
+    public Optional<CategoriesPost> findById(Integer id) {
         CategoriesPost categories = categoriesPostRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found CategoriesPost ID : " + id));
-        return Optional.of(categoriesMapper.categoriesPostResponse(categories));
+        return Optional.of(categories);
     }
 
     @Override
     @Cacheable(cacheNames = "categoryPost", key="#name", unless = "#result==null")
-    public Optional<CategoriesPostResponse> findByName(String name) {
+    public Optional<CategoriesPost> findByName(String name) {
         CategoriesPost categories = categoriesPostRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found CategoriesPost Name : " + name));
-        return Optional.of(categoriesMapper.categoriesPostResponse(categories));
+        return Optional.of(categories);
     }
 
     @Override
@@ -82,20 +76,14 @@ public class CategoriesPostServiceImpl implements CategoriesPostService<Categori
 
     @Override
     @Cacheable(cacheNames = "categoriesPosts")
-    public List<CategoriesPostResponse> findAll() {
-        return categoriesPostRepository.findAll().stream().map( category -> {
-            CategoriesPostResponse categoriesResponse = categoriesMapper.categoriesPostResponse(category);
-            return categoriesResponse;
-        }).collect(Collectors.toList());
+    public List<CategoriesPost> findAll() {
+        return categoriesPostRepository.findAll();
     }
 
     @Override
     @Cacheable(cacheNames = "categoriesPostActive")
-    public List<CategoriesPostResponse> findByActive(Boolean active) {
-        return categoriesPostRepository.findByActive(active).stream().map( category -> {
-            CategoriesPostResponse categoriesResponse = categoriesMapper.categoriesPostResponse(category);
-            return categoriesResponse;
-        }).collect(Collectors.toList());
+    public List<CategoriesPost> findByActive(Boolean active) {
+        return categoriesPostRepository.findByActive(active);
     }
 }
 

@@ -2,20 +2,21 @@ package org.website.thienan.ricewaterthienan.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.website.thienan.ricewaterthienan.entities.Orders;
 
 import java.util.Optional;
 
-public interface OrdersService<T,R>{
-    T save(R orders);
-    T update(R orders);
-    Optional<T> findById(String id);
-    Optional<T> findByName(String name);
-    Optional<T> findByPhone(String phone);
+public interface OrdersService{
+    Orders save(Orders orders);
+    Orders update(Orders orders);
+    Optional<Orders> findById(String id);
+    Optional<Orders> findByName(String name);
+    Optional<Orders> findByPhone(String phone);
     void deleteById(String id);
-    Page<T> findByKeyword(Pageable pageable, String keyword);
-    Page<T> findByActive(Pageable pageable,Boolean active);
+    Page<Orders> findByKeyword(Pageable pageable, String keyword);
+    Page<Orders> findByActive(Pageable pageable,Boolean active);
 
-    Page<T> findByStatus(Pageable pageable, String status);
+    Page<Orders> findByStatus(Pageable pageable, String status);
 
 
 }

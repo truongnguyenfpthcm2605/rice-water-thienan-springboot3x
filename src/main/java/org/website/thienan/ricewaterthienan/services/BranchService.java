@@ -1,15 +1,17 @@
 package org.website.thienan.ricewaterthienan.services;
 
+import org.website.thienan.ricewaterthienan.entities.Branch;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface BranchService<T,R> {
-    T save(R branchRequest);
-    T update(R branchRequest);
-    Optional<T> findById(Integer id);
-    Optional<T> findByName(String name);
+public interface BranchService {
+    Branch save(Branch branchRequest);
+    Branch update(Branch branchRequest);
+    Optional<Branch> findById(Integer id);
+    Optional<Branch> findByName(String name);
     void deleteById(Integer id);
-    List<T> findAll();
-    List<T> findByActive(Boolean active);
+    List<Branch> findAll();
+    List<Branch> findByActive(Boolean active);
 
 }

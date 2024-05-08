@@ -9,24 +9,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.website.thienan.ricewaterthienan.dto.request.RoleDetailRequest;
-import org.website.thienan.ricewaterthienan.dto.response.RoleDetailResponse;
 import org.website.thienan.ricewaterthienan.entities.RoleDetail;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
-import org.website.thienan.ricewaterthienan.mapper.RoleDetailMapper;
 import org.website.thienan.ricewaterthienan.repositories.RoleDetailRepository;
 import org.website.thienan.ricewaterthienan.services.RoleDetailService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
-public class RoleDetailServiceImpl implements RoleDetailService<RoleDetailRequest, RoleDetailResponse> {
+public class RoleDetailServiceImpl implements RoleDetailService {
     private final RoleDetailRepository roleDetailRepository;
-    private final RoleDetailMapper roleDetailMapper;
     @Override
     @Caching(
             evict = {
@@ -34,9 +29,8 @@ public class RoleDetailServiceImpl implements RoleDetailService<RoleDetailReques
                     @CacheEvict(cacheNames = "roleDetailsActive", allEntries = true)
             }
     )
-    public RoleDetailResponse save(RoleDetailRequest roleDetail) {
-        RoleDetail roleDetail1 = roleDetailMapper.roleDetail(roleDetail);
-        return  roleDetailMapper.roleDetailResponse(roleDetailRepository.save(roleDetail1));
+    public RoleDetail save(RoleDetail roleDetail) {
+        return roleDetailRepository.save(roleDetail);
     }
 
     @Override
@@ -50,23 +44,22 @@ public class RoleDetailServiceImpl implements RoleDetailService<RoleDetailReques
                     @CacheEvict(cacheNames = "roleDetailsActive", allEntries = true)
             }
     )
-    public RoleDetailResponse update(RoleDetailRequest roleDetail) {
-        RoleDetail roleDetail1 = roleDetailMapper.roleDetail(roleDetail);
-        return  roleDetailMapper.roleDetailResponse(roleDetailRepository.save(roleDetail1));
+    public RoleDetail update(RoleDetail roleDetail) {
+        return roleDetailRepository.save(roleDetail);
     }
 
     @Override
     @Cacheable(cacheNames = "roleDetail", key = "#id", unless = "#result==null")
-    public Optional<RoleDetailResponse> findById(Integer id) {
+    public Optional<RoleDetail> findById(Integer id) {
         RoleDetail roleDetail = roleDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("RoleDetail ID Not Found"));
-        return Optional.of(roleDetailMapper.roleDetailResponse(roleDetail));
+        return Optional.of(roleDetail);
     }
 
     @Override
     @Cacheable(cacheNames = "roleDetailName", key = "#name", unless = "#result==null")
-    public Optional<RoleDetailResponse> findByName(String name) {
+    public Optional<RoleDetail> findByName(String name) {
         RoleDetail roleDetail = roleDetailRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("RoleDetail Name Not Found"));
-        return Optional.of(roleDetailMapper.roleDetailResponse(roleDetail));
+        return Optional.of(roleDetail);
     }
 
     @Override
@@ -83,19 +76,13 @@ public class RoleDetailServiceImpl implements RoleDetailService<RoleDetailReques
 
     @Override
     @Cacheable(cacheNames = "roleDetails")
-    public List<RoleDetailResponse> findAll() {
-        return  roleDetailRepository.findAll().stream().map(e -> {
-            RoleDetailResponse roleDetailResponse = roleDetailMapper.roleDetailResponse(e);
-            return roleDetailResponse;
-        }).collect(Collectors.toList());
+    public List<RoleDetail> findAll() {
+        return  roleDetailRepository.findAll();
     }
 
     @Override
     @Cacheable(cacheNames = "roleDetailsActive")
-    public List<RoleDetailResponse> findByActive(Boolean active) {
-        return  roleDetailRepository.findByActive(active).stream().map(e -> {
-            RoleDetailResponse roleDetailResponse = roleDetailMapper.roleDetailResponse(e);
-            return roleDetailResponse;
-        }).collect(Collectors.toList());
+    public List<RoleDetail> findByActive(Boolean active) {
+        return  roleDetailRepository.findByActive(active);
     }
 }

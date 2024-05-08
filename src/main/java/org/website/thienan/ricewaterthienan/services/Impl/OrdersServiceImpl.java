@@ -6,30 +6,23 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.website.thienan.ricewaterthienan.dto.request.OrdersRequest;
-import org.website.thienan.ricewaterthienan.dto.response.OrdersResponse;
 import org.website.thienan.ricewaterthienan.entities.Orders;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
-import org.website.thienan.ricewaterthienan.mapper.OrdersMapper;
 import org.website.thienan.ricewaterthienan.repositories.OrdersRepository;
 import org.website.thienan.ricewaterthienan.services.OrdersService;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
-public class OrdersServiceImpl implements OrdersService<OrdersResponse, OrdersRequest> {
+public class OrdersServiceImpl implements OrdersService {
     private final OrdersRepository ordersRepository;
-    private final OrdersMapper ordersMapper;
     @Override
     @Caching(
             evict = {
@@ -38,9 +31,8 @@ public class OrdersServiceImpl implements OrdersService<OrdersResponse, OrdersRe
                     @CacheEvict(cacheNames = "ordersStatus", allEntries = true)
             }
     )
-    public OrdersResponse save(OrdersRequest orders) {
-        Orders orders1 = ordersMapper.orders(orders);
-        return ordersMapper.ordersResponse(ordersRepository.save(orders1));
+    public Orders save(Orders orders) {
+        return ordersRepository.save(orders);
     }
 
     @Override
@@ -54,30 +46,29 @@ public class OrdersServiceImpl implements OrdersService<OrdersResponse, OrdersRe
                     @CacheEvict(cacheNames = "ordersStatus", allEntries = true)
             }
     )
-    public OrdersResponse update(OrdersRequest orders) {
-        Orders orders1 = ordersMapper.orders(orders);
-        return ordersMapper.ordersResponse(ordersRepository.saveAndFlush(orders1));
+    public Orders update(Orders orders) {
+        return ordersRepository.save(orders);
     }
 
     @Override
     @Cacheable(cacheNames = "orders",key = "#id", unless = "#result==null")
-    public Optional<OrdersResponse> findById(String id) {
+    public Optional<Orders> findById(String id) {
         Orders orders = ordersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID : "+ id));
-        return Optional.of(ordersMapper.ordersResponse(orders));
+        return Optional.of(orders);
     }
 
     @Override
     @Cacheable(cacheNames = "orders",key = "#name", unless = "#result==null")
-    public Optional<OrdersResponse> findByName(String name) {
+    public Optional<Orders> findByName(String name) {
         Orders orders = ordersRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found Orders NAME : "+ name));
-        return Optional.of(ordersMapper.ordersResponse(orders));
+        return Optional.of(orders);
     }
 
     @Override
     @Cacheable(cacheNames = "orders",key = "#phone", unless = "#result==null")
-    public Optional<OrdersResponse> findByPhone(String phone) {
+    public Optional<Orders> findByPhone(String phone) {
         Orders orders = ordersRepository.findByPhone(phone).orElseThrow(() -> new ResourceNotFoundException("Not found Orders PHONE : "+ phone));
-        return Optional.of(ordersMapper.ordersResponse(orders));
+        return Optional.of(orders);
     }
 
     @Override
@@ -95,46 +86,22 @@ public class OrdersServiceImpl implements OrdersService<OrdersResponse, OrdersRe
 
     @Override
     @Cacheable(cacheNames = "ordersKeyWord")
-    public Page<OrdersResponse> findByKeyword(Pageable pageable, String keyword) {
-        Page<Orders> ordersPage = ordersRepository.findByKeyword(pageable, "%"+keyword+"%");
+    public Page<Orders> findByKeyword(Pageable pageable, String keyword) {
+        return  ordersRepository.findByKeyword(pageable, "%"+keyword+"%");
 
-        List<OrdersResponse> ordersResponses = ordersPage.getContent().stream()
-                .map(orders -> {
-                    OrdersResponse ordersResponse = ordersMapper.ordersResponse(orders);
-                    return ordersResponse;
-                })
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(ordersResponses, pageable, ordersPage.getTotalElements());
     }
 
     @Override
     @Cacheable(cacheNames = "ordersActive")
-    public Page<OrdersResponse> findByActive(Pageable pageable, Boolean active) {
-        Page<Orders> ordersPage = ordersRepository.findByActive(pageable, active);
-
-        List<OrdersResponse> ordersResponses = ordersPage.getContent().stream()
-                .map(orders -> {
-                    OrdersResponse ordersResponse = ordersMapper.ordersResponse(orders);
-                    return ordersResponse;
-                })
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(ordersResponses, pageable, ordersPage.getTotalElements());
+    public Page<Orders> findByActive(Pageable pageable, Boolean active) {
+        return ordersRepository.findByActive(pageable, active);
     }
 
     @Override
     @Cacheable(cacheNames = "ordersStatus")
-    public Page<OrdersResponse> findByStatus(Pageable pageable, String status) {
-        Page<Orders> ordersPage = ordersRepository.findByStatus(pageable, status);
+    public Page<Orders> findByStatus(Pageable pageable, String status) {
+        return ordersRepository.findByStatus(pageable, status);
 
-        List<OrdersResponse> ordersResponses = ordersPage.getContent().stream()
-                .map(orders -> {
-                    OrdersResponse ordersResponse = ordersMapper.ordersResponse(orders);
-                    return ordersResponse;
-                })
-                .collect(Collectors.toList());
 
-        return new PageImpl<>(ordersResponses, pageable, ordersPage.getTotalElements());
     }
 }

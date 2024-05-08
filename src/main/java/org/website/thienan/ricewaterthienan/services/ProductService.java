@@ -2,23 +2,24 @@ package org.website.thienan.ricewaterthienan.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.website.thienan.ricewaterthienan.entities.Product;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public interface ProductService<T, R> {
+public interface ProductService {
 
-    T save(R product);
+    Product save(Product product);
 
-    T update(R product);
+    Product update(Product product);
 
-    Optional<T> findById(String id);
+    Optional<Product> findById(String id);
 
     void deleteById(String id);
 
-    Page<T> findByActive(Pageable pageable, Boolean active);
+    Page<Product> findByActive(Pageable pageable, Boolean active);
 
-    Page<T> findAllFilter(Pageable pageable, String name,
+    Page<Product> findAllFilter(Pageable pageable, String name,
                           Double price,
                           Long views,
                           Boolean active,
