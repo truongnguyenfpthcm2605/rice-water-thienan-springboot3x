@@ -9,11 +9,14 @@ import org.website.thienan.ricewaterthienan.entities.CategoriesPost;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
 
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class CategoriesPostMapper {
     private  final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final PostMapper postMapper;
 
     public CategoriesPost categoriesPost(CategoriesPostRequest categoriesPostRequest){
         CategoriesPost categoriesPost = new CategoriesPost();
@@ -39,6 +42,7 @@ public class CategoriesPostMapper {
                 .createAt(categoriesPost.getCreateAt())
                 .updateAt(categoriesPost.getUpdateAt())
                 .accountResponse(accountMapper.accountResponse(categoriesPost.getAccount()))
+                .posts(categoriesPost.getPosts().stream().map(e -> postMapper.postResponse(e)).collect(Collectors.toList()))
                 .build();
     }
 }

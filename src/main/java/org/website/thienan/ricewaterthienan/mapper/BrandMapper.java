@@ -9,12 +9,15 @@ import org.website.thienan.ricewaterthienan.entities.Brand;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
 
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class BrandMapper {
 
     private  final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final ProductMapper productMapper;
     public Brand brand(BrandRequest brandRequest) {
         Brand brand = new Brand();
         if(brandRequest.getId() != null){
@@ -37,6 +40,7 @@ public class BrandMapper {
                 .createAt(brand.getCreateAt())
                 .updateAt(brand.getUpdateAt())
                 .accountResponse(accountMapper.accountResponse(brand.getAccount()))
+                .productResponses(brand.getProducts().stream().map(e -> productMapper.productResponse(e)).collect(Collectors.toList()))
                 .build();
     }
 }

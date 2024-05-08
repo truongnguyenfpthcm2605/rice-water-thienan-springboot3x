@@ -10,11 +10,14 @@ import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
 
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class OrdersMapper {
     private  final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final OrderDetailMapper orderDetailMapper;
 
     public Orders orders(OrdersRequest ordersRequest){
         Orders orders = new Orders();
@@ -44,6 +47,7 @@ public class OrdersMapper {
                 .createAt(orders.getCreateAt())
                 .updateAt(orders.getUpdateAt())
                 .accountResponse(accountMapper.accountResponse(orders.getAccount()))
+                .orderdetailResponses(orders.getOrderDetails().stream().map(e -> orderDetailMapper.orderdetailResponse(e)).collect(Collectors.toList()))
                 .build();
     }
 

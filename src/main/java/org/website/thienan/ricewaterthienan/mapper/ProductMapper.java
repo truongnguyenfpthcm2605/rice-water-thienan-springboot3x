@@ -14,23 +14,24 @@ import org.website.thienan.ricewaterthienan.repositories.CategoriesRepository;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class ProductMapper {
-    private  final AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
     private final BrandRepository brandRepository;
     private final BranchRepository branchRepository;
     private final CategoriesRepository categoriesRepository;
     private final BrandMapper brandMapper;
     private final BranchMapper branchMapper;
-    private final CategoriesMapper categoriesMapper;
+    private final OrderDetailMapper orderDetailMapper;
 
-    public Product product(ProductRequest productRequest){
+    public Product product(ProductRequest productRequest) {
         Product product = new Product();
-        if(productRequest.getId()!=null){
+        if (productRequest.getId() != null) {
             product.setId(productRequest.getId());
         }
         product.setName(productRequest.getName());
@@ -57,12 +58,12 @@ public class ProductMapper {
         log.info("{}: Add categories for product", this.getClass().getName());
         product.setCategories(categories(productRequest.getCategories()));
 
-        return  product;
+        return product;
 
     }
 
 
-    public ProductResponse productResponse(Product product){
+    public ProductResponse productResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -79,13 +80,15 @@ public class ProductMapper {
                 .branchResponse(branchMapper.branchResponse(product.getBranch()))
                 .brandResponse(brandMapper.brandResponse(product.getBrand()))
                 .categories(product.getCategories())
+                .orderdetailResponses(product.getOrderDetails().stream().map(e -> orderDetailMapper.orderdetailResponse(e)).collect(Collectors.toList()))
                 .build();
 
     }
-    private Set<Categories> categories(Set<String> categoryName){
+
+    private Set<Categories> categories(Set<String> categoryName) {
         Set<Categories> categories = new HashSet<>();
         categoryName.stream().forEach(e -> {
-            Categories categories1 = categoriesRepository.findByName(e).orElseThrow(()-> new ResourceNotFoundException("Not Found Category Name - Product Mapper" + e));
+            Categories categories1 = categoriesRepository.findByName(e).orElseThrow(() -> new ResourceNotFoundException("Not Found Category Name - Product Mapper" + e));
             categories.add(categories1);
         });
         return categories;

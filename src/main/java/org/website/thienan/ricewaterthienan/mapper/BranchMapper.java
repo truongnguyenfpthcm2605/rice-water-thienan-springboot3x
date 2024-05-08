@@ -1,6 +1,7 @@
 package org.website.thienan.ricewaterthienan.mapper;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.website.thienan.ricewaterthienan.dto.request.BranchRequest;
 import org.website.thienan.ricewaterthienan.dto.response.BranchResponse;
@@ -9,11 +10,14 @@ import org.website.thienan.ricewaterthienan.entities.Branch;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
 
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class BranchMapper {
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final ProductMapper productMapper;
     public Branch branch(BranchRequest branchRequest){
         Branch branch = new Branch();
         if(branchRequest.getAccountId() != null){
@@ -39,6 +43,7 @@ public class BranchMapper {
                 .active(branch.getActive())
                 .createAt(branch.getCreateAt())
                 .updateAt(branch.getUpdateAt())
+                .productResponses(branch.getProducts().stream().map(e -> productMapper.productResponse(e)).collect(Collectors.toList()))
                 .build();
     }
 
