@@ -7,6 +7,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.website.thienan.ricewaterthienan.dto.request.AccountRequest;
 import org.website.thienan.ricewaterthienan.dto.response.MessageResponse;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceExistingException;
@@ -15,6 +16,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 @Component
@@ -32,7 +34,7 @@ public class JWTprovider {
                 .issueTime(new Date())
                 .jwtID(UUID.randomUUID().toString())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
-                .claim("scope", account)
+                .claim("scope", buildScope(account))
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(jwsHeader,payload);
@@ -44,6 +46,16 @@ public class JWTprovider {
             throw  new ResourceExistingException("Jwt Generation Fail");
         }
 
+    }
+
+    private String buildScope(AccountRequest account) {
+        StringJoiner stringJoiner = new StringJoiner("");
+        if(!CollectionUtils.isEmpty(account.getRoleDetail())){
+            account.getRoleDetail().forEach(s -> {
+                stringJoiner.add(s);
+            });
+        }
+        return  stringJoiner.toString();
     }
 
     public MessageResponse checkValidToken(String token) throws Exception{

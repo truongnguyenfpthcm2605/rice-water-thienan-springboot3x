@@ -6,23 +6,28 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.website.thienan.ricewaterthienan.dto.request.AccountRequest;
-import org.website.thienan.ricewaterthienan.dto.response.AccountResponse;
-import org.website.thienan.ricewaterthienan.dto.response.RoleDetailResponse;
-import org.website.thienan.ricewaterthienan.entities.Account;
-import org.website.thienan.ricewaterthienan.entities.RoleDetail;
+import org.website.thienan.ricewaterthienan.dto.response.*;
+import org.website.thienan.ricewaterthienan.entities.*;
 import org.website.thienan.ricewaterthienan.enums.RoleEnum;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.services.Impl.RoleDetailServiceImpl;
 
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class AccountMapper {
     private final RoleDetailServiceImpl roleDetailService;
     private final RoleDetailMapper roleDetailMapper;
+    private final BranchMapper branchMapper;
+    private final BrandMapper brandMapper;
+    private final ProductMapper productMapper;
+    private final  OrdersMapper ordersMapper;
+    private final PostMapper postMapper;
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
     public Account account(AccountRequest accountRequest){
         Account account = new Account();
@@ -63,7 +68,11 @@ public class AccountMapper {
                 .active(account.getActive())
                 .createAt(account.getCreateAt())
                 .updateAt(account.getUpdateAt())
-
+                .branches(getBranchResponses(account.getBranch()))
+                .brands(getBrandResponses(account.getBrands()))
+                .products(getProductResponses(account.getProducts()))
+                .orders(getOrdersResponses(account.getOrders()))
+                .posts(getPostResponses(account.getPosts()))
                 .build();
 
     }
@@ -84,6 +93,26 @@ public class AccountMapper {
             case "Staff" -> RoleEnum.Staff;
             default -> null;
         };
+    }
+
+    private List<BranchResponse> getBranchResponses(List<Branch> branches){
+        return branches.stream().map(e -> branchMapper.branchResponse(e)).collect(Collectors.toList());
+    }
+
+    private List<BrandResponse> getBrandResponses(List<Brand> brands){
+        return  brands.stream().map(e -> brandMapper.brandResponse(e)).collect(Collectors.toList());
+    }
+
+    private List<ProductResponse> getProductResponses(List<Product> products){
+        return  products.stream().map(e -> productMapper.productResponse(e)).collect(Collectors.toList());
+    }
+
+    private List<OrdersResponse> getOrdersResponses(List<Orders> orders){
+        return  orders.stream().map(e -> ordersMapper.ordersResponse(e)).collect(Collectors.toList());
+    }
+
+    private List<PostResponse> getPostResponses(List<Post> posts){
+        return  posts.stream().map(e -> postMapper.postResponse(e)).collect(Collectors.toList());
     }
 
 }
