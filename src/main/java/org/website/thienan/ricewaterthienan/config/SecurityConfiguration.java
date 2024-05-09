@@ -1,8 +1,6 @@
 package org.website.thienan.ricewaterthienan.config;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,17 +13,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.website.thienan.ricewaterthienan.security.jwt.JWTFilter;
 import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -36,9 +32,7 @@ import java.util.Collections;
 public class SecurityConfiguration {
 
     private final AccountDetailService accountDetailService;
-
-    @Value("${spring.jwt.signature.key}")
-    private String sgiNatureKey;
+    private final JWTFilter jwtAuthFilter;
 
     @Bean
     PasswordEncoder getPasswordEncoder() {
@@ -74,26 +68,15 @@ public class SecurityConfiguration {
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/v1/auth/logout"))
                                 .logoutSuccessUrl("/api/v1/auth/logout/success")
                 )
-                .oauth2ResourceServer(jwtConfig -> {
-                    jwtConfig.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()));
-                })
 
                 .exceptionHandling(ex -> ex.accessDeniedPage("/api/v1/auth/denied"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider());
-
-
+                .authenticationProvider(authenticationProvider()).addFilterBefore(
+                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+                );
         return http.build();
     }
 
-    @Bean
-    JwtDecoder jwtDecoder(){
-        SecretKeySpec secretKeySpec = new SecretKeySpec(sgiNatureKey.getBytes(), "HS512");
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build();
-    }
 
 
     @Bean

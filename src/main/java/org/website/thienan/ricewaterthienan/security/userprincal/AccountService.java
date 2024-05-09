@@ -14,12 +14,14 @@ public class AccountService implements UserDetails {
     private String email;
     private String password;
     private String name;
+    private String avatar;
     private List<? extends GrantedAuthority> authorities;
 
     public AccountService(Account account) {
         this.email = account.getEmail();
         this.password = account.getPassword();
         this.name = account.getName();
+        this.avatar = account.getAvatar();
         this.authorities = List.of(new SimpleGrantedAuthority(account.getRole().name()));
     }
 

@@ -27,4 +27,5 @@ public class TypeRequest extends BaseRequest {
     Set<Integer> typePost = new HashSet<>();
     String accountId;
 
+
 }

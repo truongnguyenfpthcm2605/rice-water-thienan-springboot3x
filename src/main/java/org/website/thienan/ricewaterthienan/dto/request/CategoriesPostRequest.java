@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.website.thienan.ricewaterthienan.dto.response.BaseResponse;
 
 
 @Data
@@ -14,7 +13,7 @@ import org.website.thienan.ricewaterthienan.dto.response.BaseResponse;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoriesPostRequest extends BaseResponse {
+public class CategoriesPostRequest extends BaseRequest {
     Integer id;
     String name;
     String link;

@@ -1,40 +1,24 @@
 package org.website.thienan.ricewaterthienan.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
-import org.website.thienan.ricewaterthienan.dto.request.BranchRequest;
-import org.website.thienan.ricewaterthienan.dto.request.BrandRequest;
-import org.website.thienan.ricewaterthienan.entities.*;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@EqualsAndHashCode(callSuper = true)
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccountResponse extends BaseResponse {
-    String id;
-    String name;
-    String password;
+public class AccountResponse {
     String email;
+    String name;
+    String token;
+    String refreshToken;
+    String timeToken;
+    LocalDateTime time;
     String avatar;
-    Long views;
-    String role;
-    Set<RoleDetailResponse> roleDetails = new HashSet<>();
-    List<BranchResponse> branches;
-    List<BrandResponse> brands;
-    List<ProductResponse> products;
-    List<OrdersResponse> orders;
-    List<CategoriesResponse> categories;
-    List<PostResponse> posts;
-    List<TypeResponse> types;
-    List<CategoriesPostResponse> categoriesPosts;
-
+    private Collection<? extends GrantedAuthority> authorities;
 }

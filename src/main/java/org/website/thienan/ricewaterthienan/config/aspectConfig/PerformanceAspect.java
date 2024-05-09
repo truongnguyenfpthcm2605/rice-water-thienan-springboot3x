@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class PerformanceAspect {
     @Pointcut("within(org.website.thienan.ricewaterthienan.controller.*.*)")
-    public void controllerMethods(){};
+    public void controllerMethods(){}
 
     @Around("controllerMethods()")
     public Object measureControllerMethodExecutionTime(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
