@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiV1.client;
+package org.website.thienan.ricewaterthienan.controller.apiv1;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.dto.request.AccountRequest;
 import org.website.thienan.ricewaterthienan.dto.response.AccountResponse;
@@ -30,7 +27,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(value = UrlApi.API_V1)
 public class AuthenticationController {
@@ -42,8 +39,8 @@ public class AuthenticationController {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     @PostMapping("/auth/login")
-    public ResponseEntity<MessageResponse> login(@Valid @RequestBody AccountRequest accountRequest, Errors errors){
-        if(errors.hasErrors()){
+    public ResponseEntity<MessageResponse> login(@Valid @RequestBody AccountRequest accountRequest, Errors errors) {
+        if (errors.hasErrors()) {
             return new ResponseEntity<>(MessageResponse.builder()
                     .code(405)
                     .message("Email and password is not empty")
@@ -51,43 +48,40 @@ public class AuthenticationController {
                     .build()
                     , HttpStatus.BAD_REQUEST);
         }
-       try {
-           Authentication authentication = authenticationManager.authenticate(
-                   new UsernamePasswordAuthenticationToken(accountRequest.getEmail(), accountRequest.getPassword())
-           );
-           SecurityContextHolder.getContext().setAuthentication(authentication);
-           AccountService accountService = (AccountService) authentication.getPrincipal();
-           String token = jwtProvider.generateToken(accountService);
-           String refreshToken = jwtProvider.generateRefreshToken(new HashMap<>(), accountService);
-           return new ResponseEntity<>(MessageResponse.builder()
-                   .code(200)
-                   .timeStamp(LocalDateTime.now())
-                   .message("Login Successfully")
-                   .data(AccountResponse.builder()
-                           .email(accountService.getEmail())
-                           .name(accountService.getName())
-                           .avatar(accountService.getAvatar())
-                           .token(token)
-                           .refreshToken(refreshToken)
-                           .timeToken("24H")
-                           .authorities(accountService.getAuthorities())
-                           .time(LocalDateTime.now())
-                           .build()).build(),
-                   HttpStatus.OK);
-       }catch (Exception ex){
-           return new ResponseEntity<>(MessageResponse.builder()
-                   .code(500)
-                   .message("Login Fail!")
-                   .timeStamp(LocalDateTime.now()).build(),HttpStatus.INTERNAL_SERVER_ERROR);
-       }
-
-
-
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(accountRequest.getEmail(), accountRequest.getPassword())
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            AccountService accountService = (AccountService) authentication.getPrincipal();
+            String token = jwtProvider.generateToken(accountService);
+            String refreshToken = jwtProvider.generateRefreshToken(new HashMap<>(), accountService);
+            return new ResponseEntity<>(MessageResponse.builder()
+                    .code(200)
+                    .timeStamp(LocalDateTime.now())
+                    .message("Login Successfully")
+                    .data(AccountResponse.builder()
+                            .email(accountService.getEmail())
+                            .name(accountService.getName())
+                            .avatar(accountService.getAvatar())
+                            .token(token)
+                            .refreshToken(refreshToken)
+                            .timeToken("24H")
+                            .authorities(accountService.getAuthorities())
+                            .time(LocalDateTime.now())
+                            .build()).build(),
+                    HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(MessageResponse.builder()
+                    .code(500)
+                    .message("Login Fail!")
+                    .timeStamp(LocalDateTime.now()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/auth/log-up")
-    public ResponseEntity<MessageResponse> logUp(@Valid @RequestBody AccountRequest accountRequest, Errors errors){
-        if(errors.hasErrors()){
+    public ResponseEntity<MessageResponse> logUp(@Valid @RequestBody AccountRequest accountRequest, Errors errors) {
+        if (errors.hasErrors()) {
             return new ResponseEntity<>(MessageResponse.builder()
                     .code(405)
                     .message("Fields is valid")
@@ -95,7 +89,7 @@ public class AuthenticationController {
                     .build()
                     , HttpStatus.BAD_REQUEST);
         }
-        if(accountServices.findByEmailAndActive(accountRequest.getEmail(),true).isPresent()){
+        if (accountServices.findByEmailAndActive(accountRequest.getEmail(), true).isPresent()) {
             return new ResponseEntity<>(MessageResponse.builder()
                     .code(401)
                     .message("Account Email existed")
@@ -103,7 +97,6 @@ public class AuthenticationController {
                     .build()
                     , HttpStatus.UNAUTHORIZED);
         }
-
         Account account = accountServices.save(account((accountRequest)));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
@@ -114,24 +107,45 @@ public class AuthenticationController {
                 HttpStatus.OK);
     }
 
-
-    @PostMapping("/auth/logout/success")
-    public  ResponseEntity<MessageResponse> logout(){
+    @PostMapping("/auth/change-password")
+    public ResponseEntity<MessageResponse> changePassword(@RequestParam("email") String email,
+                                                          @RequestParam("newPassword") String newPassword) {
+        Account account = accountServices.findByEmailAndActive(email, true).orElse(null);
+        if (account != null) {
+            if (passwordEncoder.matches(newPassword, account.getPassword())) {
+                account.setPassword(passwordEncoder.encode(newPassword));
+                Account account1 = accountServices.update(account);
+                return new ResponseEntity<>(MessageResponse.builder()
+                        .code(200).message("Change Password successfully")
+                        .data(account1.getId())
+                        .timeStamp(LocalDateTime.now()).build(), HttpStatus.OK);
+            }
+        }
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200).timeStamp(LocalDateTime.now()).message("Logout successfully").build(),HttpStatus.OK);
+                .code(405).message("Old password valid")
+                .timeStamp(LocalDateTime.now()).build(), HttpStatus.BAD_REQUEST);
+
     }
 
 
-    private RoleEnum getRole(String role){
-        return switch (role){
+
+    @PostMapping("/auth/logout/success")
+    public ResponseEntity<MessageResponse> logout() {
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(200).timeStamp(LocalDateTime.now()).message("Logout successfully").build(), HttpStatus.OK);
+    }
+
+
+    private RoleEnum getRole(String role) {
+        return switch (role) {
             case "Admin" -> RoleEnum.Admin;
             case "Staff" -> RoleEnum.Staff;
             default -> RoleEnum.User;
         };
     }
 
-    private Account account(AccountRequest accountRequest){
-        Account account =new Account();
+    private Account account(AccountRequest accountRequest) {
+        Account account = new Account();
         account.setName(accountRequest.getName());
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
         account.setEmail(accountRequest.getEmail());
@@ -144,6 +158,6 @@ public class AuthenticationController {
                         e -> roleDetailService.findByName(e).orElseThrow()
                 ).collect(Collectors.toSet())
         );
-        return  account;
+        return account;
     }
 }
