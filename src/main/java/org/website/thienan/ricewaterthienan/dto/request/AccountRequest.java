@@ -23,6 +23,7 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountRequest extends BaseRequest {
     String id;
+    @NotBlank(message = MessageValidation.NAME_MESSAGE)
     String name;
     @NotBlank(message = MessageValidation.PASSWORD_MESSAGE)
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$", message = MessageValidation.PASSWORD_PATTERN)

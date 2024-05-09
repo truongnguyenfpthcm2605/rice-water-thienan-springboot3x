@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.website.thienan.ricewaterthienan.entities.Account;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
-import org.website.thienan.ricewaterthienan.services.AccountService;
+import org.website.thienan.ricewaterthienan.services.AccountServices;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements AccountServices {
 
     private final AccountRepository accountRepository;
 

@@ -7,7 +7,7 @@ import org.website.thienan.ricewaterthienan.entities.Account;
 import java.util.List;
 import java.util.Optional;
 
-public interface AccountService {
+public interface AccountServices {
     Account save(Account account);
     Account update(Account account);
     Optional<Account> findById(String id);
