@@ -1,11 +1,9 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
@@ -17,6 +15,8 @@ import org.website.thienan.ricewaterthienan.services.AccountServices;
 import org.website.thienan.ricewaterthienan.services.RoleDetailService;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 public class AccountController {
     private final AccountServices accountServices;
     private final RoleDetailService roleDetailService;
-
 
     @DeleteMapping("/account/delete/{id}")
     public ResponseEntity<MessageResponse> delete(@PathVariable("id") String id) {
@@ -93,6 +92,27 @@ public class AccountController {
                 .build(), HttpStatus.BAD_REQUEST);
     }
 
+    @PutMapping("/account/update_role_detail/{id}")
+    public ResponseEntity<MessageResponse> updateRoleDetail(@PathVariable("id") String id, @RequestParam("role-details") List<String> roleDetails) {
+        Account account = accountServices.findById(id).orElse(null);
+        if (account != null) {
+            account.setRoles(roleDetails.stream().map(e -> roleDetailService.findByName(e).orElseThrow()).collect(Collectors.toSet()));
+            account.setUpdateAt(LocalDateTime.now());
+            return new ResponseEntity<>(MessageResponse.builder()
+                    .code(200)
+                    .message("Update Role Details successfully")
+                    .timeStamp(LocalDateTime.now())
+                    .data(accountServices.update(account).getId())
+                    .build(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(404)
+                .message("Not found Account ID :" + id)
+                .timeStamp(LocalDateTime.now())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+
     private RoleEnum getRole(String role) {
         return switch (role) {
             case "Admin" -> RoleEnum.Admin;
@@ -100,6 +120,7 @@ public class AccountController {
             default -> RoleEnum.User;
         };
     }
+
 
 
 }
