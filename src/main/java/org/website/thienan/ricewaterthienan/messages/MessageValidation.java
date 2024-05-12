@@ -8,4 +8,6 @@ public class MessageValidation {
     public static final String ROLE_MESSAGE = "Role is not empty";
     public static final String ROLE_DETAIL_MESSAGE = "Role Detail is not empty";
     public static final String NAME_MESSAGE = "Name is not empty";
+    public static final String NAME_BRANCH_MESSAGE = "Name is not empty";
+    public static final String LINK_BRANCH_MESSAGE = "Link is not empty";
 }
