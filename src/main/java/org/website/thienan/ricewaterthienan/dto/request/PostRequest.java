@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostRequest extends  BaseRequest {
-    Integer id;
     String title;
     String link;
     String content;

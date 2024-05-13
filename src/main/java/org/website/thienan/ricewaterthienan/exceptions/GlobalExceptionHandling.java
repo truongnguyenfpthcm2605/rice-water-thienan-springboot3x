@@ -41,7 +41,7 @@ public class GlobalExceptionHandling {
     }
 
     @ExceptionHandler(MailException.class)
-    public ResponseEntity<MessageResponse> handlingMailException(FileException ex){
+    public ResponseEntity<MessageResponse> handlingMailException(MailException ex){
         log.info("Mail Exception :", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.MAIL_EXCEPTION.getCode())
@@ -52,17 +52,18 @@ public class GlobalExceptionHandling {
     }
 
     @ExceptionHandler(ResourceExistingException.class)
-    public ResponseEntity<MessageResponse> handlingResourceExitException(FileException ex){
+    public ResponseEntity<MessageResponse> handlingResourceExitException(ResourceExistingException ex){
         log.info("Resource Exit Exception :", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.RESOURCE_EXIT.getCode())
                 .message(MessagesHanlderEnum.RESOURCE_EXIT.getMessage())
                 .timeStamp(LocalDateTime.now())
                 .build(), MessagesHanlderEnum.RESOURCE_EXIT.getStatusCode()
+
         );
     }
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<MessageResponse> handlingResourceNotFoundException(FileException ex){
+    public ResponseEntity<MessageResponse> handlingResourceNotFoundException(ResourceNotFoundException ex){
         log.info("Resource Notfound Exception :", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.NOTFOUND.getCode())

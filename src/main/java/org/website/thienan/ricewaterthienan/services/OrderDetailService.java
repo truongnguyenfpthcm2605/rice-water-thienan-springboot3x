@@ -9,6 +9,8 @@ public interface OrderDetailService {
     OrderDetail save(OrderDetail orderDetail);
     OrderDetail update(OrderDetail orderDetail);
 
+    List<OrderDetail> saveAll(List<OrderDetail> list);
+
     Optional<OrderDetail> findById(Integer id);
 
     void deleteById(Integer id);

@@ -1,10 +1,8 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.dto.request.BranchRequest;
@@ -63,15 +61,7 @@ public class BranchController {
     }
 
     @PostMapping("/branch/save")
-    public ResponseEntity<MessageResponse> save(@Valid @RequestBody BranchRequest branchRequest, Errors errors) {
-        if (errors.hasErrors()) {
-            return new ResponseEntity<>(
-                    MessageResponse.builder().code(405)
-                            .message("Fields Valid")
-                            .timeStamp(LocalDateTime.now())
-                            .build(),HttpStatus.BAD_REQUEST
-            );
-        }
+    public ResponseEntity<MessageResponse> save(@RequestBody BranchRequest branchRequest) {
         Branch branch = new Branch();
         branch.setActive(true);
         branch.setLink(branchRequest.getLink());
@@ -86,15 +76,7 @@ public class BranchController {
     }
 
     @PutMapping("/branch/update/{id}")
-    public ResponseEntity<MessageResponse> update(@Valid @RequestBody BranchRequest branchRequest ,@PathVariable("id") Integer id, Errors errors) {
-        if (errors.hasErrors()) {
-            return new ResponseEntity<>(
-                    MessageResponse.builder().code(405)
-                            .message("Fields Valid")
-                            .timeStamp(LocalDateTime.now())
-                            .build(),HttpStatus.BAD_REQUEST
-            );
-        }
+    public ResponseEntity<MessageResponse> update( @RequestBody BranchRequest branchRequest ,@PathVariable("id") Integer id) {
         Branch branch = branchService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found!"));
         if(branch!=null){
             branch.setActive(branchRequest.getActive());
@@ -104,7 +86,6 @@ public class BranchController {
             branch.setUpdateAt(LocalDateTime.now());
             branch.setAccount(accountServices.findById(branchRequest.getAccountId()).orElseThrow());
         }
-
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
@@ -120,7 +101,7 @@ public class BranchController {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
-                .message("Get Branch By Id!"+ id)
+                .message("Delete  Branch By Id!"+ id)
                 .data(branchService.update(branch).getId()).build(), HttpStatus.OK);
     }
 

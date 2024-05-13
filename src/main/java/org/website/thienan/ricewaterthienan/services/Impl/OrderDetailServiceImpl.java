@@ -22,6 +22,19 @@ import java.util.Optional;
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
+
+    @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "orderDetails", allEntries = true),
+                    @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
+                    @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
+            }
+    )
+    public List<OrderDetail> saveAll(List<OrderDetail> list) {
+        return orderDetailRepository.saveAllAndFlush(list);
+    }
+
     @Override
     @Caching(
             evict = {

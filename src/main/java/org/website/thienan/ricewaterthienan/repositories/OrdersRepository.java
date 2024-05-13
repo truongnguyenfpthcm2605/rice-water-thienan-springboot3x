@@ -16,9 +16,9 @@ public interface OrdersRepository extends JpaRepository<Orders, String> {
     Optional<Orders> findByPhone(String phone);
 
     Page<Orders> findByActive(Pageable pageable,Boolean active);
+    @Query("select o from Orders  o where  o.status =:status and o.active =true")
+    Page<Orders> findByStatus(Pageable pageable,@Param("status") String status);
 
-    Page<Orders> findByStatus(Pageable pageable, String status);
-
-    @Query("select  o from Orders  o where o.name like :keyword or o.address like :keyword or o.phone like :keyword")
+    @Query("select  o from Orders  o where o.name like :keyword or o.address like :keyword or o.phone like :keyword and o.active = true")
     Page<Orders> findByKeyword(Pageable pageable,@Param("keyword") String keyword);
 }
