@@ -1,14 +1,11 @@
 package org.website.thienan.ricewaterthienan.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.website.thienan.ricewaterthienan.messages.MessageValidation;
+import org.website.thienan.ricewaterthienan.exceptions.customValidation.PasswordRegex;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,19 +19,18 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountRequest extends BaseRequest {
-    String id;
-    @NotBlank(message = MessageValidation.NAME_MESSAGE)
+    @NotBlank
+    @Size(min = 10, max = 100)
     String name;
-    @NotBlank(message = MessageValidation.PASSWORD_MESSAGE)
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$", message = MessageValidation.PASSWORD_PATTERN)
+    @PasswordRegex
     String password;
-    @NotBlank(message = MessageValidation.EMAIL_MESSAGE)
+    @NotBlank
     @Email
     String email;
     String avatar;
-    @NotBlank(message = MessageValidation.ROLE_MESSAGE)
+    @NotBlank
     String role;
     Long views;
-    @NotEmpty(message = MessageValidation.ROLE_DETAIL_MESSAGE)
+    @NotEmpty
     Set<String> roleDetail = new HashSet<>();
 }

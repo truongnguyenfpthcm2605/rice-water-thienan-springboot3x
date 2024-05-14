@@ -19,6 +19,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.security.jwt.JWTFilter;
 import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
 
@@ -57,9 +58,8 @@ public class SecurityConfiguration {
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .cors(cr -> cr.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/index","/api/v2/**").permitAll();
+                    auth.requestMatchers(UrlApi.PUBLIC_API).permitAll();
                     auth.anyRequest().authenticated();
-
                 })
                 .logout(httpSecurityLogoutConfigurer ->
                         httpSecurityLogoutConfigurer.invalidateHttpSession(true)
@@ -69,7 +69,7 @@ public class SecurityConfiguration {
                                 .logoutSuccessUrl("/api/v1/auth/logout/success")
                 )
 
-                .exceptionHandling(ex -> ex.accessDeniedPage("/api/v1/auth/denied"))
+                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/api/v1/auth/denied")))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
                         jwtAuthFilter, UsernamePasswordAuthenticationFilter.class

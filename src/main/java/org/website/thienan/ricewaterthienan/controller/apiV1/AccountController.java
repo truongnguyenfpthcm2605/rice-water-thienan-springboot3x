@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
@@ -25,7 +26,8 @@ public class AccountController {
     private final AccountServices accountServices;
     private final RoleDetailService roleDetailService;
 
-    @DeleteMapping("/account/delete/{id}")
+    @PutMapping("/account/delete/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<MessageResponse> delete(@PathVariable("id") String id) {
         Account account = accountServices.findById(id).orElse(null);
         if (account != null) {
@@ -42,28 +44,21 @@ public class AccountController {
     }
 
     @PutMapping("/account/update/{id}")
+    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
     public ResponseEntity<MessageResponse> update(
-            @Valid @PathVariable("id") String id, @RequestBody AccountRequest accountRequest, Errors errors) {
+            @PathVariable("id") String id, @RequestBody AccountRequest accountRequest) {
         Account account = accountServices.findById(id).orElse(null);
         if (account != null) {
-            if (errors.hasErrors()) {
-                return new ResponseEntity<>(MessageResponse.builder()
-                        .code(405)
-                        .message("Fields is valid")
-                        .timeStamp(LocalDateTime.now())
-                        .build(), HttpStatus.BAD_REQUEST);
-            } else {
-                account.setName(accountRequest.getName());
-                account.setAvatar(accountRequest.getAvatar());
-                account.setEmail(accountRequest.getEmail());
-                account.setUpdateAt(LocalDateTime.now());
-                return new ResponseEntity<>(MessageResponse.builder()
-                        .code(200)
-                        .message("Update account successfully")
-                        .timeStamp(LocalDateTime.now())
-                        .data(accountServices.update(account).getId())
-                        .build(), HttpStatus.OK);
-            }
+            account.setName(accountRequest.getName());
+            account.setAvatar(accountRequest.getAvatar());
+            account.setEmail(accountRequest.getEmail());
+            account.setUpdateAt(LocalDateTime.now());
+            return new ResponseEntity<>(MessageResponse.builder()
+                    .code(200)
+                    .message("Update account successfully")
+                    .timeStamp(LocalDateTime.now())
+                    .data(accountServices.update(account).getId())
+                    .build(), HttpStatus.OK);
         }
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(405)
@@ -73,6 +68,7 @@ public class AccountController {
     }
 
     @PutMapping("/account/update_role/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<MessageResponse> updateRole(@PathVariable("id") String id, @RequestParam("role") String role) {
         Account account = accountServices.findById(id).orElse(null);
         if (account != null) {
@@ -93,6 +89,7 @@ public class AccountController {
     }
 
     @PutMapping("/account/update_role_detail/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<MessageResponse> updateRoleDetail(@PathVariable("id") String id, @RequestParam("role-details") List<String> roleDetails) {
         Account account = accountServices.findById(id).orElse(null);
         if (account != null) {
@@ -120,7 +117,6 @@ public class AccountController {
             default -> RoleEnum.User;
         };
     }
-
 
 
 }

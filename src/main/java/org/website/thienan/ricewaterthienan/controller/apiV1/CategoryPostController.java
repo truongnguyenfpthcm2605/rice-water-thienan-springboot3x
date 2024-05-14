@@ -3,6 +3,7 @@ package org.website.thienan.ricewaterthienan.controller.apiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.dto.request.CategoriesPostRequest;
@@ -60,6 +61,7 @@ public class CategoryPostController {
     }
 
     @PostMapping("/category-post/save")
+    @PreAuthorize("hasAnyRole('Admin','Staff')")
     public ResponseEntity<MessageResponse> save(@RequestBody CategoriesPostRequest categoriesPostRequest) {
         CategoriesPost categoriesPost = new CategoriesPost();
         categoriesPost.setActive(true);
@@ -75,6 +77,7 @@ public class CategoryPostController {
     }
 
     @PutMapping("/category-post/update/{id}")
+    @PreAuthorize("hasAnyRole('Admin','Staff')")
     public ResponseEntity<MessageResponse> update( @RequestBody CategoriesPostRequest categoriesPostRequest ,@PathVariable("id") Integer id) {
         CategoriesPost categoriesPost = categoriesPostService.findById(id).orElseThrow(() -> new ResourceNotFoundException("CategoryPost not found!"));
         if(categoriesPost!=null){
@@ -93,6 +96,7 @@ public class CategoryPostController {
     }
 
     @PutMapping("/category-post/delete/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<MessageResponse> deleteByID(@PathVariable("id") Integer id) {
         CategoriesPost categoriesPost = categoriesPostService.findById(id).orElseThrow(() -> new ResourceNotFoundException("CategoryPost not found!"));
         categoriesPost.setActive(false);

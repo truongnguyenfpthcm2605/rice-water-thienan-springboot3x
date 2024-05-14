@@ -1,5 +1,7 @@
 package org.website.thienan.ricewaterthienan.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,14 +18,22 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductRequest extends BaseRequest {
-    String id;
+    @NotBlank
     String name;
+    @NotBlank
     String link;
+    @PositiveOrZero
+    @NotBlank
     Double price;
+    @PositiveOrZero
+    @NotBlank
     Double cost;
+    @NotBlank
     String avatar;
+    @NotBlank
     String description;
     Long views;
+    @NotBlank
     String content;
     String accountId;
     Integer branchId;

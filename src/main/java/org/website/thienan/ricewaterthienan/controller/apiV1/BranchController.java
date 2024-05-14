@@ -3,6 +3,7 @@ package org.website.thienan.ricewaterthienan.controller.apiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.dto.request.BranchRequest;
@@ -61,6 +62,7 @@ public class BranchController {
     }
 
     @PostMapping("/branch/save")
+    @PreAuthorize("hasAnyRole('Admin','Staff')")
     public ResponseEntity<MessageResponse> save(@RequestBody BranchRequest branchRequest) {
         Branch branch = new Branch();
         branch.setActive(true);
@@ -76,6 +78,7 @@ public class BranchController {
     }
 
     @PutMapping("/branch/update/{id}")
+    @PreAuthorize("hasAnyRole('Admin','Staff')")
     public ResponseEntity<MessageResponse> update( @RequestBody BranchRequest branchRequest ,@PathVariable("id") Integer id) {
         Branch branch = branchService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found!"));
         if(branch!=null){
@@ -94,6 +97,7 @@ public class BranchController {
     }
 
     @PutMapping("/branch/delete/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<MessageResponse> deleteByID(@PathVariable("id") Integer id) {
         Branch branch = branchService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found!"));
         branch.setActive(false);

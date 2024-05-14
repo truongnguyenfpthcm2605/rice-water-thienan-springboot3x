@@ -3,6 +3,7 @@ package org.website.thienan.ricewaterthienan.controller.apiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.dto.request.BrandRequest;
@@ -51,7 +52,7 @@ public class BrandController {
                 .data(brand).build(), HttpStatus.OK);
     }
 
-    @GetMapping("/branch/findByName/{name}")
+    @GetMapping("/brand/findByName/{name}")
     public ResponseEntity<MessageResponse> findByName(@PathVariable("name") String name) {
         Brand brand = brandService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Brand not found!"));
         return new ResponseEntity<>(MessageResponse.builder()
@@ -62,6 +63,7 @@ public class BrandController {
     }
 
     @PostMapping("/brand/save")
+    @PreAuthorize("hasAnyRole('Admin','Staff')")
     public ResponseEntity<MessageResponse> save(@RequestBody BrandRequest brandRequest) {
         Brand brand = new Brand();
         brand.setActive(true);
@@ -77,6 +79,7 @@ public class BrandController {
     }
 
     @PutMapping("/brand/update/{id}")
+    @PreAuthorize("hasAnyRole('Admin','Staff')")
     public ResponseEntity<MessageResponse> update(@RequestBody BrandRequest brandRequest ,@PathVariable("id") Integer id) {
         Brand brand = brandService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand not found!"));
         if(brand!=null){
@@ -95,7 +98,8 @@ public class BrandController {
                 .data(brandService.update(brand).getId()).build(), HttpStatus.OK);
     }
 
-    @PutMapping("/branch/delete/{id}")
+    @PutMapping("/brand/delete/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<MessageResponse> deleteByID(@PathVariable("id") Integer id) {
         Brand brand = brandService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found!"));
         brand.setActive(false);

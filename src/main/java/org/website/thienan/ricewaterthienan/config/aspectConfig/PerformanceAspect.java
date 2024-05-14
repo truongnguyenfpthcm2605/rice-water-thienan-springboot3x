@@ -22,7 +22,7 @@ public class PerformanceAspect {
         Object returnValue = proceedingJoinPoint.proceed();
         long end = System.nanoTime();
         String methodName = proceedingJoinPoint.getSignature().getName();
-        log.info("Execution of {} took {}ms", methodName, TimeUnit.NANOSECONDS.toMillis(end - start));
+        log.info("Execution of function {} took {}ms", methodName, TimeUnit.NANOSECONDS.toMillis(end - start));
         return returnValue;
     }
 

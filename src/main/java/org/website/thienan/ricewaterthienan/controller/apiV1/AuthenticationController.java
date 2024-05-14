@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -113,6 +114,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/auth/change-password")
+    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
     public ResponseEntity<MessageResponse> changePassword(@RequestParam("email") String email,
                                                           @RequestParam("newPassword") String newPassword) {
         Account account = accountServices.findByEmailAndActive(email, true).orElse(null);
@@ -133,6 +135,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/auth/remember_password")
+    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
     public ResponseEntity<MessageResponse> remember(@RequestParam("email") String email) throws MessagingException {
         Account account = accountServices.findByEmailAndActive(email, true).orElseThrow(() -> new ResourceNotFoundException("Not found Account with email :" + email));
         String refreshPassword = randomCodeMail();
@@ -164,6 +167,11 @@ public class AuthenticationController {
                 .code(200).timeStamp(LocalDateTime.now()).message("Logout successfully").build(), HttpStatus.OK);
     }
 
+    @GetMapping("/auth/denied")
+    public ResponseEntity<MessageResponse> accessDenied() {
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(401).timeStamp(LocalDateTime.now()).message("Access Denied , You Login , Please !").build(), HttpStatus.UNAUTHORIZED);
+    }
 
     private RoleEnum getRole(String role) {
         return switch (role) {

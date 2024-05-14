@@ -1,9 +1,9 @@
 package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.Get;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.dto.request.PostRequest;
@@ -48,7 +48,7 @@ public class PostController {
                 ).build(), HttpStatus.OK);
     }
 
-    @GetMapping("/post/findAll/{page}/{sort}")
+    @GetMapping("/post/findAllTitle/{page}/{sort}")
     public ResponseEntity<MessageResponse> findByTitle(
             @RequestParam("active") Boolean active,
             @RequestParam("title") String title,
@@ -80,6 +80,7 @@ public class PostController {
     }
 
     @PostMapping("/post/save")
+    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
     public ResponseEntity<MessageResponse> save(@RequestBody PostRequest postRequest){
         Post post = new Post();
         post.setTitle(postRequest.getTitle());
@@ -105,6 +106,7 @@ public class PostController {
     }
 
     @PutMapping("/post/update/{id}")
+    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
     public ResponseEntity<MessageResponse> update(@RequestBody PostRequest postRequest, @PathVariable("id") Integer id){
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found post"));
         if(post!=null){
@@ -131,6 +133,7 @@ public class PostController {
     }
 
     @PutMapping("/post/delete/{id}")
+    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
     public ResponseEntity<MessageResponse> delete(@PathVariable("id") Integer id){
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found post"));
         if(post!=null){

@@ -3,6 +3,7 @@ package org.website.thienan.ricewaterthienan.controller.apiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.dto.request.OrdersDetailRequest;
@@ -112,6 +113,7 @@ public class OrdersController {
     }
 
     @PostMapping("/orders/save")
+    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
     public ResponseEntity<MessageResponse> save(
             @RequestBody OrdersRequest ordersRequest,
             @RequestBody List<OrdersDetailRequest> ordersDetailRequests){
@@ -145,7 +147,26 @@ public class OrdersController {
                 .data(orders).build(), HttpStatus.OK);
     }
 
+    @PutMapping("/orders/update/{id}")
+    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
+    public ResponseEntity<MessageResponse> update(@PathVariable("id") String id, @RequestBody OrdersRequest OrdersRequest){
+        Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID"+ id));
+        orders.setPhone(OrdersRequest.getPhone());
+        orders.setName(OrdersRequest.getName());
+        orders.setAddress(OrdersRequest.getAddress());
+        orders.setStatus(getStatusOrderEnum(OrdersRequest.getStatus()));
+        orders.setNotes(OrdersRequest.getNotes());
+        orders.setUpdateAt(LocalDateTime.now());
+        Orders ordersSave = ordersService.save(orders);
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(200)
+                .timeStamp(LocalDateTime.now())
+                .message("Update orders Success!")
+                .data(ordersSave.getId()).build(), HttpStatus.OK);
+    }
+
     @PutMapping("/orders/delete/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<MessageResponse> delete(@PathVariable("id") String id){
         Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID"+ id));
         if(orders.getStatus().compareTo(StatusOrderEnum.Completed) > 0){
@@ -161,7 +182,7 @@ public class OrdersController {
                 .code(200)
                 .timeStamp(LocalDateTime.now())
                 .message("Cancel orders Success!")
-                .data(orders.getStatus()).build(), HttpStatus.OK);
+                .data(ordersService.update(orders).getStatus()).build(), HttpStatus.OK);
     }
 
 

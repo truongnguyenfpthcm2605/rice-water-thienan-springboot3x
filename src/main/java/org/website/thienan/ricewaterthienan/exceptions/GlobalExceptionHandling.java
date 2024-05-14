@@ -88,7 +88,6 @@ public class GlobalExceptionHandling {
     public ResponseEntity<MessageResponse> methodHandleExceptionValidation(MethodArgumentNotValidException e){
         log.info("Validation Exception :", e.getMessage());
        List<String> fieldsErrors = e.getBindingResult().getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
-     //   String enumMessageValid = e.getFieldError().getDefaultMessage();
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(500)
                 .message("Error Validation")

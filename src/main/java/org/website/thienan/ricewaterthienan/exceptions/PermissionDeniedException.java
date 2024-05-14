@@ -1,12 +1,7 @@
 package org.website.thienan.ricewaterthienan.exceptions;
 
-import lombok.*;
-import org.website.thienan.ricewaterthienan.enums.MessagesHanlderEnum;
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class PermissionDeniedException extends  RuntimeException{
-   private MessagesHanlderEnum messagesHanlderEnum;
-
+   public PermissionDeniedException(String message) {
+      super(message);
+   }
 }
