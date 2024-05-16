@@ -3,6 +3,7 @@ package org.website.thienan.ricewaterthienan.messages.mail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MailerServiceImpl implements MailService {
     private final JavaMailSender sender;
     private final List<MailModel> list = new ArrayList<>();
@@ -22,6 +24,7 @@ public class MailerServiceImpl implements MailService {
     @Override
     @Async
     public void send(MailModel mail) throws MessagingException {
+        log.info("mail sender");
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
         helper.setFrom(mail.getFrom());
@@ -61,6 +64,7 @@ public class MailerServiceImpl implements MailService {
 
     @Scheduled(fixedDelay = 1000, initialDelay = 1000)
     public void run() throws MessagingException {
+        log.info("send mail");
         while (!list.isEmpty()) {
             MailModel mail = list.remove(0);
             this.send(mail);

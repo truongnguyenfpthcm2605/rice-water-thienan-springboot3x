@@ -1,6 +1,5 @@
 package org.website.thienan.ricewaterthienan.services;
 
-import org.website.thienan.ricewaterthienan.entities.Branch;
 import org.website.thienan.ricewaterthienan.entities.Brand;
 
 import java.util.List;

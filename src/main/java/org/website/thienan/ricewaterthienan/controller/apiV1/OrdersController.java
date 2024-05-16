@@ -102,7 +102,7 @@ public class OrdersController {
                 .data(orders).build(), HttpStatus.OK);
     }
 
-    @GetMapping("/orders/findByName/{phone}")
+    @GetMapping("/orders/findByPhone/{phone}")
     public ResponseEntity<MessageResponse> findByPhone(@PathVariable("phone") String phone){
         Orders orders = ordersService.findByPhone(phone).orElseThrow(() -> new ResourceNotFoundException("Not found Orders Phone "+ phone));
         return new ResponseEntity<>(MessageResponse.builder()
