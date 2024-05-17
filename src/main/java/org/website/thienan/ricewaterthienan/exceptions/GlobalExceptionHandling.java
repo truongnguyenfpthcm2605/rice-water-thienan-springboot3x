@@ -23,7 +23,7 @@ public class GlobalExceptionHandling {
         log.info("Exception Global :", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                     code(MessagesHanlderEnum.UNCATEGORIZED_EXCEPTION.getCode())
-                .message(MessagesHanlderEnum.UNCATEGORIZED_EXCEPTION.getMessage())
+                .message(MessagesHanlderEnum.UNCATEGORIZED_EXCEPTION.getMessage() + ex.getMessage())
                 .timeStamp(LocalDateTime.now())
                 .build(), MessagesHanlderEnum.UNCATEGORIZED_EXCEPTION.getStatusCode()
                 );

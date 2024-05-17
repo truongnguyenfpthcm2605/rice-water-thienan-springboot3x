@@ -64,7 +64,6 @@ public class MailerServiceImpl implements MailService {
 
     @Scheduled(fixedDelay = 1000, initialDelay = 1000)
     public void run() throws MessagingException {
-        log.info("send mail");
         while (!list.isEmpty()) {
             MailModel mail = list.remove(0);
             this.send(mail);
