@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
@@ -23,6 +24,7 @@ import org.website.thienan.ricewaterthienan.enums.RoleEnum;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.messages.mail.MailService;
 import org.website.thienan.ricewaterthienan.security.jwt.JWTProvider;
+import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
 import org.website.thienan.ricewaterthienan.security.userprincal.AccountService;
 import org.website.thienan.ricewaterthienan.services.AccountServices;
 import org.website.thienan.ricewaterthienan.services.RoleDetailService;
@@ -41,6 +43,7 @@ public class AuthenticationController {
     private final AccountServices accountServices;
     private final RoleDetailService roleDetailService;
     private final MailService mailService;
+    private final AccountDetailService accountDetailService;
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -172,6 +175,35 @@ public class AuthenticationController {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(401).timeStamp(LocalDateTime.now()).message("Access Denied , You Login , Please !").build(), HttpStatus.UNAUTHORIZED);
     }
+
+
+    @PostMapping("/auth/refresh-token")
+    public ResponseEntity<AccountResponse> refreshToken(@RequestBody String refreshToken) {
+        try {
+            String email = jwtProvider.extractUsername(refreshToken);
+            Account account = accountServices.findByEmailAndActive(email, true)
+                    .orElseThrow(() -> new RuntimeException("Account not found or not active"));
+
+            UserDetails userDetails = accountDetailService.loadUserByUsername(account.getEmail());
+
+            if (jwtProvider.isTokenValid(refreshToken, userDetails)) {
+                String newToken = jwtProvider.generateToken(userDetails);
+                String newRefreshToken = jwtProvider.generateRefreshToken(new HashMap<>(), userDetails);
+
+                AccountResponse accountResponse = new AccountResponse();
+                accountResponse.setToken(newToken);
+                accountResponse.setRefreshToken(newRefreshToken);
+                accountResponse.setTime(LocalDateTime.now());
+
+                return ResponseEntity.ok(accountResponse);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
 
     private RoleEnum getRole(String role) {
         return switch (role) {

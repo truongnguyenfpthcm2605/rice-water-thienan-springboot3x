@@ -5,7 +5,7 @@ public class UrlApi {
     public static final String  API_V2 = "api/v2" ;
 
     public static final  String[]  PUBLIC_API = {
-            "/api/v1/index","/api/v1/auth/login", "/api/v1/auth/log_up",
+            "/api/v1/index","/api/v1/auth/login", "/api/v1/auth/log_up","/api/v1/auth/refresh-token",
             "/api/v1/health","/ap1/v1/branch/findAll","/ap1/v1/branch/findAllActive",
             "/ap1/v1/branch/findById/**", "/ap1/v1/branch/findByName/**",
             "/api/v1/brand/findAll","/api/v1/brand/findAllActive",
@@ -22,6 +22,6 @@ public class UrlApi {
             "/api/v1/role_detail/findById/**","/api/v1/role_detail/findByName/**",
             "/api/v1/setting/findAll","/api/v1/setting/findById/**",
             "/api/v1/type/findAll/**","/api/v1/type/findAllTitle/**", "/api/v1/type/findById/**",
-            "/api/chat/**"
+            "/api/v1/chat/**"
     } ;
 }
