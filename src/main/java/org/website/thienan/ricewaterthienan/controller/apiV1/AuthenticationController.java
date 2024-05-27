@@ -178,7 +178,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/auth/refresh-token")
-    public ResponseEntity<AccountResponse> refreshToken(@RequestBody String refreshToken) {
+    public ResponseEntity<AccountResponse> refreshToken(@RequestParam("re-fresh-token") String refreshToken) {
         try {
             String email = jwtProvider.extractUsername(refreshToken);
             Account account = accountServices.findByEmailAndActive(email, true)
