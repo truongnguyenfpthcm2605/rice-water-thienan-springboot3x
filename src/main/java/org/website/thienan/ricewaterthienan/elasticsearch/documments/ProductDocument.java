@@ -1,37 +1,30 @@
-package org.website.thienan.ricewaterthienan.dto.request;
+package org.website.thienan.ricewaterthienan.elasticsearch.documments;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.HashSet;
 import java.util.Set;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductRequest extends BaseRequest {
-    @NotBlank
+@Document(indexName = "products")
+@SuperBuilder
+public class ProductDocument extends BaseSearch {
+    @Id
+    String id;
     String name;
-    @NotBlank
     String link;
-    @PositiveOrZero
-    @NotBlank
     Double price;
-    @PositiveOrZero
-    @NotBlank
     Double cost;
-    @NotBlank
     String avatar;
-    @NotBlank
     String description;
     Long views;
-    @NotBlank
     String content;
     String accountId;
     Integer branchId;

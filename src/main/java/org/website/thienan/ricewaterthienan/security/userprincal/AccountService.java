@@ -11,11 +11,11 @@ import java.util.List;
 
 @Getter
 public class AccountService implements UserDetails {
-    private String email;
-    private String password;
-    private String name;
-    private String avatar;
-    private List<? extends GrantedAuthority> authorities;
+    private final String email;
+    private final String password;
+    private final String name;
+    private final String avatar;
+    private final List<? extends GrantedAuthority> authorities;
 
     public AccountService(Account account) {
         this.email = account.getEmail();

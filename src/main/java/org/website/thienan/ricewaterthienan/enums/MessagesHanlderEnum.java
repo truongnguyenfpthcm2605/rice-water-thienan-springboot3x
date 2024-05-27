@@ -23,9 +23,9 @@ public enum MessagesHanlderEnum {
     PERMISSION(1013,"Access Denied",HttpStatus.UNAUTHORIZED),
     SQL_EXCEPTION(1014, "SQL ERROR INJECTION", HttpStatus.BAD_REQUEST);
 
-    private int code;
-    private String message;
-    private HttpStatus statusCode;
+    private final int code;
+    private final String message;
+    private final HttpStatus statusCode;
 
     MessagesHanlderEnum(int code, String message, HttpStatus httpStatus) {
         this.code = code;

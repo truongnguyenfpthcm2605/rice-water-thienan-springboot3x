@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MailModel {
-     String from = "travelbee@fpt.edu.vn";
+     String from = "gaonuocthienan@gmail.com";
      String to;
      String subject;
      String content;

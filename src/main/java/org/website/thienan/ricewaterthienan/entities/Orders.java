@@ -3,16 +3,14 @@ package org.website.thienan.ricewaterthienan.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.NaturalId;
 import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "orders")
 @Data

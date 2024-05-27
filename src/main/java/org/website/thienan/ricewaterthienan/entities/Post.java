@@ -2,16 +2,14 @@ package org.website.thienan.ricewaterthienan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.HashSet;
 import java.util.Set;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "post")
 @Data

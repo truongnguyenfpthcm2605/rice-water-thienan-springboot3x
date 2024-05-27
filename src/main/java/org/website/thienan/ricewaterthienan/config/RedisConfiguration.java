@@ -25,7 +25,7 @@ public class RedisConfiguration {
     @Value("${spring.data.redis.host}")
     private String redisHost;
     @Value("${spring.data.redis.port}")
-    private String redisPort;
+    private int redisPort;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
@@ -33,7 +33,7 @@ public class RedisConfiguration {
         JedisConnectionFactory jedisConFactory
                 = new JedisConnectionFactory();
         jedisConFactory.setHostName(redisHost);
-        jedisConFactory.setPort(Integer.parseInt(redisPort));
+        jedisConFactory.setPort(redisPort);
         return jedisConFactory;
     }
 

@@ -1,12 +1,10 @@
 package org.website.thienan.ricewaterthienan.entities;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "role_detail")
 @Data

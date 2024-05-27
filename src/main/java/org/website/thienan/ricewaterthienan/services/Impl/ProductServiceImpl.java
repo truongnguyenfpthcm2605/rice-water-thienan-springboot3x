@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.website.thienan.ricewaterthienan.elasticsearch.documments.ProductDocument;
+import org.website.thienan.ricewaterthienan.elasticsearch.repositories.ProductSearchRepository;
+import org.website.thienan.ricewaterthienan.elasticsearch.services.ProductSearchService;
 import org.website.thienan.ricewaterthienan.entities.Product;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.repositories.ProductRepository;
@@ -24,6 +27,7 @@ import java.util.Optional;
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ProductSearchService productSearchService;
 
     @Override
     @Caching(
@@ -33,6 +37,8 @@ public class ProductServiceImpl implements ProductService {
             }
     )
     public Product save(Product product) {
+        Product saved = productRepository.save(product);
+        productSearchService.saveProductSearch(saved);
         return  productRepository.save(product);
     }
 
@@ -47,7 +53,10 @@ public class ProductServiceImpl implements ProductService {
             }
     )
     public Product update(Product product) {
-        return productRepository.save(product);
+        Product saved = productRepository.save(product);
+        productSearchService.updateProductSearch(saved);
+        return  productRepository.save(product);
+
     }
 
     @Override
@@ -66,7 +75,9 @@ public class ProductServiceImpl implements ProductService {
             }
     )
     public void deleteById(String id) {
+
         productRepository.deleteById(id);
+        productSearchService.deleteByIdProductSearch(id);
     }
 
     @Override
@@ -82,5 +93,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository
                 .findAllFilter(pageable, name, price, views, active, create);
 
+    }
+
+    @Override
+    public Page<ProductDocument> search(Pageable pageable, String name, Double price, Long views, Boolean active, LocalDateTime create) {
+        return productSearchService.search(pageable, name, price,price+100000,create, views, active);
     }
 }

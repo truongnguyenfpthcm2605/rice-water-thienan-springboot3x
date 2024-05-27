@@ -1,6 +1,7 @@
 package org.website.thienan.ricewaterthienan.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler({Exception.class, Throwable.class})
     public ResponseEntity<MessageResponse> handlingExceptionGlobal(Exception ex){
-        log.info("Exception Global :", ex.getMessage());
+        log.info("Exception Global {} :", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                     code(MessagesHanlderEnum.UNCATEGORIZED_EXCEPTION.getCode())
                 .message(MessagesHanlderEnum.UNCATEGORIZED_EXCEPTION.getMessage() + ex.getMessage())
@@ -31,7 +32,7 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(FileException.class)
     public ResponseEntity<MessageResponse> handlingFileException(FileException ex){
-        log.info("File Exception :", ex.getMessage());
+        log.info("File Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.FILE_EXCEPTION.getCode())
                 .message(MessagesHanlderEnum.FILE_EXCEPTION.getMessage())
@@ -42,7 +43,7 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(MailException.class)
     public ResponseEntity<MessageResponse> handlingMailException(MailException ex){
-        log.info("Mail Exception :", ex.getMessage());
+        log.info("Mail Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.MAIL_EXCEPTION.getCode())
                 .message(MessagesHanlderEnum.MAIL_EXCEPTION.getMessage())
@@ -53,7 +54,7 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(ResourceExistingException.class)
     public ResponseEntity<MessageResponse> handlingResourceExitException(ResourceExistingException ex){
-        log.info("Resource Exit Exception :", ex.getMessage());
+        log.info("Resource Exit Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.RESOURCE_EXIT.getCode())
                 .message(MessagesHanlderEnum.RESOURCE_EXIT.getMessage())
@@ -64,7 +65,7 @@ public class GlobalExceptionHandling {
     }
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<MessageResponse> handlingResourceNotFoundException(ResourceNotFoundException ex){
-        log.info("Resource Notfound Exception :", ex.getMessage());
+        log.info("Resource Notfound Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.NOTFOUND.getCode())
                 .message(MessagesHanlderEnum.NOTFOUND.getMessage() + ex.getMessage())
@@ -75,7 +76,7 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler({PermissionDeniedException.class, AccessDeniedException.class})
     public ResponseEntity<MessageResponse> handlingPermissionException(FileException ex){
-        log.info("Permission Exception :", ex.getMessage());
+        log.info("Permission Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.PERMISSION.getCode())
                 .message(MessagesHanlderEnum.PERMISSION.getMessage())
@@ -86,8 +87,8 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MessageResponse> methodHandleExceptionValidation(MethodArgumentNotValidException e){
-        log.info("Validation Exception :", e.getMessage());
-       List<String> fieldsErrors = e.getBindingResult().getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+        log.info("Validation Exception {}:", e.getMessage());
+       List<String> fieldsErrors = e.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(500)
                 .message("Error Validation")
@@ -96,7 +97,7 @@ public class GlobalExceptionHandling {
     }
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<MessageResponse> handlingSQLQueryException(DataAccessException ex){
-        log.info("DataAccessException Exception :", ex.getMessage());
+        log.info("DataAccessException Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.SQL_EXCEPTION.getCode())
                 .message(MessagesHanlderEnum.SQL_EXCEPTION.getMessage())

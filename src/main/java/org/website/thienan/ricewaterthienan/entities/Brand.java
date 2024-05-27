@@ -3,14 +3,12 @@ package org.website.thienan.ricewaterthienan.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "brand")
 @Data

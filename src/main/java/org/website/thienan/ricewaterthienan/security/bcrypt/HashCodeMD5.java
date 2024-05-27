@@ -12,8 +12,7 @@ public class HashCodeMD5 {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(password.getBytes());
         byte[] digest = md.digest();
-        String md5Hash = DatatypeConverter.printHexBinary(digest);
-        return  md5Hash;
+        return DatatypeConverter.printHexBinary(digest);
     }
     public boolean compareMD5(String password1, String password2) throws Exception {
         String hashedPassword1 = hashMD5(password1);
