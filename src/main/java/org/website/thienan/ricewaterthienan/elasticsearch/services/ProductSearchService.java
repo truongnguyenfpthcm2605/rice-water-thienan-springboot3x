@@ -10,6 +10,7 @@ import org.website.thienan.ricewaterthienan.entities.Categories;
 import org.website.thienan.ricewaterthienan.entities.Product;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,5 +83,12 @@ public class ProductSearchService {
                 create,
                 minViews,
                 active);
+    }
+
+
+    public void saveAll(List<Product> products) {
+        for (Product product : products) {
+            saveProductSearch(product);
+        }
     }
 }

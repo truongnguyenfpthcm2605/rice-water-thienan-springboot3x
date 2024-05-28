@@ -1,10 +1,12 @@
 package org.website.thienan.ricewaterthienan.services.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,9 @@ import org.website.thienan.ricewaterthienan.repositories.ProductRepository;
 import org.website.thienan.ricewaterthienan.services.ProductService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +32,13 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductSearchService productSearchService;
+
+    @Override
+    @EventListener(ApplicationReadyEvent.class)
+    public void synchronizeDataSearch() {
+        List<Product> products = productRepository.findAll();
+        productSearchService.saveAll(products);
+    }
 
     @Override
     @Caching(
@@ -99,4 +110,6 @@ public class ProductServiceImpl implements ProductService {
     public Page<ProductDocument> search(Pageable pageable, String name, Double price, Long views, Boolean active, LocalDateTime create) {
         return productSearchService.search(pageable, name, price,price+100000,create, views, active);
     }
+
+
 }

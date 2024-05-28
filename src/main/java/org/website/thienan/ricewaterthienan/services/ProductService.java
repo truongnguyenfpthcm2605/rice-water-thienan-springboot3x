@@ -31,4 +31,5 @@ public interface ProductService {
                                  Long views,
                                  Boolean active,
                                  LocalDateTime create);
+    void synchronizeDataSearch();
 }
