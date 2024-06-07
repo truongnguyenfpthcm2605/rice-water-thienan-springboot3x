@@ -14,7 +14,7 @@ public class FirebaseStorageService implements IFirebaseStorageService{
 
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
         Bucket bucket = StorageClient.getInstance().bucket();
         Blob blob = bucket.create(fileName, file.getBytes(), file.getContentType());
         return blob.getMediaLink();

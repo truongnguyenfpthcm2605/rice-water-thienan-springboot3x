@@ -2,7 +2,6 @@ package org.website.thienan.ricewaterthienan.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.website.thienan.ricewaterthienan.elasticsearch.documments.ProductDocument;
 import org.website.thienan.ricewaterthienan.entities.Product;
 
 import java.time.LocalDateTime;
@@ -26,10 +25,5 @@ public interface ProductService {
                           Boolean active,
                           LocalDateTime create);
 
-    Page<ProductDocument> search(Pageable pageable, String name,
-                                 Double price,
-                                 Long views,
-                                 Boolean active,
-                                 LocalDateTime create);
-    void synchronizeDataSearch();
+
 }
