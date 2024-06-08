@@ -14,5 +14,5 @@ public interface AccountServices {
     void deleteById(String id);
     Page<Account> findAll(Pageable pageable,Boolean active);
     Optional<Account> findByEmailAndActive(String email,Boolean active);
-    List<Account> findAll();
+    Iterable<Account> findAll();
 }

@@ -14,4 +14,5 @@ public class OrdersDetailRequest {
     Double quantity;
     Double price;
     String productId;
+    String orderId;
 }

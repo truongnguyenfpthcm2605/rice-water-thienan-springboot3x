@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,10 +59,10 @@ public class AccountController {
                     .build(), HttpStatus.OK);
         }
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(405)
+                .code(404)
                 .message("Not found Account ID :" + id)
                 .timeStamp(LocalDateTime.now())
-                .build(), HttpStatus.BAD_REQUEST);
+                .build(), HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/account/update_role/{id}")
@@ -83,7 +83,7 @@ public class AccountController {
                 .code(404)
                 .message("Not found Account ID :" + id)
                 .timeStamp(LocalDateTime.now())
-                .build(), HttpStatus.BAD_REQUEST);
+                .build(), HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/account/update_role_detail/{id}")
@@ -104,7 +104,7 @@ public class AccountController {
                 .code(404)
                 .message("Not found Account ID :" + id)
                 .timeStamp(LocalDateTime.now())
-                .build(), HttpStatus.BAD_REQUEST);
+                .build(), HttpStatus.NOT_FOUND);
     }
 
 

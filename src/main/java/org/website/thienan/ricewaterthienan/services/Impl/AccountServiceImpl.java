@@ -87,7 +87,7 @@ public class AccountServiceImpl implements AccountServices {
 
     @Override
     @Cacheable(cacheNames = "accounts")
-    public List<Account> findAll() {
+    public Iterable<Account> findAll() {
         return accountRepository.findAll();
     }
 }
