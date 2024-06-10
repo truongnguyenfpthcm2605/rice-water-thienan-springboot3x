@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import org.website.thienan.ricewaterthienan.services.AccountServices;
 import org.website.thienan.ricewaterthienan.services.CategoriesPostService;
 
 import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping(value = UrlApi.API_V1)
 @RequiredArgsConstructor
@@ -46,7 +47,7 @@ public class CategoryPostController {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
-                .message("Get CategoryPost By Id!"+ id)
+                .message("Get CategoryPost By Id!" + id)
                 .data(categoriesPost).build(), HttpStatus.OK);
     }
 
@@ -56,7 +57,7 @@ public class CategoryPostController {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
-                .message("Get CategoryPost By Name!"+ name)
+                .message("Get CategoryPost By Name!" + name)
                 .data(categoriesPost).build(), HttpStatus.OK);
     }
 
@@ -68,7 +69,7 @@ public class CategoryPostController {
         categoriesPost.setLink(categoriesPostRequest.getLink());
         categoriesPost.setViews(1L);
         categoriesPost.setName(categoriesPostRequest.getName());
-        categoriesPost.setAccount(accountServices.findById(categoriesPostRequest.getAccountId()).orElseThrow());
+        categoriesPost.setAccount(accountServices.findById(categoriesPostRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Account not found!")));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
@@ -78,16 +79,14 @@ public class CategoryPostController {
 
     @PutMapping("/category-post/update/{id}")
     @PreAuthorize("hasAnyRole('Admin','Staff')")
-    public ResponseEntity<MessageResponse> update( @RequestBody CategoriesPostRequest categoriesPostRequest ,@PathVariable("id") Integer id) {
+    public ResponseEntity<MessageResponse> update(@RequestBody CategoriesPostRequest categoriesPostRequest, @PathVariable("id") Integer id) {
         CategoriesPost categoriesPost = categoriesPostService.findById(id).orElseThrow(() -> new ResourceNotFoundException("CategoryPost not found!"));
-        if(categoriesPost!=null){
-            categoriesPost.setActive(categoriesPostRequest.getActive());
-            categoriesPost.setLink(categoriesPostRequest.getLink());
-            categoriesPost.setViews(categoriesPostRequest.getViews());
-            categoriesPost.setName(categoriesPostRequest.getName());
-            categoriesPost.setUpdateAt(LocalDateTime.now());
-            categoriesPost.setAccount(accountServices.findById(categoriesPostRequest.getAccountId()).orElseThrow());
-        }
+        categoriesPost.setActive(categoriesPostRequest.getActive());
+        categoriesPost.setLink(categoriesPostRequest.getLink());
+        categoriesPost.setViews(categoriesPostRequest.getViews());
+        categoriesPost.setName(categoriesPostRequest.getName());
+        categoriesPost.setUpdateAt(LocalDateTime.now());
+        categoriesPost.setAccount(accountServices.findById(categoriesPostRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Account not found!")));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
@@ -104,7 +103,7 @@ public class CategoryPostController {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
-                .message("Delete  CategoryPost By Id!"+ id)
+                .message("Delete  CategoryPost By Id!" + id)
                 .data(categoriesPostService.update(categoriesPost).getId()).build(), HttpStatus.OK);
     }
 

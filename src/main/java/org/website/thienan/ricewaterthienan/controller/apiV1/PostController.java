@@ -91,9 +91,10 @@ public class PostController {
         post.setAvatar(postRequest.getAvatar());
         post.setImageHeader(postRequest.getImageHeader());
         post.setViews(1L);
-        post.setAccount(accountServices.findById(postRequest.getAccountId()).orElseThrow());
-        post.setCategoryPost(categoriesPostService.findById(postRequest.getCategoriesPostId()).orElseThrow());
-        post.setCategories(postRequest.getCategories().stream().map(e -> categoriesService.findById(e).orElseThrow()).collect(Collectors.toSet()));
+        post.setAccount(accountServices.findById(postRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
+        post.setCategoryPost(categoriesPostService.findById(postRequest.getCategoriesPostId()).orElseThrow(() -> new ResourceNotFoundException("Not found Category Post")));
+        post.setCategories(postRequest.getCategories().stream()
+                .map(e -> categoriesService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not Found Category ID"))).collect(Collectors.toSet()));
 
         return new ResponseEntity<>(
                 MessageResponse.builder()
@@ -109,7 +110,6 @@ public class PostController {
     @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
     public ResponseEntity<MessageResponse> update(@RequestBody PostRequest postRequest, @PathVariable("id") Integer id){
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found post"));
-        if(post!=null){
             post.setLink(postRequest.getLink());
             post.setUpdateAt(LocalDateTime.now());
             post.setContent(postRequest.getContent());
@@ -118,11 +118,10 @@ public class PostController {
             post.setAvatar(postRequest.getAvatar());
             post.setImageHeader(postRequest.getImageHeader());
             post.setViews(postRequest.getViews());
-            post.setAccount(accountServices.findById(postRequest.getAccountId()).orElseThrow());
-            post.setCategoryPost(categoriesPostService.findById(postRequest.getCategoriesPostId()).orElseThrow());
-            post.setCategories(postRequest.getCategories().stream().map(e -> categoriesService.findById(e).orElseThrow()).collect(Collectors.toSet()));
-
-        }
+            post.setAccount(accountServices.findById(postRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
+            post.setCategoryPost(categoriesPostService.findById(postRequest.getCategoriesPostId()).orElseThrow(()-> new ResourceNotFoundException("Not found Category Post")));
+            post.setCategories(postRequest.getCategories().stream()
+                    .map(e -> categoriesService.findById(e).orElseThrow(()-> new ResourceNotFoundException("Not found category ID"))).collect(Collectors.toSet()));
         return new ResponseEntity<>(
                 MessageResponse.builder()
                         .code(200)

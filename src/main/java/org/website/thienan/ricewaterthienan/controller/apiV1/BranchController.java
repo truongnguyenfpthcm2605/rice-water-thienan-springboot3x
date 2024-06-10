@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,7 @@ public class BranchController {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
-                .message("Get Branch By Id!"+ id)
+                .message("Get Branch By Id!" + id)
                 .data(branch).build(), HttpStatus.OK);
     }
 
@@ -57,7 +57,7 @@ public class BranchController {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
-                .message("Get Branch By Name!"+ name)
+                .message("Get Branch By Name!" + name)
                 .data(branch).build(), HttpStatus.OK);
     }
 
@@ -69,7 +69,7 @@ public class BranchController {
         branch.setLink(branchRequest.getLink());
         branch.setViews(1L);
         branch.setName(branchRequest.getName());
-        branch.setAccount(accountServices.findById(branchRequest.getAccountId()).orElseThrow());
+        branch.setAccount(accountServices.findById(branchRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Account not found!")));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
@@ -79,16 +79,14 @@ public class BranchController {
 
     @PutMapping("/branch/update/{id}")
     @PreAuthorize("hasAnyRole('Admin','Staff')")
-    public ResponseEntity<MessageResponse> update( @RequestBody BranchRequest branchRequest ,@PathVariable("id") Integer id) {
+    public ResponseEntity<MessageResponse> update(@RequestBody BranchRequest branchRequest, @PathVariable("id") Integer id) {
         Branch branch = branchService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found!"));
-        if(branch!=null){
-            branch.setActive(branchRequest.getActive());
-            branch.setLink(branchRequest.getLink());
-            branch.setViews(branchRequest.getViews());
-            branch.setName(branchRequest.getName());
-            branch.setUpdateAt(LocalDateTime.now());
-            branch.setAccount(accountServices.findById(branchRequest.getAccountId()).orElseThrow());
-        }
+        branch.setActive(branchRequest.getActive());
+        branch.setLink(branchRequest.getLink());
+        branch.setViews(branchRequest.getViews());
+        branch.setName(branchRequest.getName());
+        branch.setUpdateAt(LocalDateTime.now());
+        branch.setAccount(accountServices.findById(branchRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Account not found!")));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
@@ -105,7 +103,7 @@ public class BranchController {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
-                .message("Delete  Branch By Id!"+ id)
+                .message("Delete  Branch By Id!" + id)
                 .data(branchService.update(branch).getId()).build(), HttpStatus.OK);
     }
 

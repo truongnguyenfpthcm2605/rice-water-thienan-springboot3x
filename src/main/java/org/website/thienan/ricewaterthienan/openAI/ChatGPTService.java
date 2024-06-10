@@ -21,6 +21,7 @@ public class ChatGPTService {
     public String chat(String prompt){
         ChatGPTRequest request=new ChatGPTRequest(model, prompt.isEmpty() ? "Hello" : prompt);
         ChatGptResponse chatGptResponse = template.postForObject(apiURL, request, ChatGptResponse.class);
+        assert chatGptResponse != null;
         return chatGptResponse.getChoices().get(0).getMessage().getContent();
     }
 }

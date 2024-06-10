@@ -68,7 +68,7 @@ public class GlobalExceptionHandling {
         log.info("Resource Notfound Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.NOTFOUND.getCode())
-                .message(MessagesHanlderEnum.NOTFOUND.getMessage() + ex.getMessage())
+                .message(ex.getMessage())
                 .timeStamp(LocalDateTime.now())
                 .build(), MessagesHanlderEnum.NOTFOUND.getStatusCode()
         );
@@ -95,6 +95,7 @@ public class GlobalExceptionHandling {
                 .timeStamp(LocalDateTime.now())
                 .data(fieldsErrors).build(), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<MessageResponse> handlingSQLQueryException(DataAccessException ex){
         log.info("DataAccessException Exception {}:", ex.getMessage());
