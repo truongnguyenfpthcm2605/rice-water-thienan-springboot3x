@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -89,8 +89,9 @@ public class TypeController {
         type.setAvatar(typeRequest.getAvatar());
         type.setImageHeader(typeRequest.getImageHeader());
         type.setViews(1L);
-        type.setAccount(accountServices.findById(typeRequest.getAccountId()).orElseThrow());
-        type.setPosts(typeRequest.getTypePost().stream().map(e -> postService.findById(e).orElseThrow()).collect(Collectors.toSet()));
+        type.setAccount(accountServices.findById(typeRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
+        type.setPosts(typeRequest.getTypePost().stream()
+                .map(e -> postService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found post"))).collect(Collectors.toSet()));
         return new ResponseEntity<>(
                 MessageResponse.builder()
                         .code(200)
@@ -114,8 +115,9 @@ public class TypeController {
             type.setAvatar(typeRequest.getAvatar());
             type.setImageHeader(typeRequest.getImageHeader());
             type.setViews(typeRequest.getViews());
-            type.setAccount(accountServices.findById(typeRequest.getAccountId()).orElseThrow());
-            type.setPosts(typeRequest.getTypePost().stream().map(e -> postService.findById(e).orElseThrow()).collect(Collectors.toSet()));
+            type.setAccount(accountServices.findById(typeRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
+            type.setPosts(typeRequest.getTypePost().stream()
+                    .map(e -> postService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found Post"))).collect(Collectors.toSet()));
         }
         return new ResponseEntity<>(
                 MessageResponse.builder()
@@ -130,10 +132,8 @@ public class TypeController {
     @PreAuthorize("hasAnyRole('Admin','Staff')")
     public ResponseEntity<MessageResponse> delete(@PathVariable("id") Integer id){
         Type type = typeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found type"));
-        if(type!=null){
             type.setUpdateAt(LocalDateTime.now());
             type.setActive(false);
-        }
         return new ResponseEntity<>(
                 MessageResponse.builder()
                         .code(200)
