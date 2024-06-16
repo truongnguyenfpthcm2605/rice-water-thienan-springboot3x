@@ -2,6 +2,7 @@ package org.website.thienan.ricewaterthienan.dto.request;
 
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +28,9 @@ public class CategoriesRequest extends BaseRequest {
     String avatar;
     @NotBlank
     String imageHeader;
+    @NotBlank
     String accountId;
+    @NotNull
     Long views;
 
 

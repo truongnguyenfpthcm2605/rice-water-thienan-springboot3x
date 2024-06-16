@@ -144,7 +144,7 @@ public class AuthenticationController {
         String refreshPassword = randomCodeMail();
         mailService.send(email, "Mail xác thực tài khoản từ Gạo Và Nước Thiên An",
                 "  <div style=width:80%; margin:0 auto;text-align: center ;>\n" +
-                        "    <h1 style=color:#080202 ;>TraVel Bee</h1>\n" +
+                        "    <h1 style=color:#080202 ;>Gạo Nước Thiên An</h1>\n" +
                         "    <p>Dùng mã này để xác minh địa chỉ email của bạn trên Gạo Và Nước Thiên An </p>\n" +
                         "    <p>Xin chào Bạn,Chúng tôi cần xác minh địa chỉ email của bạn để đảm bảo là có thể liên hệ với bạn sau khi xem xét\n" +
                         "      ID.</p>\n" +

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public class BaseRequest implements Serializable {
     LocalDateTime createAt;
     LocalDateTime updateAt;

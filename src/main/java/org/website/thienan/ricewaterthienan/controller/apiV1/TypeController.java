@@ -1,5 +1,6 @@
 package org.website.thienan.ricewaterthienan.controller.apiv1;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +80,7 @@ public class TypeController {
 
     @PostMapping("/type/save")
     @PreAuthorize("hasAnyRole('Admin','Staff')")
-    public ResponseEntity<MessageResponse> save(@RequestBody TypeRequest typeRequest){
+    public ResponseEntity<MessageResponse> save(@Valid @RequestBody TypeRequest typeRequest){
         Type type = new Type();
         type.setTitle(typeRequest.getTitle());
         type.setLink(typeRequest.getLink());

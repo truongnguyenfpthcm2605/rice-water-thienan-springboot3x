@@ -27,9 +27,11 @@ public class AccountRequest extends BaseRequest {
     @NotBlank
     @Email
     String email;
+    @NotBlank
     String avatar;
     @NotBlank
     String role;
+    @NotNull
     Long views;
     @NotEmpty
     Set<String> roleDetail = new HashSet<>();

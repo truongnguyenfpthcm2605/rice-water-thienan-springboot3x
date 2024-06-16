@@ -12,7 +12,7 @@ public class ChatGPTController {
 
     private final ChatGPTService chatGPTService;
 
-    // Cannot use API , because we need pay for them!
+    // Cannot use API, because we need pay for them!
     @PostMapping("/chat")
     public String sendPrompt(@RequestParam("prompt") String prompt) {
         return chatGPTService.chat(prompt);

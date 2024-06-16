@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.website.thienan.ricewaterthienan.exceptions.customValidation.PhoneNumbers;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -13,8 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrdersRequest extends BaseRequest {
-    @NotBlank
-    @Max(value = 15)
+    @PhoneNumbers
     String phone;
     @NotBlank
     @Max(value = 100)
@@ -25,6 +25,8 @@ public class OrdersRequest extends BaseRequest {
     @Max(value = 256)
     @NotBlank
     String notes;
+    @NotBlank
     String status;
+    @NotBlank
     String accountId;
 }

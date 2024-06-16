@@ -15,4 +15,6 @@
      -	curl -X GET "localhost:9200/"
 # Step 4 : start servers 
 # Step 5 : install Maven 
+# Document API
+
     

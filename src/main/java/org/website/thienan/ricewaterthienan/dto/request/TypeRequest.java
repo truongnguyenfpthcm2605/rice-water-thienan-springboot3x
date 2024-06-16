@@ -1,6 +1,7 @@
 package org.website.thienan.ricewaterthienan.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,7 +31,9 @@ public class TypeRequest extends BaseRequest {
     @NotBlank
     String imageHeader;
     Long views;
+    @NotEmpty
     Set<Integer> typePost = new HashSet<>();
+    @NotBlank
     String accountId;
 
 }

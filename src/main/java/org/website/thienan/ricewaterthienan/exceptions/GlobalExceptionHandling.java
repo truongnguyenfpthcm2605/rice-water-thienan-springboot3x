@@ -2,7 +2,6 @@ package org.website.thienan.ricewaterthienan.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.website.thienan.ricewaterthienan.dto.response.MessageResponse;
 import org.website.thienan.ricewaterthienan.enums.MessagesHanlderEnum;
+
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,7 +68,7 @@ public class GlobalExceptionHandling {
         log.info("Resource Notfound Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.NOTFOUND.getCode())
-                .message(MessagesHanlderEnum.NOTFOUND.getMessage() + ex.getMessage())
+                .message(MessagesHanlderEnum.NOTFOUND.getMessage())
                 .timeStamp(LocalDateTime.now())
                 .build(), MessagesHanlderEnum.NOTFOUND.getStatusCode()
         );
@@ -95,18 +95,6 @@ public class GlobalExceptionHandling {
                 .timeStamp(LocalDateTime.now())
                 .data(fieldsErrors).build(), HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<MessageResponse> handlingSQLQueryException(DataAccessException ex){
-        log.info("DataAccessException Exception {}:", ex.getMessage());
-        return new ResponseEntity<>(MessageResponse.builder().
-                code(MessagesHanlderEnum.SQL_EXCEPTION.getCode())
-                .message(MessagesHanlderEnum.SQL_EXCEPTION.getMessage())
-                .timeStamp(LocalDateTime.now())
-                .build(), MessagesHanlderEnum.SQL_EXCEPTION.getStatusCode()
-        );
-    }
-
-
 
 
 }

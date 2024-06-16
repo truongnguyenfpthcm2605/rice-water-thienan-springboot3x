@@ -1,6 +1,8 @@
 package org.website.thienan.ricewaterthienan.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,9 +32,11 @@ public class PostRequest extends BaseRequest {
     @NotBlank
     String imageHeader;
     Long views;
+    @NotNull
     Integer categoriesPostId;
+    @NotBlank
     String accountId;
-
+    @NotEmpty
     Set<Integer> categories = new HashSet<>();
 
 }

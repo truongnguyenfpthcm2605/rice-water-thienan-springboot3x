@@ -1,6 +1,8 @@
 package org.website.thienan.ricewaterthienan.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -33,8 +35,12 @@ public class ProductRequest extends BaseRequest {
     Long views;
     @NotBlank
     String content;
+    @NotBlank
     String accountId;
+    @NotNull
     Integer branchId;
+    @NotNull
     Integer brandId;
+    @NotEmpty
     Set<String> categories = new HashSet<>();
 }
