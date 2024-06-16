@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class CategoriesController {
     private final AccountServices accountServices;
 
     @GetMapping("/categories/findAll")
-    public ResponseEntity<MessageResponse> findAll(){
+    public ResponseEntity<MessageResponse> findAll() {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .message("Get All Categories")
@@ -33,7 +33,7 @@ public class CategoriesController {
     }
 
     @GetMapping("/categories/findAllActive")
-    public ResponseEntity<MessageResponse> findAllActive(@RequestParam("active") Boolean active){
+    public ResponseEntity<MessageResponse> findAllActive(@RequestParam("active") Boolean active) {
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .message("Get All Categories Active")
@@ -42,8 +42,8 @@ public class CategoriesController {
     }
 
     @GetMapping("/categories/findById/{id}")
-    public ResponseEntity<MessageResponse> findById(@PathVariable("id") Integer id){
-        Categories categories = categoriesService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Category ID"+ id));
+    public ResponseEntity<MessageResponse> findById(@PathVariable("id") Integer id) {
+        Categories categories = categoriesService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Category ID" + id));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .message("Get Categories ID Success Full")
@@ -53,8 +53,8 @@ public class CategoriesController {
     }
 
     @GetMapping("/categories/findByName/{name}")
-    public ResponseEntity<MessageResponse> findByName(@PathVariable("name") String name){
-        Categories categories = categoriesService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found Category ID"+ name));
+    public ResponseEntity<MessageResponse> findByName(@PathVariable("name") String name) {
+        Categories categories = categoriesService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found Category ID" + name));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .message("Get Categories Name Success Full")
@@ -65,7 +65,7 @@ public class CategoriesController {
 
     @PostMapping("/categories/save")
     @PreAuthorize("hasAnyRole('Admin','Staff')")
-    public ResponseEntity<MessageResponse> save(@RequestBody CategoriesRequest categoriesRequest){
+    public ResponseEntity<MessageResponse> save(@RequestBody CategoriesRequest categoriesRequest) {
         Categories categories = new Categories();
         categories.setName(categoriesRequest.getName());
         categories.setLink(categoriesRequest.getLink());
@@ -75,43 +75,41 @@ public class CategoriesController {
         categories.setImageHeader(categoriesRequest.getImageHeader());
         categories.setViews(1L);
         categories.setActive(true);
-        categories.setAccount(accountServices.findById(categoriesRequest.getAccountId()).orElseThrow());
+        categories.setAccount(accountServices.findById(categoriesRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account ID" + categoriesRequest.getAccountId())));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .message("Categories save successfully")
                 .data(categoriesService.save(categories))
                 .timeStamp(LocalDateTime.now())
-                .build(),HttpStatus.OK);
+                .build(), HttpStatus.OK);
     }
 
     @PostMapping("/categories/update/{id}")
     @PreAuthorize("hasAnyRole('Admin','Staff')")
-    public ResponseEntity<MessageResponse> update(@RequestBody CategoriesRequest categoriesRequest,@PathVariable("id") Integer id){
-        Categories categories = categoriesService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Categories Notfound ID"+ id));
-        if(categories!=null){
-            categories.setName(categoriesRequest.getName());
-            categories.setLink(categoriesRequest.getLink());
-            categories.setContent(categoriesRequest.getContent());
-            categories.setIntroduction(categoriesRequest.getIntroduction());
-            categories.setAvatar(categoriesRequest.getAvatar());
-            categories.setImageHeader(categoriesRequest.getImageHeader());
-            categories.setViews(1L);
-            categories.setActive(true);
-            categories.setAccount(accountServices.findById(categoriesRequest.getAccountId()).orElseThrow());
-            categories.setUpdateAt(LocalDateTime.now());
-        }
+    public ResponseEntity<MessageResponse> update(@RequestBody CategoriesRequest categoriesRequest, @PathVariable("id") Integer id) {
+        Categories categories = categoriesService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Categories Notfound ID" + id));
+        categories.setName(categoriesRequest.getName());
+        categories.setLink(categoriesRequest.getLink());
+        categories.setContent(categoriesRequest.getContent());
+        categories.setIntroduction(categoriesRequest.getIntroduction());
+        categories.setAvatar(categoriesRequest.getAvatar());
+        categories.setImageHeader(categoriesRequest.getImageHeader());
+        categories.setViews(1L);
+        categories.setActive(true);
+        categories.setAccount(accountServices.findById(categoriesRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account ID" + categoriesRequest.getAccountId())  ));
+        categories.setUpdateAt(LocalDateTime.now());
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .message("Categories update successfully")
                 .data(categoriesService.save(categories))
                 .timeStamp(LocalDateTime.now())
-                .build(),HttpStatus.OK);
+                .build(), HttpStatus.OK);
     }
 
     @PutMapping("/categories/delete/{id}")
     @PreAuthorize("hasRole('Admin')")
-    public ResponseEntity<MessageResponse> delete(@PathVariable("id") Integer id){
-        Categories categories = categoriesService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Categories Notfound ID"+ id));
+    public ResponseEntity<MessageResponse> delete(@PathVariable("id") Integer id) {
+        Categories categories = categoriesService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Categories Notfound ID" + id));
         categories.setActive(false);
         categories.setUpdateAt(LocalDateTime.now());
         return new ResponseEntity<>(MessageResponse.builder()
@@ -119,6 +117,6 @@ public class CategoriesController {
                 .message("Categories delete successfully")
                 .data(categoriesService.update(categories).getId())
                 .timeStamp(LocalDateTime.now())
-                .build(),HttpStatus.OK);
+                .build(), HttpStatus.OK);
     }
 }

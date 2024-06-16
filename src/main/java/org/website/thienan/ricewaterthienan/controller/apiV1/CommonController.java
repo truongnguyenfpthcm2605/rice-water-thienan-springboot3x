@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,13 +27,9 @@ public class CommonController {
     }
 
     @GetMapping("/health")
-    public ResponseEntity<String> healthCheck(){
-        try {
+    public ResponseEntity<String> healthCheck() throws Exception{
             String computer = InetAddress.getLocalHost().getHostName();
             return new ResponseEntity<>("Stronger Server : " + computer, HttpStatus.OK);
-        }catch (Exception e){
-            return ResponseEntity.badRequest().build();
-        }
     }
 
 }

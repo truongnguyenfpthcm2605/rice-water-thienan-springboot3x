@@ -33,12 +33,13 @@ public class EncryptionService {
     public void setMainKey() {
         try {
             MessageDigest sha = MessageDigest.getInstance(HASH_ALGORITHM);
+            assert mainKey != null;
             byte[] key = mainKey.getBytes(StandardCharsets.UTF_8);
             key = sha.digest(key);
             key = Arrays.copyOf(key, 16); // Use only first 128 bit
             this.secretKey = new SecretKeySpec(key, ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            log.error("Error main key : "+ e.getMessage());
+            log.error("Error main key : {}", e.getMessage());
             throw new ResourceExistingException("Main key valid");
         }
     }
@@ -50,7 +51,7 @@ public class EncryptionService {
             byte[] encryptedBytes = cipher.doFinal(toEncrypt.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (Exception e) {
-            log.error("Error encrypt : "+ e.getMessage());
+            log.error("Error encrypt : {}", e.getMessage());
             throw new ResourceExistingException("enCrypt Valid");
         }
     }
@@ -63,7 +64,7 @@ public class EncryptionService {
             byte[] decryptedBytes = cipher.doFinal(decodedBytes);
             return new String(decryptedBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            log.error("Error decrypt : "+ e.getMessage());
+            log.error("Error decrypt : {}", e.getMessage());
             throw new ResourceExistingException("deCrypt Valid");
         }
     }

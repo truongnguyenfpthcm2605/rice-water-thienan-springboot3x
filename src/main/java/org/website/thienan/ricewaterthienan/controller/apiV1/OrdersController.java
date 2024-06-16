@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -124,20 +124,20 @@ public class OrdersController {
         orders.setAddress(ordersRequest.getAddress());
         orders.setStatus(getStatusOrderEnum(ordersRequest.getStatus()));
         orders.setNotes(ordersRequest.getNotes());
-        orders.setAccount(accountServices.findById(ordersRequest.getAccountId()).orElseThrow());
+        orders.setAccount(accountServices.findById(ordersRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account ID "+ ordersRequest.getAccountId())));
         orders.setActive(true);
         Orders ordersSave = ordersService.save(orders);
 
         // orders Detail
         List<OrderDetail> orderDetails = new ArrayList<>();
-        ordersDetailRequests.forEach(e -> {
+        for (OrdersDetailRequest e : ordersDetailRequests) {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setPrice(e.getPrice());
             orderDetail.setQuantity(e.getQuantity());
             orderDetail.setOrder(ordersSave);
-            orderDetail.setProduct(productService.findById(e.getProductId()).orElseThrow());
+            orderDetail.setProduct(productService.findById(e.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Not found Product ID "+ e.getProductId())));
             orderDetails.add(orderDetail);
-        });
+        }
 
         orderDetailService.saveAll(orderDetails);
         return new ResponseEntity<>(MessageResponse.builder()

@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiv1;
+package org.website.thienan.ricewaterthienan.controller.apiV1;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
