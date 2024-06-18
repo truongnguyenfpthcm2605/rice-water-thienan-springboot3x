@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
 import org.website.thienan.ricewaterthienan.exceptions.customValidation.PhoneNumbers;
+import org.website.thienan.ricewaterthienan.exceptions.customValidation.StatusSubnet;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -25,8 +27,8 @@ public class OrdersRequest extends BaseRequest {
     @Max(value = 256)
     @NotBlank
     String notes;
-    @NotBlank
-    String status;
+    @StatusSubnet(anyOf = {StatusOrderEnum.CANCEL,StatusOrderEnum.DELIVERY,StatusOrderEnum.COMPLETED,StatusOrderEnum.COMPLETED})
+    StatusOrderEnum status;
     @NotBlank
     String accountId;
 }

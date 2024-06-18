@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiV1;
+package org.website.thienan.ricewaterthienan.controller.apiv1;
 
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -20,7 +20,6 @@ import org.website.thienan.ricewaterthienan.dto.request.AccountRequest;
 import org.website.thienan.ricewaterthienan.dto.response.AccountResponse;
 import org.website.thienan.ricewaterthienan.dto.response.MessageResponse;
 import org.website.thienan.ricewaterthienan.entities.Account;
-import org.website.thienan.ricewaterthienan.enums.RoleEnum;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.messages.mail.MailService;
 import org.website.thienan.ricewaterthienan.security.jwt.JWTProvider;
@@ -205,13 +204,7 @@ public class AuthenticationController {
     }
 
 
-    private RoleEnum getRole(String role) {
-        return switch (role) {
-            case "Admin" -> RoleEnum.Admin;
-            case "Staff" -> RoleEnum.Staff;
-            default -> RoleEnum.User;
-        };
-    }
+
 
     private Account account(AccountRequest accountRequest) {
         Account account = new Account();
@@ -221,7 +214,7 @@ public class AuthenticationController {
         account.setAvatar(accountRequest.getAvatar());
         account.setViews(1L);
         account.setActive(true);
-        account.setRole(getRole(accountRequest.getRole()));
+        account.setRole(accountRequest.getRoleEnum());
         account.setRoles(
                 accountRequest.getRoleDetail().stream().map(
                         e -> roleDetailService.findByName(e).orElseThrow()

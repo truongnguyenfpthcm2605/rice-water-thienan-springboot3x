@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiV1;
+package org.website.thienan.ricewaterthienan.controller.apiv1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -122,7 +122,7 @@ public class OrdersController {
         orders.setPhone(ordersRequest.getPhone());
         orders.setName(ordersRequest.getName());
         orders.setAddress(ordersRequest.getAddress());
-        orders.setStatus(getStatusOrderEnum(ordersRequest.getStatus()));
+        orders.setStatus(ordersRequest.getStatus());
         orders.setNotes(ordersRequest.getNotes());
         orders.setAccount(accountServices.findById(ordersRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account ID "+ ordersRequest.getAccountId())));
         orders.setActive(true);
@@ -154,7 +154,7 @@ public class OrdersController {
         orders.setPhone(OrdersRequest.getPhone());
         orders.setName(OrdersRequest.getName());
         orders.setAddress(OrdersRequest.getAddress());
-        orders.setStatus(getStatusOrderEnum(OrdersRequest.getStatus()));
+        orders.setStatus(OrdersRequest.getStatus());
         orders.setNotes(OrdersRequest.getNotes());
         orders.setUpdateAt(LocalDateTime.now());
         Orders ordersSave = ordersService.save(orders);
@@ -169,7 +169,7 @@ public class OrdersController {
     @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<MessageResponse> delete(@PathVariable("id") String id){
         Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID"+ id));
-        if(orders.getStatus().compareTo(StatusOrderEnum.Completed) > 0){
+        if(orders.getStatus().compareTo(StatusOrderEnum.COMPLETED) > 0){
             return new ResponseEntity<>(MessageResponse.builder()
                     .code(405)
                     .timeStamp(LocalDateTime.now())
@@ -177,7 +177,7 @@ public class OrdersController {
                     .data(orders.getStatus()).build(), HttpStatus.OK);
         }
         orders.setActive(false);
-        orders.setStatus(StatusOrderEnum.Cancel);
+        orders.setStatus(StatusOrderEnum.CANCEL);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(200)
                 .timeStamp(LocalDateTime.now())
@@ -186,13 +186,6 @@ public class OrdersController {
     }
 
 
-    private StatusOrderEnum getStatusOrderEnum(String status){
-        return switch (status) {
-            case "Delivery" -> StatusOrderEnum.Delivery;
-            case "Completed" -> StatusOrderEnum.Completed;
-            case "Cancel" -> StatusOrderEnum.Cancel;
-            default -> StatusOrderEnum.WaitConfirm;
-        };
-    }
+
 
 }

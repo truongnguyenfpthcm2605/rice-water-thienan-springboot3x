@@ -5,6 +5,8 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.website.thienan.ricewaterthienan.enums.RoleEnum;
+import org.website.thienan.ricewaterthienan.exceptions.customValidation.EnumPattern;
 import org.website.thienan.ricewaterthienan.exceptions.customValidation.PasswordRegex;
 
 import java.util.HashSet;
@@ -29,8 +31,8 @@ public class AccountRequest extends BaseRequest {
     String email;
     @NotBlank
     String avatar;
-    @NotBlank
-    String role;
+    @EnumPattern(name = "Role", regexp = "ADMIN|USER|STAFF")
+    RoleEnum roleEnum;
     @NotNull
     Long views;
     @NotEmpty

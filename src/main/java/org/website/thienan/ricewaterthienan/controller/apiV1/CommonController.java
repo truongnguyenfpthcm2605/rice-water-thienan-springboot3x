@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.controller.apiV1;
+package org.website.thienan.ricewaterthienan.controller.apiv1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

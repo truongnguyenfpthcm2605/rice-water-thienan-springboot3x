@@ -21,6 +21,7 @@ public class UrlApi {
             "/api/v1/role_detail/findById/**","/api/v1/role_detail/findByName/**",
             "/api/v1/setting/findAll","/api/v1/setting/findById/**",
             "/api/v1/type/findAll/**","/api/v1/type/findAllTitle/**", "/api/v1/type/findById/**",
-            "/api/v1/chat/**","/api/v1/firebase/**"
+            "/api/v1/chat/**","/api/v1/firebase/**",
+            "/swagger-ui/**","/v3/api-docs/**","/v3/api-docs/API-Service-thienan"
     } ;
 }

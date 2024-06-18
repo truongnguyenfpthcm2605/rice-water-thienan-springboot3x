@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.NaturalId;
 import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
+import org.website.thienan.ricewaterthienan.exceptions.customValidation.EnumPattern;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Orders extends  BaseEntity {
+public class Orders extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -25,7 +26,7 @@ public class Orders extends  BaseEntity {
     @Column(length = 15, nullable = false)
     String phone;
 
-    @Column(length = 100,nullable = false)
+    @Column(length = 100, nullable = false)
     String name;
 
     @Column(nullable = false)
@@ -42,7 +43,7 @@ public class Orders extends  BaseEntity {
     @JsonBackReference
     Account account;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     List<OrderDetail> orderDetails;
 
