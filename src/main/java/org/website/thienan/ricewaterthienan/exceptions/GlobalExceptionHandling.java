@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.website.thienan.ricewaterthienan.dto.response.MessageResponse;
 import org.website.thienan.ricewaterthienan.enums.MessagesHanlderEnum;
 
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +31,7 @@ public class GlobalExceptionHandling {
                 );
     }
 
-    @ExceptionHandler(FileException.class)
+    @ExceptionHandler({FileException.class, IOException.class})
     public ResponseEntity<MessageResponse> handlingFileException(FileException ex){
         log.info("File Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().

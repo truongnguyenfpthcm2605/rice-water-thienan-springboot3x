@@ -2,7 +2,6 @@ package org.website.thienan.ricewaterthienan.controller;
 
 public class UrlApi {
     public static final String  API_V1 = "api/v1" ;
-
     public static final  String[]  PUBLIC_API = {
             "/api/v1/index","/api/v1/auth/login", "/api/v1/auth/log_up","/api/v1/auth/refresh-token",
             "/api/v1/health","/ap1/v1/branch/findAll","/ap1/v1/branch/findAllActive",
@@ -21,7 +20,7 @@ public class UrlApi {
             "/api/v1/role_detail/findById/**","/api/v1/role_detail/findByName/**",
             "/api/v1/setting/findAll","/api/v1/setting/findById/**",
             "/api/v1/type/findAll/**","/api/v1/type/findAllTitle/**", "/api/v1/type/findById/**",
-            "/api/v1/chat/**","/api/v1/firebase/**",
+            "/api/v1/chat/**","/api/v1/firebase/**","/api/v1/chat",
             "/swagger-ui/**","/v3/api-docs/**","/v3/api-docs/API-Service-thienan"
     } ;
 }

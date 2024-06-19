@@ -33,7 +33,7 @@ public class CategoriesController {
     @Operation(summary = "Find All Category", description = "Find All Category")
     @GetMapping("/categories/findAll")
     public ResponseEntity<MessageResponse> findAll() {
-        log.info("Find All Category");  
+        log.info("Find All Category");
         Iterable<Categories> categories = categoriesService.findAll();
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())
@@ -127,7 +127,7 @@ public class CategoriesController {
     }
 
     @Operation(summary = "Delete Category", description = "Delete Category by ID  ")
-    @PutMapping("/categories/delete/{id}")
+    @DeleteMapping("/categories/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MessageResponse> delete(@Valid @NotNull @PathVariable Integer id) {
         log.info("Delete category by id {}", id);

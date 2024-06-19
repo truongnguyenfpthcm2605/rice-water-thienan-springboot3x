@@ -1,5 +1,7 @@
 package org.website.thienan.ricewaterthienan.controller.apiv1;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +17,20 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping(value = UrlApi.API_V1)
 @RequiredArgsConstructor
+@Tag(name = "Welcome to Project")
 public class CommonController {
 
+    @Operation(summary = "Welcome to Website", description = "Welcome to Thien An Website")
     @GetMapping("/index")
     public ResponseEntity<MessageResponse> index(){
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .message("Welcome to Thien An :)))")
                 .timeStamp(LocalDateTime.now())
                 .build(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Check health Server", description = "Check health Server")
     @GetMapping("/health")
     public ResponseEntity<String> healthCheck() throws Exception{
             String computer = InetAddress.getLocalHost().getHostName();

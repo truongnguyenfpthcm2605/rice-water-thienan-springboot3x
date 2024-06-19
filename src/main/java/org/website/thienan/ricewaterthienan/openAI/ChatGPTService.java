@@ -11,7 +11,7 @@ public class ChatGPTService {
     @Value("${chat.model}")
     private String model;
 
-    @Value(("${chat.api.url}"))
+    @Value("${chat.api.url}")
     private String apiURL;
 
 

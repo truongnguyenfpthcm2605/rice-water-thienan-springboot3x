@@ -1,6 +1,12 @@
 package org.website.thienan.ricewaterthienan.controller.apiv1;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,96 +33,113 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = UrlApi.API_V1)
 @RequiredArgsConstructor
+@Tag(name = "Orders Controller API")
+@Slf4j
 public class OrdersController {
     private final OrdersService ordersService;
     private final AccountServices accountServices;
     private final OrderDetailService orderDetailService;
     private final ProductService productService;
 
+    @Operation(summary = "find All Page Orders", description = "Page Orders Active")
     @GetMapping("/orders/findAllActive/{page}/{sort}")
-    public ResponseEntity<MessageResponse> findAllActive(@RequestParam("active") Boolean active,
-                                                         @PathVariable("page") Optional<Integer> page,
-                                                         @PathVariable("sort") String sort) {
+    public ResponseEntity<MessageResponse> findAllActive(@Valid @NotNull @RequestParam(defaultValue = "true", required = false) Boolean active,
+                                                         @NotNull @PathVariable Optional<Integer> page,
+                                                         @NotNull @PathVariable String sort) {
+        log.info("findAllActive page: {}, sort: {}", page, sort);
+        Page<Orders> pages = ordersService.findByActive(
+                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
+                        sort != null && sort.equals("up") ?
+                                SortAndPage.getSortUp("createAt") :
+                                SortAndPage.getSort("createAt")), active);
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Get All Active Orders")
-                .data(ordersService.findByActive(
-                        SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
-                                sort != null && sort.equals("up") ?
-                                        SortAndPage.getSortUp("createAt") :
-                                        SortAndPage.getSort("createAt")), active
-                )
-                ).build(), HttpStatus.OK);
-    }
-    @GetMapping("/orders/findByKeyWord/{page}/{sort}")
-    public ResponseEntity<MessageResponse> findByKeyWord(@RequestParam("keyword") String  keyword,
-                                                         @PathVariable("page") Optional<Integer> page,
-                                                         @PathVariable("sort") String sort) {
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
-                .timeStamp(LocalDateTime.now())
-                .message("Get All Active Orders")
-                .data(ordersService.findByKeyword(
-                                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
-                                        sort != null && sort.equals("up") ?
-                                                SortAndPage.getSortUp("createAt") :
-                                                SortAndPage.getSort("createAt")), keyword
-                        )
-                ).build(), HttpStatus.OK);
-    }
-    @GetMapping("/orders/findByStatus/{page}/{sort}")
-    public ResponseEntity<MessageResponse> findByStatus(@RequestParam("status") String  status,
-                                                         @PathVariable("page") Optional<Integer> page,
-                                                         @PathVariable("sort") String sort) {
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
-                .timeStamp(LocalDateTime.now())
-                .message("Get All Active Orders")
-                .data(ordersService.findByStatus(
-                                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
-                                        sort != null && sort.equals("up") ?
-                                                SortAndPage.getSortUp("createAt") :
-                                                SortAndPage.getSort("createAt")), status
-                        )
-                ).build(), HttpStatus.OK);
+                .data(pages)
+                .build(), HttpStatus.OK);
     }
 
-    @GetMapping("/orders/findById/{id}")
-    public ResponseEntity<MessageResponse> findById(@PathVariable("id") String id){
-        Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID "+ id));
+    @Operation(summary = "find All Page Orders Keyword", description = "Page Orders Keyword")
+    @GetMapping("/orders/findByKeyWord/{page}/{sort}")
+    public ResponseEntity<MessageResponse> findByKeyWord(@Valid @NotNull @RequestParam(required = false, defaultValue = "") String keyword,
+                                                         @NotNull @PathVariable Optional<Integer> page,
+                                                         @NotNull @PathVariable String sort) {
+        log.info("findByKeyWord keyword: {}, page: {}, sort: {}", keyword, page, sort);
+        Page<Orders> pages = ordersService.findByKeyword(
+                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
+                        sort != null && sort.equals("up") ?
+                                SortAndPage.getSortUp("createAt") :
+                                SortAndPage.getSort("createAt")), keyword
+        );
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
+                .timeStamp(LocalDateTime.now())
+                .message("Get All Active Orders")
+                .data(pages).build(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "find All Page Orders Status", description = "Page Orders Status")
+    @GetMapping("/orders/findByStatus/{page}/{sort}")
+    public ResponseEntity<MessageResponse> findByStatus(@Valid @NotNull @RequestParam(defaultValue = "", required = false) String status,
+                                                        @NotNull @PathVariable Optional<Integer> page,
+                                                        @NotNull @PathVariable String sort) {
+        log.info("findByStatus status: {}, page: {}, sort: {}", status, page, sort);
+        Page<Orders> pages = ordersService.findByStatus(
+                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
+                        sort != null && sort.equals("up") ?
+                                SortAndPage.getSortUp("createAt") :
+                                SortAndPage.getSort("createAt")), status
+        );
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(HttpStatus.OK.value())
+                .timeStamp(LocalDateTime.now())
+                .message("Get All Active Orders")
+                .data(pages).build(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "find Orders By ID", description = "find Orders By ID (String)")
+    @GetMapping("/orders/findById/{id}")
+    public ResponseEntity<MessageResponse> findById(@Valid @NotNull @PathVariable String id) {
+        log.info("findById: {}", id);
+        Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID " + id));
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Find Orders Success!")
                 .data(orders).build(), HttpStatus.OK);
     }
 
+    @Operation(summary = "find Orders By Name", description = "find Orders By Name (String)")
     @GetMapping("/orders/findByName/{name}")
-    public ResponseEntity<MessageResponse> findByName(@PathVariable("name") String name){
-        Orders orders = ordersService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found Orders Phone "+ name));
+    public ResponseEntity<MessageResponse> findByName(@Valid @NotNull @PathVariable String name) {
+        log.info("findByName: {}", name);
+        Orders orders = ordersService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found Orders Phone " + name));
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Find Orders Name Success!")
                 .data(orders).build(), HttpStatus.OK);
     }
 
+    @Operation(summary = "find Orders By Phone", description = "find Orders By Phone (String)")
     @GetMapping("/orders/findByPhone/{phone}")
-    public ResponseEntity<MessageResponse> findByPhone(@PathVariable("phone") String phone){
-        Orders orders = ordersService.findByPhone(phone).orElseThrow(() -> new ResourceNotFoundException("Not found Orders Phone "+ phone));
+    public ResponseEntity<MessageResponse> findByPhone(@Valid @NotNull @PathVariable String phone) {
+        log.info("findByPhone: {}", phone);
+        Orders orders = ordersService.findByPhone(phone).orElseThrow(() -> new ResourceNotFoundException("Not found Orders Phone " + phone));
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Find Orders Phone Success!")
                 .data(orders).build(), HttpStatus.OK);
     }
-
+    @Operation(summary = "Save Orders", description = "Save new Orders")
     @PostMapping("/orders/save")
-    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
     public ResponseEntity<MessageResponse> save(
-            @RequestBody OrdersRequest ordersRequest,
-            @RequestBody List<OrdersDetailRequest> ordersDetailRequests){
+           @Valid @NotNull @RequestBody OrdersRequest ordersRequest,
+           @NotNull @RequestBody List<OrdersDetailRequest> ordersDetailRequests) {
+        log.info("save: {}", ordersRequest.getName());
         // save orders
         Orders orders = new Orders();
         orders.setPhone(ordersRequest.getPhone());
@@ -124,7 +147,7 @@ public class OrdersController {
         orders.setAddress(ordersRequest.getAddress());
         orders.setStatus(ordersRequest.getStatus());
         orders.setNotes(ordersRequest.getNotes());
-        orders.setAccount(accountServices.findById(ordersRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account ID "+ ordersRequest.getAccountId())));
+        orders.setAccount(accountServices.findById(ordersRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account ID " + ordersRequest.getAccountId())));
         orders.setActive(true);
         Orders ordersSave = ordersService.save(orders);
 
@@ -135,22 +158,23 @@ public class OrdersController {
             orderDetail.setPrice(e.getPrice());
             orderDetail.setQuantity(e.getQuantity());
             orderDetail.setOrder(ordersSave);
-            orderDetail.setProduct(productService.findById(e.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Not found Product ID "+ e.getProductId())));
+            orderDetail.setProduct(productService.findById(e.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Not found Product ID " + e.getProductId())));
             orderDetails.add(orderDetail);
         }
-
         orderDetailService.saveAll(orderDetails);
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Save orders Success!")
-                .data(orders).build(), HttpStatus.OK);
+                .data(ordersSave.getName()).build(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Update Orders", description = "Update Orders by Id (String")
     @PutMapping("/orders/update/{id}")
-    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
-    public ResponseEntity<MessageResponse> update(@PathVariable("id") String id, @RequestBody OrdersRequest OrdersRequest){
-        Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID"+ id));
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
+    public ResponseEntity<MessageResponse> update( @Valid @NotNull @PathVariable String id, @RequestBody OrdersRequest OrdersRequest) {
+        log.info("update: {}", OrdersRequest.getName());
+        Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID" + id));
         orders.setPhone(OrdersRequest.getPhone());
         orders.setName(OrdersRequest.getName());
         orders.setAddress(OrdersRequest.getAddress());
@@ -159,33 +183,34 @@ public class OrdersController {
         orders.setUpdateAt(LocalDateTime.now());
         Orders ordersSave = ordersService.save(orders);
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Update orders Success!")
-                .data(ordersSave.getId()).build(), HttpStatus.OK);
+                .data(ordersSave.getName()).build(), HttpStatus.OK);
     }
 
-    @PutMapping("/orders/delete/{id}")
+    @Operation(summary = "Delete Orders", description = "Delete Orders by Id (String")
+    @DeleteMapping("/orders/delete/{id}")
     @PreAuthorize("hasRole('Admin')")
-    public ResponseEntity<MessageResponse> delete(@PathVariable("id") String id){
-        Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID"+ id));
-        if(orders.getStatus().compareTo(StatusOrderEnum.COMPLETED) > 0){
+    public ResponseEntity<MessageResponse> delete(@PathVariable("id") String id) {
+        log.info("delete: {}", id);
+        Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID" + id));
+        if (orders.getStatus().compareTo(StatusOrderEnum.COMPLETED) > 0) {
             return new ResponseEntity<>(MessageResponse.builder()
-                    .code(405)
+                    .code(HttpStatus.METHOD_NOT_ALLOWED.value())
                     .timeStamp(LocalDateTime.now())
                     .message("Cannot Cancel Orders , Because orders is completed")
                     .data(orders.getStatus()).build(), HttpStatus.OK);
         }
         orders.setActive(false);
         orders.setStatus(StatusOrderEnum.CANCEL);
+        ordersService.update(orders);
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Cancel orders Success!")
-                .data(ordersService.update(orders).getStatus()).build(), HttpStatus.OK);
+                .data(orders.getStatus()).build(), HttpStatus.OK);
     }
-
-
 
 
 }
