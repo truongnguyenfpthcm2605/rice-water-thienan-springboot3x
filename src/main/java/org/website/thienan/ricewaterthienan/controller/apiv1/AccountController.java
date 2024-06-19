@@ -36,7 +36,7 @@ public class AccountController {
 
     @Operation(summary = "Delete Account", description = "Delete Account By ID")
     @DeleteMapping("/account/delete/{id}")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MessageResponse> delete(@Valid @NotNull @PathVariable String id) {
         log.info("Call API Delete Account by id {}", id);
         Account account = accountServices.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Account id : " + id));
@@ -49,10 +49,12 @@ public class AccountController {
                 .data(id).build(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Update account", description = "Update account by id")
     @PutMapping("/account/update/{id}")
-    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
     public ResponseEntity<MessageResponse> update(
-            @PathVariable String id, @Valid @RequestBody AccountRequest accountRequest) {
+            @Valid @NotNull @PathVariable String id, @RequestBody AccountRequest accountRequest) {
+        log.info("Call API Update Account by id {}", id);
         Account account = accountServices.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Account id : " + id));
         account.setName(accountRequest.getName());
         account.setAvatar(accountRequest.getAvatar());
@@ -67,11 +69,13 @@ public class AccountController {
                 .build(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Update permission account", description = "Update permission account by id")
     @PatchMapping("/account/update_role/{id}")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MessageResponse> updateRole(
             @Valid @NotNull @PathVariable String id,
             @EnumPattern(name = "Role", regexp = "ADMIN|USER|STAFF") @RequestParam RoleEnum role) {
+        log.info("Call API Update permission Account by id {}", id);
         Account account = accountServices.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Account id : " + id));
         account.setRole(role);
         account.setUpdateAt(LocalDateTime.now());
@@ -84,9 +88,11 @@ public class AccountController {
                 .build(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Update role-detail account", description = "Update role-detail account by id")
     @PatchMapping("/account/update_role_detail/{id}")
-    @PreAuthorize("hasRole('Admin')")
-    public ResponseEntity<MessageResponse> updateRoleDetail(@Valid @PathVariable String id, @NotEmpty @RequestParam("role-details") List<String> roleDetails) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<MessageResponse> updateRoleDetail(@Valid @NotNull @PathVariable String id, @NotEmpty @RequestParam("role-details") List<String> roleDetails) {
+        log.info("Call API Update role-detail Account by id {}", id);
         Account account = accountServices.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Account id : " + id));
         account.setRoles(roleDetails.stream()
                 .map(e -> roleDetailService.findByName(e)

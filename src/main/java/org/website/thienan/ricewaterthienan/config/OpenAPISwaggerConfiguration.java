@@ -7,6 +7,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
+@Slf4j
 public class OpenAPISwaggerConfiguration {
 
     @Bean
@@ -22,6 +24,7 @@ public class OpenAPISwaggerConfiguration {
                     @Value("${open.api.version}") String version,
                     @Value("${open.api.description}") String description,
                     @Value("${open.api.server}") String server) {
+        log.info("Config Swagger open api");
         return new OpenAPI().info(new Info().title(title)
                 .version(version)
                 .description(description)
@@ -37,6 +40,7 @@ public class OpenAPISwaggerConfiguration {
 
     @Bean
     GroupedOpenApi groupedOpenApi(){
+        log.info("Config group scan packages API");
         return GroupedOpenApi.builder()
                 .group("API-Service-thienan")
                 .packagesToScan("org.website.thienan.ricewaterthienan.controller.apiv1")
