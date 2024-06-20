@@ -50,35 +50,35 @@ public class Account extends BaseEntity {
     )
     Set<RoleDetail> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<Branch> branch;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<Brand> brands;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<Product> products ;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<Orders> orders;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<Categories> categories;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<Post> posts;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<Type> types;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<CategoriesPost> categoriesPosts;
 

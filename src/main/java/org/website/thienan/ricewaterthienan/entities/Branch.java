@@ -33,7 +33,7 @@ public class Branch extends  BaseEntity {
     @JsonBackReference
     Account account;
 
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<Product> products;
 }
