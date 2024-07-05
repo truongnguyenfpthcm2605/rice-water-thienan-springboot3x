@@ -144,7 +144,7 @@ public class PostController {
     }
 
     @Operation(summary = "Delete Post", description = "Delete post by Id (Integer")
-    @PutMapping("/post/delete/{id}")
+    @DeleteMapping("/post/delete/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
     public ResponseEntity<MessageResponse> delete(@Valid @NotNull @PathVariable Integer id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found post"));

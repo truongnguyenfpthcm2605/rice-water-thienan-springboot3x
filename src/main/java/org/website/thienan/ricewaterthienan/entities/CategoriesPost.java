@@ -10,9 +10,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "categories_post")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoriesPost extends  BaseEntity{
     @Id

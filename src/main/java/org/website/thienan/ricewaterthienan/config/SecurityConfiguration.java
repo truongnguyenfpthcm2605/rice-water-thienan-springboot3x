@@ -25,7 +25,6 @@ import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.security.jwt.JWTFilter;
 import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -85,9 +84,10 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         log.info("Config Cors API");
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
         configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
         configuration.addAllowedOrigin("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

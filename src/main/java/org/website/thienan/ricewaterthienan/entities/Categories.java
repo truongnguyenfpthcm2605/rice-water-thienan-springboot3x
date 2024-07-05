@@ -11,9 +11,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "categories")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Categories extends  BaseEntity {
 

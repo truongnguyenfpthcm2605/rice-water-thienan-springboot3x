@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: gao-nuoc-thien-an
+  profiles:
+    active: @spring.profiles.active@
+
+
+
+

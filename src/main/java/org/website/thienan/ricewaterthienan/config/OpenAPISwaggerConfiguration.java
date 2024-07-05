@@ -29,7 +29,7 @@ public class OpenAPISwaggerConfiguration {
                 .version(version)
                 .description(description)
                 .license(new License().name("Truong coder").url("https://github.com/truongnguyenfpthcm2605")))
-                .servers(List.of(new Server().url(server).description("Server Test")))
+                .servers(List.of(new Server().url(server).description(description)))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)

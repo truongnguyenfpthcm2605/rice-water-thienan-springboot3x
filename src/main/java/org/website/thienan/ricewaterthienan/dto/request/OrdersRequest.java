@@ -2,18 +2,16 @@ package org.website.thienan.ricewaterthienan.dto.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
 import org.website.thienan.ricewaterthienan.exceptions.customValidation.PhoneNumbers;
 import org.website.thienan.ricewaterthienan.exceptions.customValidation.StatusSubnet;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrdersRequest extends BaseRequest {
     @PhoneNumbers

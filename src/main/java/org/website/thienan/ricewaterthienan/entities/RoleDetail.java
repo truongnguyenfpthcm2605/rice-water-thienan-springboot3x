@@ -1,15 +1,17 @@
 package org.website.thienan.ricewaterthienan.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "role_detail")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleDetail extends  BaseEntity {
     @Id

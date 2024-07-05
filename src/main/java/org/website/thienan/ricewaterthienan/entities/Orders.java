@@ -3,20 +3,21 @@ package org.website.thienan.ricewaterthienan.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.NaturalId;
 import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
-import org.website.thienan.ricewaterthienan.exceptions.customValidation.EnumPattern;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "orders")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Orders extends BaseEntity {
     @Id

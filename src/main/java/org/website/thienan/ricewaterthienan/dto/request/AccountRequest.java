@@ -2,9 +2,10 @@ package org.website.thienan.ricewaterthienan.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.website.thienan.ricewaterthienan.enums.RoleEnum;
 import org.website.thienan.ricewaterthienan.exceptions.customValidation.EnumPattern;
 import org.website.thienan.ricewaterthienan.exceptions.customValidation.PasswordRegex;
@@ -13,11 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountRequest extends BaseRequest {

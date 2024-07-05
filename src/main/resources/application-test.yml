@@ -1,0 +1,12 @@
+server:
+  port: 8081
+spring:
+  config:
+    activate:
+      on-profile: test
+open:
+  api:
+    title : Gao Nuoc Thien  An API Testing
+    version : 1.0.0
+    description : API V1 Gao Nuoc Thien An Testing
+    server : http://localhost:${server.port}/

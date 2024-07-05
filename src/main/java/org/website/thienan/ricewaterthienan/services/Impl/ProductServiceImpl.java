@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     )
     public Product save(Product product) {
         Product saved = productRepository.save(product);
-        return productRepository.save(product);
+        return saved;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
     )
     public Product update(Product product) {
         Product saved = productRepository.save(product);
-        return productRepository.save(product);
+        return saved;
 
     }
 

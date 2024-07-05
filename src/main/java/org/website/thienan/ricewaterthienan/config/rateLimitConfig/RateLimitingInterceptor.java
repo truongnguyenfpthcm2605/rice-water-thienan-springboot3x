@@ -19,8 +19,8 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
 
     @Override
     public synchronized boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        log.info("preHandle Rate LimitApi");
-        String ipAddress = request.getRemoteAddr(); // get IP access
+        String ipAddress = request.getRemoteAddr();
+        log.info("preHandle Rate LimitApi {}",ipAddress);
         long currentTime = System.currentTimeMillis(); // get Current Time
         long count = requestCounts.getOrDefault(ipAddress, 0L); // check quantity request ip
         long lastRequestTime = requestCounts.getOrDefault(ipAddress + "_time", 0L); // get last time

@@ -1,0 +1,12 @@
+server:
+  port: 8080
+spring:
+  config:
+    activate:
+      on-profile: dev
+open:
+  api:
+    title : Gao Nuoc Thien  An API Developer
+    version : 1.0.0
+    description : API V1 Gao Nuoc Thien An Developer
+    server : http://localhost:${server.port}/
