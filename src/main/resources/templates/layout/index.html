@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"  th:fragment="dynamic(view)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Ogani Template">
+    <meta name="keywords" content="Ogani, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ogani | Template</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.3/angular-route.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-cookies/1.8.3/angular-cookies.min.js"
+        integrity="sha512-eM4WApD53FS2pv6fIgY4E2utWB82WSp3QPeoemIzA9VeOv9vQ1UzYBKIkXAwS71SCilEFpfkwtCZHj2uSS3keQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css" type="text/css">
+</head>
+
+<body ng-app="app" ng-controller="homeController">
+    
+
+<section class="youtube">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <img src="img/logothienan/z5410636376772_6c02b22f43997a040861da70d238a074.jpg
+           " alt="">
+            </div>
+            <div class="col-lg-6">
+                <div class="hero__search">
+                    <iframe width="100%" height="520" src="https://www.youtube.com/embed/17y53MnLq8Q"
+                        title="Thiên An tự hào nhà phân phối chính thức các sản phẩm gạo, nước của các doanh nghiệp uy tín tại VN"
+                        frameborder="2"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+            </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="lydo">
+                <img src="img/logothienan/5lydo.jpg" alt="" >
+            </div>
+            </div>
+
+
+        </div>
+</section><br>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="cach">
+                <img src="img/logothienan/5cach.jpg" alt="" >
+            </div>
+            </div>
+
+
+        </div>
+</section>
+
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="horizontal-line-with-border">
+                    <p class="centered-text">Sản phẩm tại Thiên An</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-6">
+                <div class="banner__pic">
+                    <a href="header.html"> <img src="img/logothienan/gao.png" width="250px" alt=""></a>
+                    <p>Gạo/Tấm/Nếp</p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-6">
+                <div class="banner__pic">
+                    <img src="img/logothienan/nuoc.png" width="250px" alt="">
+                    <p>Nước Tinh Khiết/Nước Khoán/Nước Ion Kiềm</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="horizontal-line-with-border">
+                    <p class="centered-text">Sản phẩm Gạo/Tấm/Nếp</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg">
+                    <a href="/product-details.html"><img src="img/logothienan/huong-lai-sua_0_1702183149.jpg.webp" alt=""></a>
+                    <br>
+                    <div>
+                        <p><a href="/product-details.html">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
+                       
+                    </div><hr><br>
+                    <div>
+                    <span class="original-price">23.000đ</span>
+                    <span class="discounted-price">20.000đ</span>
+                </div>
+                </div>
+                
+               
+              
+                    
+                
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg">
+                    <a href=""><img src="img/logothienan/huong-lai-sua_0_1702183149.jpg.webp" alt=""></a>
+                    <br>
+                    <div>
+                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
+                       
+                    </div><hr><br>
+                    <div>
+                    <span class="original-price">23.000đ</span>
+                    <span class="discounted-price">20.000đ</span>
+                </div>
+                </div>
+                
+               
+              
+                    
+                
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg">
+                    <a href=""><img src="img/logothienan/huong-lai-sua_0_1702183149.jpg.webp" alt=""></a>
+                    <br>
+                    <div>
+                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
+                       
+                    </div><hr><br>
+                    <div>
+                    <span class="original-price">23.000đ</span>
+                    <span class="discounted-price">20.000đ</span>
+                </div>
+                </div>
+                
+               
+              
+                    
+                
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg">
+                    <a href=""><img src="img/logothienan/huong-lai-sua_0_1702183149.jpg.webp" alt=""></a>
+                    <br>
+                    <div>
+                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
+                       
+                    </div><hr><br>
+                    <div>
+                    <span class="original-price">23.000đ</span>
+                    <span class="discounted-price">20.000đ</span>
+                </div>
+                </div>
+                
+               
+              
+                    
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Banner End -->
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="horizontal-line-with-border">
+                    <p class="centered-text">Sản phẩm Nước Tinh Khiết/Nước Khoán/Nước Ion Kiềm</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg">
+                    <a href=""><img src="img/logothienan/satori_0_1696323491.jpg.webp" alt=""></a>
+                    <br>
+                    <div>
+                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
+                       
+                    </div><hr><br>
+                    <div>
+                    <span class="original-price">23.000đ</span>
+                    <span class="discounted-price">20.000đ</span>
+                </div>
+                </div>
+                
+               
+              
+                    
+                
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg">
+                    <a href=""><img src="img/logothienan/satori_0_1696323491.jpg.webp" alt=""></a>
+                    <br>
+                    <div>
+                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
+                       
+                    </div><hr><br>
+                    <div>
+                    <span class="original-price">23.000đ</span>
+                    <span class="discounted-price">20.000đ</span>
+                </div>
+                </div>
+                
+               
+              
+                    
+                
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg">
+                    <a href=""><img src="img/logothienan/satori_0_1696323491.jpg.webp" alt=""></a>
+                    <br>
+                    <div>
+                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
+                       
+                    </div><hr><br>
+                    <div>
+                    <span class="original-price">23.000đ</span>
+                    <span class="discounted-price">20.000đ</span>
+                </div>
+                </div>
+                
+               
+              
+                    
+                
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg">
+                    <a href=""><img src="img/logothienan/satori_0_1696323491.jpg.webp" alt=""></a>
+                    <br>
+                    <div>
+                        <p><a href="#">Nước khoáng thiên nhiên La Vie 19L (Bình) không vòi </a></p>
+                       
+                    </div><hr><br>
+                    <div>
+                    <span class="original-price">23.000đ</span>
+                    <span class="discounted-price">20.000đ</span>
+                </div>
+                </div>
+                
+               
+              
+                    
+                
+            </div>
+        </div>
+    </div>
+</div>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="horizontal-line-with-border">
+                    <p class="centered-text">Bản tin Thiên An</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="horizontal-line-with-border">
+                    <p class="centered-text">Sức khỏe và Gia đình</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="horizontal-line-with-border">
+                    <p class="centered-text">Chỉ đường đến Thiên An</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+    <!-- Js Plugins -->
+    <script src="angular/routes.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.nice-select.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/jquery.slicknav.js"></script>
+    <script src="js/mixitup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/angulajs.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+    <!-- <script>
+    function showDropdown(menuId) {
+    var dropdownMenu = document.getElementById(menuId);
+    dropdownMenu.classList.add('show');
+}
+
+function hideDropdown(menuId) {
+    var dropdownMenu = document.getElementById(menuId);
+    dropdownMenu.classList.remove('show');
+}
+
+</script> -->
+
+<script>
+    $(document).ready(function() {
+        $('.dropdown').hover(
+            function() {
+                $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeIn();
+            },
+            function() {
+                $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeOut();
+            }
+        );
+    });
+    </script>
+   <script>
+    angular.module('app', [])
+        .controller('homeController', function($scope) {
+            $scope.isMenuVisible = false;
+
+            $scope.showMenu = function() {
+                $scope.isMenuVisible = true;
+            };
+
+            $scope.hideMenu = function() {
+                $scope.isMenuVisible = false;
+            };
+        });
+</script>
+    
+    <script>
+        let app = angular.module("app", ['ngRoute', 'ngCookies'])
+        app.controller("homeController", function ($scope, $rootScope, $http, $location) {
+
+        });
+       
+    </script>
+</body>
+
+</html>
