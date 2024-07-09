@@ -23,4 +23,5 @@ public class ChatGPTController {
     public String sendPrompt(@Valid @NotNull @RequestParam String prompt) {
         return chatGPTService.chat(prompt);
     }
+
 }

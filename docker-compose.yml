@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql:8.0.3
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: gaonuocthienan
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 12345678
+      MYSQL_ROOT_PASSWORD: 12345678
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/gaonuocthienan
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 12345678
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8081"
+
+volumes:
+  mysql_data:
+
+#  docker-compose up --build

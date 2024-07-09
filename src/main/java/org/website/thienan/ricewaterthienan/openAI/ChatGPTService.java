@@ -14,9 +14,7 @@ public class ChatGPTService {
     @Value("${chat.api.url}")
     private String apiURL;
 
-
     private final RestTemplate template;
-
 
     public String chat(String prompt){
         ChatGPTRequest request=new ChatGPTRequest(model, prompt.isEmpty() ? "Hello" : prompt);

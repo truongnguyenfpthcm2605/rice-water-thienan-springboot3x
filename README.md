@@ -1,7 +1,8 @@
 # Step 1 : Setup JDK 17 and Mysql 8.0.3 in your Computer
 # Step 2 : install Ubuntu 
 # Step 3 : 
-1. install : redis => Start redis 
+1. install : redis => Start redis in 
+   - http://localhost:6739 (local)
 2. install elasticsearch :
    - wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add –
      -	sudo sh -c 'echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" > /etc/apt/sources.list.d/elastic-7.x.list'
@@ -16,5 +17,9 @@
 # Step 4 : Start servers 
 # Step 5 : Install Maven 
 # Document API = > http://localhost:8080/swagger-ui/index.html
+# Run App : 
+    - java -jar target/rice-water-thienan-0.0.1-SNAPSHOT.jar
+# Build App:
+    - mvn clean package -P (dev,test,product)
 
     
