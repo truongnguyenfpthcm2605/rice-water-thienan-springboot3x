@@ -1,13 +1,10 @@
 package org.website.thienan.ricewaterthienan.controller.apiv1;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
-import org.website.thienan.ricewaterthienan.openAI.ChatGPTService;
 
 @RestController
 @RequestMapping(value = UrlApi.API_V1)
@@ -15,13 +12,26 @@ import org.website.thienan.ricewaterthienan.openAI.ChatGPTService;
 @Tag(name = "Chat GPT API")
 public class ChatGPTController {
 
-    private final ChatGPTService chatGPTService;
-
-    // Cannot use API, because we need pay for them!
-    @Operation(summary = "Chat GPT API", description = "Chat Bot API")
-    @PostMapping("/chat")
-    public String sendPrompt(@Valid @NotNull @RequestParam String prompt) {
-        return chatGPTService.chat(prompt);
-    }
-
+//    private final OpenAiChatModel chatClient;
+//
+//    @Autowired
+//    public ChatOpenAIController(OpenAiChatModel chatClient) {
+//        this.chatClient = chatClient;
+//    }
+//
+//    @GetMapping("/")
+//    public String hello(){
+//        return "Hello World";
+//    }
+//
+//    @GetMapping("/ai/generate")
+//    public Map<String, Object> generate(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
+//        return Map.of("generation", chatClient.call(message));
+//    }
+//
+//    @GetMapping("/ai/generateStream")
+//    public Flux<ChatResponse> generateStream(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
+//        Prompt prompt = new Prompt(new UserMessage(message));
+//        return chatClient.stream(prompt);
+//    }
 }

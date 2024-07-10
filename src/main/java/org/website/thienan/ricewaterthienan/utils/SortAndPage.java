@@ -12,9 +12,6 @@ public class SortAndPage{
     public static Sort getSortUp(String keySort) {
         return Sort.by(Sort.Direction.ASC, keySort);
     }
-    public static Pageable getPage(Integer number, Integer pageSize){
-        return PageRequest.of(number, pageSize);
-    }
     public static Pageable getPage(Integer number,Integer pageSize,Sort sort){
         return PageRequest.of(number, pageSize,sort);
     }

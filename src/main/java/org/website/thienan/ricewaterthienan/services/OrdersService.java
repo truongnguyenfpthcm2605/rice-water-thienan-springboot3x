@@ -15,7 +15,6 @@ public interface OrdersService{
     void deleteById(String id);
     Page<Orders> findByKeyword(Pageable pageable, String keyword);
     Page<Orders> findByActive(Pageable pageable,Boolean active);
-
     Page<Orders> findByStatus(Pageable pageable, String status);
 
 

@@ -1,6 +1,7 @@
 package org.website.thienan.ricewaterthienan.config.languageConfig;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -17,7 +18,7 @@ public class LocalResolver extends AcceptHeaderLocaleResolver implements WebMvcC
     List<Locale> LOCALES = List.of(new Locale("en"), new Locale("vi"));
 
     @Override
-    public Locale resolveLocale(HttpServletRequest request) {
+    public Locale resolveLocale(@NotNull HttpServletRequest request) {
         String languageHeader = request.getHeader("Accept-Language");
         return !StringUtils.hasLength(languageHeader)
                 ? Locale.US
