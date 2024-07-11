@@ -21,7 +21,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.security.jwt.JWTFilter;
 import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
 
@@ -36,7 +35,6 @@ public class SecurityConfiguration {
 
     private final AccountDetailService accountDetailService;
     private final JWTFilter jwtAuthFilter;
-
     @Bean
     PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
@@ -68,6 +66,11 @@ public class SecurityConfiguration {
                                 .clearAuthentication(true)
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/v1/auth/logout"))
                                 .logoutSuccessUrl("/api/v1/auth/logout/success")
+                )
+                .oauth2Login(oauth2 ->
+                     oauth2.authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig.baseUri("/oauth2/authorization"))
+                             .defaultSuccessUrl("/api/v1/auth/oauth2/success")
+                             .failureUrl("/api/v1/auth/oauth2/fail")
                 )
 
                 .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/api/v1/auth/denied")))

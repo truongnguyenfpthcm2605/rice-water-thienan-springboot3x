@@ -174,7 +174,6 @@ public class AuthenticationController {
                 .code(403).timeStamp(LocalDateTime.now()).message("Access Denied , You Login , Please !").build(), HttpStatus.UNAUTHORIZED);
     }
 
-
     @PostMapping("/auth/refresh-token")
     public ResponseEntity<AccountResponse> refreshToken(@RequestParam("re-fresh-token") String refreshToken) {
         try {
@@ -202,7 +201,16 @@ public class AuthenticationController {
         }
     }
 
+    @GetMapping("/auth/oauth2/success")
+    public ResponseEntity<Object> successOAuth2Login() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return new ResponseEntity<>(authentication, HttpStatus.OK);
+    }
 
+    @GetMapping("/auth/oauth2/fail")
+    public ResponseEntity<Object> failOAuth2Login() {
+        return new ResponseEntity<>("Fail", HttpStatus.OK);
+    }
 
 
     private Account account(AccountRequest accountRequest) {
