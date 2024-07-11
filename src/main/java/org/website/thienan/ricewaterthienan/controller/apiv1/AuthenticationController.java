@@ -43,14 +43,13 @@ public class AuthenticationController {
     private final RoleDetailService roleDetailService;
     private final MailService mailService;
     private final AccountDetailService accountDetailService;
-
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     @PostMapping("/auth/login")
     public ResponseEntity<MessageResponse> login(@Valid @RequestBody AccountRequest accountRequest, Errors errors) {
         if (errors.hasErrors()) {
             return new ResponseEntity<>(MessageResponse.builder()
-                    .code(405)
+                    .code(HttpStatus.BAD_REQUEST.value())
                     .message("Email and password is not empty")
                     .timeStamp(LocalDateTime.now())
                     .build()
@@ -172,7 +171,7 @@ public class AuthenticationController {
     @GetMapping("/auth/denied")
     public ResponseEntity<MessageResponse> accessDenied() {
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(401).timeStamp(LocalDateTime.now()).message("Access Denied , You Login , Please !").build(), HttpStatus.UNAUTHORIZED);
+                .code(403).timeStamp(LocalDateTime.now()).message("Access Denied , You Login , Please !").build(), HttpStatus.UNAUTHORIZED);
     }
 
 

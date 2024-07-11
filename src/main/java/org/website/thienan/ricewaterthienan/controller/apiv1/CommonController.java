@@ -41,4 +41,6 @@ public class CommonController {
             return new ResponseEntity<>("Stronger Server : " + computer, HttpStatus.OK);
     }
 
+
+
 }

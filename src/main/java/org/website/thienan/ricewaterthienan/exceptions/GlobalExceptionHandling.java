@@ -76,7 +76,7 @@ public class GlobalExceptionHandling {
     }
 
     @ExceptionHandler({PermissionDeniedException.class, AccessDeniedException.class})
-    public ResponseEntity<MessageResponse> handlingPermissionException(FileException ex){
+    public ResponseEntity<MessageResponse> handlingPermissionException(AccessDeniedException ex){
         log.info("Permission Exception {}:", ex.getMessage());
         return new ResponseEntity<>(MessageResponse.builder().
                 code(MessagesHanlderEnum.PERMISSION.getCode())

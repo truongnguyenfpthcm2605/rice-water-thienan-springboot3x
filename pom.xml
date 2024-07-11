@@ -150,7 +150,6 @@
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
 			<artifactId>spring-ai-openai-spring-boot-starter</artifactId>
-			<version>1.0.0-M1</version>
 		</dependency>
 	</dependencies>
 
