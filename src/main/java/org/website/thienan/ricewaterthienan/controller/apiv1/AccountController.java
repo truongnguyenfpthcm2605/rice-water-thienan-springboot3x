@@ -59,7 +59,6 @@ public class AccountController {
         account.setName(accountRequest.getName());
         account.setAvatar(accountRequest.getAvatar());
         account.setEmail(accountRequest.getEmail());
-        account.setUpdateAt(LocalDateTime.now());
         accountServices.update(account);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())
@@ -78,7 +77,6 @@ public class AccountController {
         log.info("Call API Update permission Account by id {}", id);
         Account account = accountServices.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Account id : " + id));
         account.setRole(role);
-        account.setUpdateAt(LocalDateTime.now());
         accountServices.update(account);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())
@@ -97,7 +95,6 @@ public class AccountController {
         account.setRoles(roleDetails.stream()
                 .map(e -> roleDetailService.findByName(e)
                         .orElseThrow(() -> new ResourceNotFoundException("Not found Role Name + " + e))).collect(Collectors.toSet()));
-        account.setUpdateAt(LocalDateTime.now());
         accountServices.update(account);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())

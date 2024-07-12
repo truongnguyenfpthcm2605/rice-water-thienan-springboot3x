@@ -112,7 +112,6 @@ public class RoleDetailController {
         RoleDetail roleDetail = roleDetailService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Role Detail"));
         roleDetail.setName(name);
         roleDetail.setActive(active);
-        roleDetail.setUpdateAt(LocalDateTime.now());
         roleDetailService.save(roleDetail);
         return new ResponseEntity<>(
                 MessageResponse.builder()

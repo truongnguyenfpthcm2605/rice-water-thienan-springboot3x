@@ -106,7 +106,6 @@ public class BranchController {
         branch.setLink(branchRequest.getLink());
         branch.setViews(branchRequest.getViews());
         branch.setName(branchRequest.getName());
-        branch.setUpdateAt(LocalDateTime.now());
         branch.setAccount(accountServices.findById(branchRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Account not found!")));
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())
@@ -122,7 +121,6 @@ public class BranchController {
         log.info("Delete Branch by Id {}",id);
         Branch branch = branchService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found!"));
         branch.setActive(false);
-        branch.setUpdateAt(LocalDateTime.now());
         branchService.update(branch);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())

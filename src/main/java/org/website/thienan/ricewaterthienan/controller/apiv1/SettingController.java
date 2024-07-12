@@ -68,7 +68,6 @@ public class SettingController {
     public ResponseEntity<MessageResponse> update(@Valid @RequestBody Setting settingR){
         log.info("Update setting");
         Setting setting = settingRepository.findById(settingR.getId()).orElseThrow(() -> new ResourceNotFoundException("Not found Setting"));
-        setting.setUpdateAt(LocalDateTime.now());
         setting.setActive(settingR.getActive());
         setting.setCustom(settingR.getCustom());
         settingRepository.update(setting);

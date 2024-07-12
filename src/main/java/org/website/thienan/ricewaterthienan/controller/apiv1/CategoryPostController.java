@@ -105,7 +105,6 @@ public class CategoryPostController {
         categoriesPost.setLink(categoriesPostRequest.getLink());
         categoriesPost.setViews(categoriesPostRequest.getViews());
         categoriesPost.setName(categoriesPostRequest.getName());
-        categoriesPost.setUpdateAt(LocalDateTime.now());
         categoriesPost.setAccount(accountServices.findById(categoriesPostRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Account not found!")));
         categoriesPostService.update(categoriesPost);
         return new ResponseEntity<>(MessageResponse.builder()
@@ -122,7 +121,6 @@ public class CategoryPostController {
         log.info("Delete Category post ID {}", id);
         CategoriesPost categoriesPost = categoriesPostService.findById(id).orElseThrow(() -> new ResourceNotFoundException("CategoryPost not found!"));
         categoriesPost.setActive(false);
-        categoriesPost.setUpdateAt(LocalDateTime.now());
         categoriesPostService.update(categoriesPost);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())

@@ -92,26 +92,13 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<MessageResponse> save(@Valid @RequestBody ProductRequest productRequest) {
         log.info("save product {}", productRequest);
-        Product product = new Product();
-        product.setName(productRequest.getName());
-        product.setLink(productRequest.getLink());
-        product.setPrice(productRequest.getPrice());
-        product.setCost(productRequest.getCost());
-        product.setAvatar(productRequest.getAvatar());
-        product.setDescription(productRequest.getDescription());
-        product.setViews(productRequest.getViews());
-        product.setContent(productRequest.getContent());
-        product.setActive(true);
-        product.setAccount(accountServices.findById(productRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
-        product.setBranch(branchService.findById(productRequest.getBranchId()).orElseThrow(() -> new ResourceNotFoundException("Not found Branch")));
-        product.setBrand(brandService.findById(productRequest.getBrandId()).orElseThrow(() -> new ResourceNotFoundException("Not found Brand")));
-        product.setCategories(productRequest.getCategories().stream()
-                .map(e -> categoriesService.findByName(e).orElseThrow(() -> new ResourceNotFoundException("Not found Category"))).collect(Collectors.toSet()));
+        Product product = getProduct(new Product(),productRequest);
+        productService.save(product);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Save product successfully!")
-                .data(productService.save(product)).build(), HttpStatus.OK);
+                .data(product.getName()).build(), HttpStatus.OK);
     }
 
     @Operation(summary = "Update product", description = "Update product")
@@ -119,6 +106,31 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<MessageResponse> update(@Valid @NotNull @PathVariable String id, @RequestBody ProductRequest productRequest) {
         Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Product"));
+        Product update = getProduct(product,productRequest);
+        productService.save(update);
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(HttpStatus.OK.value())
+                .timeStamp(LocalDateTime.now())
+                .message("Update product successfully! ")
+                .data(update.getName()).build(), HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Delete product", description = "Delete product")
+    @DeleteMapping("/product/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<MessageResponse> delete(@Valid @NotNull @PathVariable String id) {
+        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Product"));
+        product.setActive(false);
+        productService.update(product);
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(HttpStatus.OK.value())
+                .timeStamp(LocalDateTime.now())
+                .message("Delete product successfully! ")
+                .data("success").build(), HttpStatus.OK);
+    }
+
+    private Product getProduct(Product product, ProductRequest productRequest) {
         product.setName(productRequest.getName());
         product.setLink(productRequest.getLink());
         product.setPrice(productRequest.getPrice());
@@ -133,27 +145,6 @@ public class ProductController {
         product.setBrand(brandService.findById(productRequest.getBrandId()).orElseThrow(() -> new ResourceNotFoundException("Not found Brand")));
         product.setCategories(productRequest.getCategories().stream()
                 .map(e -> categoriesService.findByName(e).orElseThrow(() -> new ResourceNotFoundException("Not found Category"))).collect(Collectors.toSet()));
-        productService.update(product);
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .timeStamp(LocalDateTime.now())
-                .message("Update product successfully! ")
-                .data(id).build(), HttpStatus.OK);
-    }
-
-
-    @Operation(summary = "Delete product", description = "Delete product")
-    @DeleteMapping("/product/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MessageResponse> delete(@Valid @NotNull @PathVariable String id) {
-        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Product"));
-        product.setActive(false);
-        product.setUpdateAt(LocalDateTime.now());
-        productService.update(product);
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .timeStamp(LocalDateTime.now())
-                .message("Delete product successfully! ")
-                .data("success").build(), HttpStatus.OK);
+        return product;
     }
 }

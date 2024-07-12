@@ -180,7 +180,6 @@ public class OrdersController {
         orders.setAddress(OrdersRequest.getAddress());
         orders.setStatus(OrdersRequest.getStatus());
         orders.setNotes(OrdersRequest.getNotes());
-        orders.setUpdateAt(LocalDateTime.now());
         Orders ordersSave = ordersService.save(orders);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())

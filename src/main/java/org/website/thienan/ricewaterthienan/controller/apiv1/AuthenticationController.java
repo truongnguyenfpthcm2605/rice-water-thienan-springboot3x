@@ -1,8 +1,11 @@
 package org.website.thienan.ricewaterthienan.controller.apiv1;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.website.thienan.ricewaterthienan.controller.UrlApi;
 import org.website.thienan.ricewaterthienan.dto.request.AccountRequest;
@@ -35,6 +37,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Authentication Controller API ")
+@Slf4j
 @RequestMapping(value = UrlApi.API_V1)
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
@@ -45,16 +49,9 @@ public class AuthenticationController {
     private final AccountDetailService accountDetailService;
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
+    @Operation(summary = "Login Account", description = "Login Account and return Token")
     @PostMapping("/auth/login")
-    public ResponseEntity<MessageResponse> login(@Valid @RequestBody AccountRequest accountRequest, Errors errors) {
-        if (errors.hasErrors()) {
-            return new ResponseEntity<>(MessageResponse.builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message("Email and password is not empty")
-                    .timeStamp(LocalDateTime.now())
-                    .build()
-                    , HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<MessageResponse> login(@Valid @RequestBody AccountRequest accountRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(accountRequest.getEmail(), accountRequest.getPassword())
@@ -64,7 +61,7 @@ public class AuthenticationController {
             String token = jwtProvider.generateToken(accountService);
             String refreshToken = jwtProvider.generateRefreshToken(new HashMap<>(), accountService);
             return new ResponseEntity<>(MessageResponse.builder()
-                    .code(200)
+                    .code(HttpStatus.OK.value())
                     .timeStamp(LocalDateTime.now())
                     .message("Login Successfully")
                     .data(AccountResponse.builder()
@@ -80,25 +77,18 @@ public class AuthenticationController {
                     HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(MessageResponse.builder()
-                    .code(500)
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                     .message("Login Fail!")
                     .timeStamp(LocalDateTime.now()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @Operation(summary = "Signup Account", description = "Sign Account Information")
     @PostMapping("/auth/log-up")
-    public ResponseEntity<MessageResponse> logUp(@Valid @RequestBody AccountRequest accountRequest, Errors errors) {
-        if (errors.hasErrors()) {
-            return new ResponseEntity<>(MessageResponse.builder()
-                    .code(405)
-                    .message("Fields is valid")
-                    .timeStamp(LocalDateTime.now())
-                    .build()
-                    , HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<MessageResponse> logUp(@Valid @RequestBody AccountRequest accountRequest) {
         if (accountServices.findByEmailAndActive(accountRequest.getEmail(), true).isPresent()) {
             return new ResponseEntity<>(MessageResponse.builder()
-                    .code(401)
+                    .code(HttpStatus.BAD_REQUEST.value())
                     .message("Account Email existed")
                     .timeStamp(LocalDateTime.now())
                     .build()
@@ -106,37 +96,39 @@ public class AuthenticationController {
         }
         Account account = accountServices.save(account((accountRequest)));
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
-                .message("LogUp Successfully")
-                .data(account.getId())
+                .message("Sign Up Successfully")
+                .data(account.getName())
                 .build(),
                 HttpStatus.OK);
     }
 
-    @PostMapping("/auth/change-password")
-    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
+    @Operation(summary = "Change password Account", description = "Change password account information")
+    @PatchMapping("/auth/change-password")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
     public ResponseEntity<MessageResponse> changePassword(@RequestParam("email") String email,
-                                                          @RequestParam("newPassword") String newPassword) {
-        Account account = accountServices.findByEmailAndActive(email, true).orElse(null);
-        if (account != null) {
-            if (passwordEncoder.matches(newPassword, account.getPassword())) {
-                account.setPassword(passwordEncoder.encode(newPassword));
-                Account account1 = accountServices.update(account);
-                return new ResponseEntity<>(MessageResponse.builder()
-                        .code(200).message("Change Password successfully")
-                        .data(account1.getId())
-                        .timeStamp(LocalDateTime.now()).build(), HttpStatus.OK);
-            }
+                                                          @RequestParam("new") String newPassword,
+                                                          @RequestParam("current") String currentPassword
+    ) {
+        Account account = accountServices.findByEmailAndActive(email, true).orElseThrow(() -> new ResourceNotFoundException(email));
+        if (passwordEncoder.matches(currentPassword, account.getPassword())) {
+            account.setPassword(passwordEncoder.encode(newPassword));
+            Account account1 = accountServices.update(account);
+            return new ResponseEntity<>(MessageResponse.builder()
+                    .code(HttpStatus.OK.value()).message("Change Password successfully")
+                    .data(account1.getId())
+                    .timeStamp(LocalDateTime.now()).build(), HttpStatus.OK);
         }
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(405).message("Old password valid")
+                .code(HttpStatus.BAD_REQUEST.value()).message("current password invalid")
                 .timeStamp(LocalDateTime.now()).build(), HttpStatus.BAD_REQUEST);
 
     }
 
-    @PostMapping("/auth/remember_password")
-    @PreAuthorize("hasAnyRole('Admin', 'Staff','User')")
+    @Operation(summary = "remember password Account", description = "remember password account information for email confirm")
+    @PatchMapping("/auth/remember_password")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
     public ResponseEntity<MessageResponse> remember(@RequestParam("email") String email) throws MessagingException {
         Account account = accountServices.findByEmailAndActive(email, true).orElseThrow(() -> new ResourceNotFoundException("Not found Account with email :" + email));
         String refreshPassword = randomCodeMail();
@@ -147,33 +139,34 @@ public class AuthenticationController {
                         "    <p>Xin chào Bạn,Chúng tôi cần xác minh địa chỉ email của bạn để đảm bảo là có thể liên hệ với bạn sau khi xem xét\n" +
                         "      ID.</p>\n" +
                         "    <p>Chúng tôi cần xác minh địa chỉ email của bạn để đảm bảo là có thể liên hệ với bạn sau khi xem xét ID.</p>\n" +
-                        "    <h5>Mã xác nhận</h5>" +
+                        "    <h5> Mật khẩu mới của bạn</h5>" +
                         "<h2 style=color: #116D6E;>" + refreshPassword + "</h2>" +
                         "      <br>" +
-                        "    <p style=font-size: 15px;font-weight: 200;>Tin nhắn này được gửi tới bạn theo yêu cầu của Travel Bee.\n" +
+                        "    <p style=font-size: 15px;font-weight: 200;>Tin nhắn này được gửi tới bạn theo yêu cầu của Gạo Và Nước Thiên An.\n" +
                         "      Gạo Và Nước Thiên An © 2024 All rights . Privacy Policy|T&C|System Status</p>\n" +
                         "  </div>");
         account.setPassword(passwordEncoder.encode(refreshPassword));
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .timeStamp(LocalDateTime.now())
                 .message("Send refresh Password for Mail success full")
-                .data(accountServices.update(account).getId()).build(), HttpStatus.OK);
+                .data(accountServices.update(account).getName()).build(), HttpStatus.OK);
     }
 
 
     @PostMapping("/auth/logout/success")
     public ResponseEntity<MessageResponse> logout() {
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(200).timeStamp(LocalDateTime.now()).message("Logout successfully").build(), HttpStatus.OK);
+                .code(HttpStatus.OK.value()).timeStamp(LocalDateTime.now()).message("Logout successfully").build(), HttpStatus.OK);
     }
 
     @GetMapping("/auth/denied")
     public ResponseEntity<MessageResponse> accessDenied() {
         return new ResponseEntity<>(MessageResponse.builder()
-                .code(403).timeStamp(LocalDateTime.now()).message("Access Denied , You Login , Please !").build(), HttpStatus.UNAUTHORIZED);
+                .code(HttpStatus.FORBIDDEN.value()).timeStamp(LocalDateTime.now()).message("Access Denied , You Login , Please !").build(), HttpStatus.UNAUTHORIZED);
     }
 
+    @Operation(summary = "RefreshToken Account", description = "Refresh Token after token expired ")
     @PostMapping("/auth/refresh-token")
     public ResponseEntity<AccountResponse> refreshToken(@RequestParam("re-fresh-token") String refreshToken) {
         try {

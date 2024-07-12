@@ -92,24 +92,12 @@ public class TypeController {
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<MessageResponse> save(@Valid @RequestBody TypeRequest typeRequest) {
         log.info("Save type");
-        Type type = new Type();
-        type.setTitle(typeRequest.getTitle());
-        type.setLink(typeRequest.getLink());
-        type.setContent(typeRequest.getContent());
-        type.setIntroduction(typeRequest.getIntroduction());
-        type.setActive(true);
-        type.setAvatar(typeRequest.getAvatar());
-        type.setImageHeader(typeRequest.getImageHeader());
-        type.setViews(typeRequest.getViews());
-        type.setAccount(accountServices.findById(typeRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
-        type.setPosts(typeRequest.getTypePost().stream()
-                .map(e -> postService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found post"))).collect(Collectors.toSet()));
         return new ResponseEntity<>(
                 MessageResponse.builder()
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Save Type Success")
-                        .data(typeRepository.save(type).getId()).build(), HttpStatus.OK
+                        .data(typeRepository.save(getType(new Type(),typeRequest)).getId()).build(), HttpStatus.OK
         );
 
     }
@@ -120,23 +108,12 @@ public class TypeController {
     public ResponseEntity<MessageResponse> update(@Valid @RequestBody TypeRequest typeRequest, @NotNull @PathVariable Integer id) {
         log.info("Update Type");
         Type type = typeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found type"));
-        type.setTitle(typeRequest.getTitle());
-        type.setLink(typeRequest.getLink());
-        type.setContent(typeRequest.getContent());
-        type.setIntroduction(typeRequest.getIntroduction());
-        type.setActive(typeRequest.getActive());
-        type.setAvatar(typeRequest.getAvatar());
-        type.setImageHeader(typeRequest.getImageHeader());
-        type.setViews(typeRequest.getViews());
-        type.setAccount(accountServices.findById(typeRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
-        type.setPosts(typeRequest.getTypePost().stream()
-                .map(e -> postService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found Post"))).collect(Collectors.toSet()));
         return new ResponseEntity<>(
                 MessageResponse.builder()
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Update Type Success")
-                        .data(typeRepository.update(type)).build(), HttpStatus.OK);
+                        .data(typeRepository.update(getType(type,typeRequest))).build(), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete Type", description = "Delete type")
@@ -153,6 +130,23 @@ public class TypeController {
                         .timeStamp(LocalDateTime.now())
                         .message("Delete Post Success")
                         .data("Success").build(), HttpStatus.OK);
+    }
+
+
+    private Type getType(Type type, TypeRequest typeRequest) {
+        type.setTitle(typeRequest.getTitle());
+        type.setLink(typeRequest.getLink());
+        type.setContent(typeRequest.getContent());
+        type.setIntroduction(typeRequest.getIntroduction());
+        type.setActive(typeRequest.getActive());
+        type.setAvatar(typeRequest.getAvatar());
+        type.setImageHeader(typeRequest.getImageHeader());
+        type.setViews(typeRequest.getViews());
+        type.setAccount(accountServices.findById(typeRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
+        type.setPosts(typeRequest.getTypePost().stream()
+                .map(e -> postService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found post"))).collect(Collectors.toSet()));
+
+        return type;
     }
 
 }

@@ -106,7 +106,6 @@ public class BrandController {
         brand.setAvatar(brandRequest.getAvatar());
         brand.setViews(brandRequest.getViews());
         brand.setName(brandRequest.getName());
-        brand.setUpdateAt(LocalDateTime.now());
         brand.setAccount(accountServices.findById(brandRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Account not found!")));
         brandService.update(brand);
         return new ResponseEntity<>(MessageResponse.builder()
@@ -123,7 +122,6 @@ public class BrandController {
         log.info("Delete brand id {}", id);
         Brand brand = brandService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found!"));
         brand.setActive(false);
-        brand.setUpdateAt(LocalDateTime.now());
         brandService.update(brand);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())

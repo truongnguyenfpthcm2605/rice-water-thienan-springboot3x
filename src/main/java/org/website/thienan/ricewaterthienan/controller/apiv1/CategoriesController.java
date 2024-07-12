@@ -117,7 +117,6 @@ public class CategoriesController {
         categories.setViews(categoriesRequest.getViews());
         categories.setActive(categoriesRequest.getActive());
         categories.setAccount(accountServices.findById(categoriesRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account ID" + categoriesRequest.getAccountId())  ));
-        categories.setUpdateAt(LocalDateTime.now());
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())
                 .message("Categories update successfully")
@@ -133,7 +132,6 @@ public class CategoriesController {
         log.info("Delete category by id {}", id);
         Categories categories = categoriesService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Categories Notfound ID" + id));
         categories.setActive(false);
-        categories.setUpdateAt(LocalDateTime.now());
         categoriesService.update(categories);
         return new ResponseEntity<>(MessageResponse.builder()
                 .code(HttpStatus.OK.value())

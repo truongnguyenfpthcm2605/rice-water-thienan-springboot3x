@@ -1,12 +1,12 @@
-#server:
-#  port: 8082
-#spring:
-#  config:
-#    activate:
-#      on-profile: product
-#open:
-#  api:
-#    title : Gao Nuoc Thien  An API Production
-#    version : 1.0.0
-#    description : API V1 Gao Nuoc Thien An Production
-#    server : http://localhost:${server.port}/
+server:
+  port: 8082
+spring:
+  config:
+    activate:
+      on-profile: product
+open:
+  api:
+    title : Gao Nuoc Thien  An API Production
+    version : 1.0.0
+    description : API V1 Gao Nuoc Thien An Production
+    server : http://localhost:${server.port}/

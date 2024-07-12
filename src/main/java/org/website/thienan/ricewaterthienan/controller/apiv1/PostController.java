@@ -94,25 +94,12 @@ public class PostController {
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
     public ResponseEntity<MessageResponse> save(@Valid @RequestBody PostRequest postRequest) {
         log.info("Save Post");
-        Post post = new Post();
-        post.setTitle(postRequest.getTitle());
-        post.setLink(postRequest.getLink());
-        post.setContent(postRequest.getContent());
-        post.setIntroduction(postRequest.getIntroduction());
-        post.setActive(true);
-        post.setAvatar(postRequest.getAvatar());
-        post.setImageHeader(postRequest.getImageHeader());
-        post.setViews(postRequest.getViews());
-        post.setAccount(accountServices.findById(postRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
-        post.setCategoryPost(categoriesPostService.findById(postRequest.getCategoriesPostId()).orElseThrow(() -> new ResourceNotFoundException("Not found Category Post")));
-        post.setCategories(postRequest.getCategories().stream()
-                .map(e -> categoriesService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not Found Category ID"))).collect(Collectors.toSet()));
         return new ResponseEntity<>(
                 MessageResponse.builder()
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Save Post Success")
-                        .data(postService.save(post).getId()).build(), HttpStatus.OK);
+                        .data(postService.save(getPost(new Post(),postRequest)).getId()).build(), HttpStatus.OK);
 
     }
 
@@ -122,8 +109,31 @@ public class PostController {
     public ResponseEntity<MessageResponse> update(@Valid @RequestBody PostRequest postRequest, @NotNull @PathVariable Integer id) {
         log.info("Update post");
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found post"));
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Update Post Success")
+                        .data(postService.update(getPost(post,postRequest)).getId()).build(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Delete Post", description = "Delete post by Id (Integer")
+    @DeleteMapping("/post/delete/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
+    public ResponseEntity<MessageResponse> delete(@Valid @NotNull @PathVariable Integer id) {
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found post"));
+        post.setActive(false);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Delete Post Success")
+                        .data(postService.update(post).getId()).build(), HttpStatus.OK);
+    }
+
+    private  Post getPost(Post post,PostRequest postRequest) {
+        post.setTitle(postRequest.getTitle());
         post.setLink(postRequest.getLink());
-        post.setUpdateAt(LocalDateTime.now());
         post.setContent(postRequest.getContent());
         post.setIntroduction(postRequest.getIntroduction());
         post.setActive(postRequest.getActive());
@@ -133,29 +143,8 @@ public class PostController {
         post.setAccount(accountServices.findById(postRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
         post.setCategoryPost(categoriesPostService.findById(postRequest.getCategoriesPostId()).orElseThrow(() -> new ResourceNotFoundException("Not found Category Post")));
         post.setCategories(postRequest.getCategories().stream()
-                .map(e -> categoriesService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found category ID"))).collect(Collectors.toSet()));
-        return new ResponseEntity<>(
-                MessageResponse.builder()
-                        .code(HttpStatus.OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .message("Update Post Success")
-                        .data(postService.update(post).getId()).build(), HttpStatus.OK
-        );
-    }
-
-    @Operation(summary = "Delete Post", description = "Delete post by Id (Integer")
-    @DeleteMapping("/post/delete/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
-    public ResponseEntity<MessageResponse> delete(@Valid @NotNull @PathVariable Integer id) {
-        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found post"));
-        post.setUpdateAt(LocalDateTime.now());
-        post.setActive(false);
-        return new ResponseEntity<>(
-                MessageResponse.builder()
-                        .code(HttpStatus.OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .message("Delete Post Success")
-                        .data(postService.update(post).getId()).build(), HttpStatus.OK);
+                .map(e -> categoriesService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not Found Category ID"))).collect(Collectors.toSet()));
+        return  post;
     }
 
 
