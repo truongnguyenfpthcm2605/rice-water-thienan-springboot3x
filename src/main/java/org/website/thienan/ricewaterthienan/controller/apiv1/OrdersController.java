@@ -190,7 +190,7 @@ public class OrdersController {
 
     @Operation(summary = "Delete Orders", description = "Delete Orders by Id (String")
     @DeleteMapping("/orders/delete/{id}")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MessageResponse> delete(@PathVariable("id") String id) {
         log.info("delete: {}", id);
         Orders orders = ordersService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID" + id));

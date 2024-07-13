@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -205,6 +206,17 @@ public class AuthenticationController {
         return new ResponseEntity<>("Fail", HttpStatus.OK);
     }
 
+    @Operation(summary = "Account Information", description = "Get Account Information")
+    @GetMapping("/auth/information")
+    public ResponseEntity<MessageResponse> information() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(HttpStatus.OK.value())
+                .message("get information success")
+                .data(account)
+                .build(),HttpStatus.OK);
+    }
 
     private Account account(AccountRequest accountRequest) {
         Account account = new Account();

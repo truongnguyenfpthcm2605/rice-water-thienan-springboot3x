@@ -15,6 +15,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -22,8 +25,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.website.thienan.ricewaterthienan.security.jwt.JWTFilter;
+import org.website.thienan.ricewaterthienan.security.jwtoauth2.JWTOAuth2ServerProvider;
 import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Collections;
 
 @Configuration
@@ -35,6 +40,8 @@ public class SecurityConfiguration {
 
     private final AccountDetailService accountDetailService;
     private final JWTFilter jwtAuthFilter;
+    private final JWTOAuth2ServerProvider jwtoAuth2ServerProvider;
+
     @Bean
     PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
@@ -48,6 +55,7 @@ public class SecurityConfiguration {
         return authenticationProvider;
     }
 
+    // Manager Authentication -> so many AuthenticationProvider in config spring
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -66,22 +74,42 @@ public class SecurityConfiguration {
                                 .clearAuthentication(true)
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/v1/auth/logout"))
                                 .logoutSuccessUrl("/api/v1/auth/logout/success")
-                )
-                .oauth2Login(oauth2 ->
-                     oauth2.authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig.baseUri("/oauth2/authorization"))
-                             .defaultSuccessUrl("/api/v1/auth/oauth2/success")
-                             .failureUrl("/api/v1/auth/oauth2/fail")
-                )
 
+                )
+        // config login social media with oauth2 in spring config
+                .oauth2Login(oauth2 ->
+                        oauth2.authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig.baseUri("/oauth2/authorization"))
+                                .defaultSuccessUrl("/api/v1/auth/oauth2/success")
+                                .failureUrl("/api/v1/auth/oauth2/fail")
+                )
+        // throw exception , endpoint denied
                 .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/api/v1/auth/denied")))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+        // jwt oauth2ResourceServer in Spring Security -> get default token headers "Bearer"
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
                 );
+        // Jwt Filter
+//                .authenticationProvider(authenticationProvider()).addFilterBefore(
+//                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+//                );
+
         return http.build();
     }
 
+    // Bean decode token valid or invalid
+    @Bean
+    JwtDecoder jwtDecoder() {
+        // Algorithm the same key your created
+        SecretKeySpec secretKeySpec = new SecretKeySpec(jwtoAuth2ServerProvider.SECRET_KEY.getBytes(), "HS512");
+        return NimbusJwtDecoder
+                .withSecretKey(secretKeySpec)
+                .macAlgorithm(MacAlgorithm.HS512)
+                .build();
+    }
 
+
+    // Config Cors api allow from client
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         log.info("Config Cors API");

@@ -1,9 +1,6 @@
 package org.website.thienan.ricewaterthienan.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.website.thienan.ricewaterthienan.enums.MessagesHanlderEnum;
 
 import java.io.IOException;
@@ -11,6 +8,7 @@ import java.io.IOException;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 public class FileException extends IOException {
     private MessagesHanlderEnum messagesHanlderEnum;
 }
