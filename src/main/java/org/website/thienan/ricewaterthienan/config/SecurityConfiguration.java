@@ -60,8 +60,7 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cr -> cr.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(UrlApi.PUBLIC_API).permitAll();
-                    auth.anyRequest().authenticated();
+                    auth.anyRequest().permitAll();
                 })
                 .logout(httpSecurityLogoutConfigurer ->
                         httpSecurityLogoutConfigurer.invalidateHttpSession(true)
