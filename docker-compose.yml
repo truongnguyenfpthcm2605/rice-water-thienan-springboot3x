@@ -1,31 +1,32 @@
 version: '3.9'
-services:
-  mysql:
-    image: mysql:8.0.3
-    container_name: mysql
-    environment:
-      MYSQL_DATABASE: gaonuocthienan
-      MYSQL_USER: root
-      MYSQL_PASSWORD: 12345678
-      MYSQL_ROOT_PASSWORD: 12345678
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
 
-  app:
+services:
+  springboot-app:
     build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/gaonuocthienan?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=12345678
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
     depends_on:
       - mysql
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/gaonuocthienan
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 12345678
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-    ports:
-      - "8080:8081"
+      - redis
 
-volumes:
-  mysql_data:
+  mysql:
+    image: mysql:8.0.3
+    ports:
+      - "3307:3307"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=gaonuocthienan
+
+  redis:
+    image: redis:7.2
+    ports:
+      - "6379:6379"
+
 
 #  docker-compose up --build

@@ -19,13 +19,11 @@ import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.website.thienan.ricewaterthienan.security.jwt.JWTFilter;
 import org.website.thienan.ricewaterthienan.security.jwtoauth2.JWTOAuth2ServerProvider;
+import org.website.thienan.ricewaterthienan.security.jwtoauth2.JwtAuthenticationEntryPoint;
 import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -39,8 +37,8 @@ import java.util.Collections;
 public class SecurityConfiguration {
 
     private final AccountDetailService accountDetailService;
-    private final JWTFilter jwtAuthFilter;
     private final JWTOAuth2ServerProvider jwtoAuth2ServerProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     PasswordEncoder getPasswordEncoder() {
@@ -55,7 +53,6 @@ public class SecurityConfiguration {
         return authenticationProvider;
     }
 
-    // Manager Authentication -> so many AuthenticationProvider in config spring
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -68,32 +65,23 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                     auth.anyRequest().permitAll();
                 })
-                .logout(httpSecurityLogoutConfigurer ->
-                        httpSecurityLogoutConfigurer.invalidateHttpSession(true)
-                                .deleteCookies("JSESSIONID")
-                                .clearAuthentication(true)
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/api/v1/auth/logout"))
-                                .logoutSuccessUrl("/api/v1/auth/logout/success")
-
-                )
-        // config login social media with oauth2 in spring config
                 .oauth2Login(oauth2 ->
                         oauth2.authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig.baseUri("/oauth2/authorization"))
                                 .defaultSuccessUrl("/api/v1/auth/oauth2/success")
                                 .failureUrl("/api/v1/auth/oauth2/fail")
                 )
-        // throw exception , endpoint denied
-                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/api/v1/auth/denied")))
+                .authenticationProvider(authenticationProvider())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        // jwt oauth2ResourceServer in Spring Security -> get default token headers "Bearer"
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
+                        {
+                            oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()));
+                            oauth2.authenticationEntryPoint(jwtAuthenticationEntryPoint);
+                        }
                 );
-        // Jwt Filter
 //                .authenticationProvider(authenticationProvider()).addFilterBefore(
 //                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
 //                );
-
         return http.build();
     }
 

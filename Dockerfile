@@ -5,9 +5,11 @@ ARG FILE_JAR=target/*.jar
 
 ADD ${FILE_JAR} api-service.jar
 
+EXPOSE 8080
+
 ENTRYPOINT ["java","-jar","api-service.jar"]
 
-EXPOSE 8080
+
 
 # docker build -t api-thienan .
 #docker run -it -p 8080:8080 --name=api-container api-thienan
