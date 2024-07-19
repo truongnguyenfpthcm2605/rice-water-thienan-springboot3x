@@ -1,16 +1,16 @@
 package org.website.thienan.ricewaterthienan.dto.response;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.GrantedAuthority;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+import org.springframework.security.core.GrantedAuthority;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
 @Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountResponse {
     String email;

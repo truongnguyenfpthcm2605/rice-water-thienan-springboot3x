@@ -16,7 +16,6 @@ import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException
 import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
 import org.website.thienan.ricewaterthienan.services.AccountServices;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,29 +25,23 @@ public class AccountServiceImpl implements AccountServices {
 
     private final AccountRepository accountRepository;
 
-
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "accounts", allEntries = true),
-                    @CacheEvict(cacheNames = "accountsActive", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "accounts", allEntries = true),
+                @CacheEvict(cacheNames = "accountsActive", allEntries = true)
+            })
     public Account save(Account account) {
         return accountRepository.save(account);
     }
 
     @Override
     @Caching(
-            put = {
-                    @CachePut(cacheNames = "account", key = "#Account.id")
-
-            },
+            put = {@CachePut(cacheNames = "account", key = "#Account.id")},
             evict = {
-                    @CacheEvict(cacheNames = "accounts", allEntries = true),
-                    @CacheEvict(cacheNames = "accountsActive", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "accounts", allEntries = true),
+                @CacheEvict(cacheNames = "accountsActive", allEntries = true)
+            })
     public Account update(Account account) {
         return accountRepository.saveAndFlush(account);
     }
@@ -56,18 +49,18 @@ public class AccountServiceImpl implements AccountServices {
     @Override
     @Cacheable(cacheNames = "account", key = "#id", unless = "#result == null")
     public Optional<Account> findById(String id) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Account NotFound"));
+        Account account =
+                accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Account NotFound"));
         return Optional.of(account);
     }
 
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "account", key = "#id", allEntries = true),
-                    @CacheEvict(cacheNames = "accounts", allEntries = true),
-                    @CacheEvict(cacheNames = "accountsActive", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "account", key = "#id", allEntries = true),
+                @CacheEvict(cacheNames = "accounts", allEntries = true),
+                @CacheEvict(cacheNames = "accountsActive", allEntries = true)
+            })
     public void deleteById(String id) {
         accountRepository.deleteById(id);
     }
@@ -81,7 +74,9 @@ public class AccountServiceImpl implements AccountServices {
     @Override
     @Cacheable(cacheNames = "accountByEmail", unless = "#result==null", key = "#email")
     public Optional<Account> findByEmailAndActive(String email, Boolean active) {
-        Account account = accountRepository.findByEmailAndActive(email, active).orElseThrow(() -> new ResourceNotFoundException("Account Email Not Found"));
+        Account account = accountRepository
+                .findByEmailAndActive(email, active)
+                .orElseThrow(() -> new ResourceNotFoundException("Account Email Not Found"));
         return Optional.of(account);
     }
 

@@ -1,24 +1,24 @@
 package org.website.thienan.ricewaterthienan.services.Impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.website.thienan.ricewaterthienan.services.RedisService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.website.thienan.ricewaterthienan.services.RedisService;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class RedisServiceImpl implements RedisService {
 
-    private  final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final HashOperations<String, String, Object> hashOperations;
-
 
     @Override
     public void set(String key, String value) {
@@ -27,7 +27,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void setTimeToLive(String key, long timeToLive) {
-        redisTemplate.expire(key,timeToLive, TimeUnit.DAYS);
+        redisTemplate.expire(key, timeToLive, TimeUnit.DAYS);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public boolean hashExists(String key, String field) {
-       return hashOperations.hasKey(key,field );
+        return hashOperations.hasKey(key, field);
     }
 
     @Override
@@ -47,16 +47,15 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public Object hashGet(String key, String field) {
-        return hashOperations.get(key,field);
+        return hashOperations.get(key, field);
     }
-
 
     @Override
     public List<Object> hashGetByFiedlPrefix(String key, String fieldPrefix) {
         List<Object> objects = new ArrayList<>();
         Map<String, Object> map = hashOperations.entries(key);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if(entry.getKey().startsWith(fieldPrefix)){
+            if (entry.getKey().startsWith(fieldPrefix)) {
                 objects.add(entry.getValue());
             }
         }
@@ -75,14 +74,13 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void delete(String key, String field) {
-        hashOperations.delete(key,field);
+        hashOperations.delete(key, field);
     }
 
     @Override
     public void deleteByField(String key, List<String> fields) {
         for (String field : fields) {
-            hashOperations.delete(key,field);
+            hashOperations.delete(key, field);
         }
-
     }
 }

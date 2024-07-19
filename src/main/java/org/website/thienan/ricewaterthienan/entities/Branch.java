@@ -1,15 +1,17 @@
 package org.website.thienan.ricewaterthienan.entities;
 
+import java.util.List;
+
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -17,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Branch extends  BaseEntity {
+public class Branch extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -25,7 +27,7 @@ public class Branch extends  BaseEntity {
     @Column(length = 100, nullable = false, unique = true)
     String name;
 
-    @Column(columnDefinition= "BIGINT", nullable = false)
+    @Column(columnDefinition = "BIGINT", nullable = false)
     Long views;
 
     String link;
@@ -35,7 +37,7 @@ public class Branch extends  BaseEntity {
     @JsonBackReference
     Account account;
 
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonManagedReference
     List<Product> products;
 }

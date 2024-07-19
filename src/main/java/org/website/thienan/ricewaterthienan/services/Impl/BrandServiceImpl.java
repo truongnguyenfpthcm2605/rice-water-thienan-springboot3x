@@ -1,6 +1,8 @@
 package org.website.thienan.ricewaterthienan.services.Impl;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,36 +16,32 @@ import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException
 import org.website.thienan.ricewaterthienan.repositories.BrandRepository;
 import org.website.thienan.ricewaterthienan.services.BrandService;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
-public class BrandServiceImpl  implements BrandService {
+public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
+
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "brands", allEntries = true),
-                    @CacheEvict(cacheNames = "brandsActive", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "brands", allEntries = true),
+                @CacheEvict(cacheNames = "brandsActive", allEntries = true)
+            })
     public Brand save(Brand branchRequest) {
-       return brandRepository.save(branchRequest);
+        return brandRepository.save(branchRequest);
     }
 
     @Override
     @Caching(
-            put = {
-                    @CachePut(cacheNames = "brand", key="#BrandRequest.id")
-            },
+            put = {@CachePut(cacheNames = "brand", key = "#BrandRequest.id")},
             evict = {
-                    @CacheEvict(cacheNames = "brands", allEntries = true),
-                    @CacheEvict(cacheNames = "brandsActive", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "brands", allEntries = true),
+                @CacheEvict(cacheNames = "brandsActive", allEntries = true)
+            })
     public Brand update(Brand branchRequest) {
         return brandRepository.save(branchRequest);
     }
@@ -51,25 +49,28 @@ public class BrandServiceImpl  implements BrandService {
     @Override
     @Cacheable(cacheNames = "brand", key = "#id", unless = "#result==null")
     public Optional<Brand> findById(Integer id) {
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Brand Id: "+ id ));
+        Brand brand = brandRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Brand Id: " + id));
         return Optional.of(brand);
     }
 
     @Override
     @Cacheable(cacheNames = "brand", key = "#name", unless = "#result==null")
     public Optional<Brand> findByName(String name) {
-        Brand brand = brandRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found Brand Id: "+ name ));
+        Brand brand = brandRepository
+                .findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Brand Id: " + name));
         return Optional.of(brand);
     }
 
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "brand", key = "#id"),
-                    @CacheEvict(cacheNames = "brands", allEntries = true),
-                    @CacheEvict(cacheNames = "brandsActive", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "brand", key = "#id"),
+                @CacheEvict(cacheNames = "brands", allEntries = true),
+                @CacheEvict(cacheNames = "brandsActive", allEntries = true)
+            })
     public void deleteById(Integer id) {
         brandRepository.deleteById(id);
     }

@@ -1,11 +1,12 @@
 package org.website.thienan.ricewaterthienan.controller.apiv1;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,10 @@ import org.website.thienan.ricewaterthienan.services.PostService;
 import org.website.thienan.ricewaterthienan.services.TypeService;
 import org.website.thienan.ricewaterthienan.utils.SortAndPage;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping(value = UrlApi.API_V1)
@@ -43,15 +45,19 @@ public class TypeController {
             @NotNull @PathVariable String sort) {
         log.info("Find All Page Type");
         Page<Type> types = typeRepository.findByActive(
-                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
-                        sort.equals("up") ? SortAndPage.getSortUp("createAt") :
-                                SortAndPage.getSort("createAt")), active
-        );
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .timeStamp(LocalDateTime.now())
-                .message("Get All Type")
-                .data(types).build(), HttpStatus.OK);
+                SortAndPage.getPage(
+                        page.orElse(0),
+                        SortAndPage.MAX_PAGE,
+                        sort.equals("up") ? SortAndPage.getSortUp("createAt") : SortAndPage.getSort("createAt")),
+                active);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Get All Type")
+                        .data(types)
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Find ALL Page Type Title", description = "Find All Page Type Title")
@@ -63,15 +69,20 @@ public class TypeController {
             @NotNull @PathVariable String sort) {
         log.info("Find All Page Type Title");
         Page<Type> types = typeRepository.findByTitle(
-                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
-                        sort.equals("up") ? SortAndPage.getSortUp("createAt") :
-                                SortAndPage.getSort("createAt")), title, active
-        );
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .timeStamp(LocalDateTime.now())
-                .message("Get All Type")
-                .data(types).build(), HttpStatus.OK);
+                SortAndPage.getPage(
+                        page.orElse(0),
+                        SortAndPage.MAX_PAGE,
+                        sort.equals("up") ? SortAndPage.getSortUp("createAt") : SortAndPage.getSort("createAt")),
+                title,
+                active);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Get All Type")
+                        .data(types)
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Find By Id Type", description = "Find By Id Type (Integer)")
@@ -84,7 +95,9 @@ public class TypeController {
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Get Type Success")
-                        .data(type).build(), HttpStatus.OK);
+                        .data(type)
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Save Type", description = "Save new type")
@@ -97,15 +110,18 @@ public class TypeController {
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Save Type Success")
-                        .data(typeRepository.save(getType(new Type(),typeRequest)).getId()).build(), HttpStatus.OK
-        );
-
+                        .data(typeRepository
+                                .save(getType(new Type(), typeRequest))
+                                .getId())
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Update Type", description = "Update type")
     @PutMapping("/type/update/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<MessageResponse> update(@Valid @RequestBody TypeRequest typeRequest, @NotNull @PathVariable Integer id) {
+    public ResponseEntity<MessageResponse> update(
+            @Valid @RequestBody TypeRequest typeRequest, @NotNull @PathVariable Integer id) {
         log.info("Update Type");
         Type type = typeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found type"));
         return new ResponseEntity<>(
@@ -113,7 +129,9 @@ public class TypeController {
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Update Type Success")
-                        .data(typeRepository.update(getType(type,typeRequest))).build(), HttpStatus.OK);
+                        .data(typeRepository.update(getType(type, typeRequest)))
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Delete Type", description = "Delete type")
@@ -129,9 +147,10 @@ public class TypeController {
                         .code(200)
                         .timeStamp(LocalDateTime.now())
                         .message("Delete Post Success")
-                        .data("Success").build(), HttpStatus.OK);
+                        .data("Success")
+                        .build(),
+                HttpStatus.OK);
     }
-
 
     private Type getType(Type type, TypeRequest typeRequest) {
         type.setTitle(typeRequest.getTitle());
@@ -142,11 +161,13 @@ public class TypeController {
         type.setAvatar(typeRequest.getAvatar());
         type.setImageHeader(typeRequest.getImageHeader());
         type.setViews(typeRequest.getViews());
-        type.setAccount(accountServices.findById(typeRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
+        type.setAccount(accountServices
+                .findById(typeRequest.getAccountId())
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
         type.setPosts(typeRequest.getTypePost().stream()
-                .map(e -> postService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found post"))).collect(Collectors.toSet()));
+                .map(e -> postService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found post")))
+                .collect(Collectors.toSet()));
 
         return type;
     }
-
 }

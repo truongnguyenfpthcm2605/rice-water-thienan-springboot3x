@@ -1,12 +1,12 @@
 package org.website.thienan.ricewaterthienan.exceptions.customValidation;
 
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.*;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 @Documented
 @Retention(RUNTIME)
@@ -14,9 +14,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = EnumPatternValidator.class)
 public @interface EnumPattern {
     String name();
+
     String regexp();
+
     String message() default "{name} must match {regexp}";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
-

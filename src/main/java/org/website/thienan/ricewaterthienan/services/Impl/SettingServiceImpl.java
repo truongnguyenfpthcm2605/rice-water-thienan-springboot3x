@@ -1,6 +1,8 @@
 package org.website.thienan.ricewaterthienan.services.Impl;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -10,8 +12,7 @@ import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException
 import org.website.thienan.ricewaterthienan.repositories.SettingRepository;
 import org.website.thienan.ricewaterthienan.services.SettingService;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,9 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public Optional<Setting> findById(String id) {
-        Setting setting = settingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Setting ID : " + id));
+        Setting setting = settingRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Setting ID : " + id));
         return Optional.of(setting);
     }
 

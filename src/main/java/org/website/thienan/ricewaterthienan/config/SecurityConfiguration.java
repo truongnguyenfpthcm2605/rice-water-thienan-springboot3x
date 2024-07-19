@@ -1,7 +1,8 @@
 package org.website.thienan.ricewaterthienan.config;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,8 +27,8 @@ import org.website.thienan.ricewaterthienan.security.jwtoauth2.JWTOAuth2ServerPr
 import org.website.thienan.ricewaterthienan.security.jwtoauth2.JwtAuthenticationEntryPoint;
 import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.util.Collections;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
@@ -65,23 +66,20 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                     auth.anyRequest().permitAll();
                 })
-                .oauth2Login(oauth2 ->
-                        oauth2.authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig.baseUri("/oauth2/authorization"))
-                                .defaultSuccessUrl("/api/v1/auth/oauth2/success")
-                                .failureUrl("/api/v1/auth/oauth2/fail")
-                )
+                .oauth2Login(oauth2 -> oauth2.authorizationEndpoint(authorizationEndpointConfig ->
+                                authorizationEndpointConfig.baseUri("/oauth2/authorization"))
+                        .defaultSuccessUrl("/api/v1/auth/oauth2/success")
+                        .failureUrl("/api/v1/auth/oauth2/fail"))
                 .authenticationProvider(authenticationProvider())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 ->
-                        {
-                            oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()));
-                            oauth2.authenticationEntryPoint(jwtAuthenticationEntryPoint);
-                        }
-                );
-//                .authenticationProvider(authenticationProvider()).addFilterBefore(
-//                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
-//                );
+                .oauth2ResourceServer(oauth2 -> {
+                    oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()));
+                    oauth2.authenticationEntryPoint(jwtAuthenticationEntryPoint);
+                });
+        //                .authenticationProvider(authenticationProvider()).addFilterBefore(
+        //                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+        //                );
         return http.build();
     }
 
@@ -90,12 +88,10 @@ public class SecurityConfiguration {
     JwtDecoder jwtDecoder() {
         // Algorithm the same key your created
         SecretKeySpec secretKeySpec = new SecretKeySpec(jwtoAuth2ServerProvider.SECRET_KEY.getBytes(), "HS512");
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
+        return NimbusJwtDecoder.withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
     }
-
 
     // Config Cors api allow from client
     @Bean

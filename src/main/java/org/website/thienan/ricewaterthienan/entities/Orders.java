@@ -1,17 +1,20 @@
 package org.website.thienan.ricewaterthienan.entities;
 
+import java.util.List;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.NaturalId;
+import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.NaturalId;
-import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
-
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -47,6 +50,4 @@ public class Orders extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     List<OrderDetail> orderDetails;
-
-
 }

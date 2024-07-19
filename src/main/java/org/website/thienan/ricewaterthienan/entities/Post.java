@@ -1,16 +1,17 @@
 package org.website.thienan.ricewaterthienan.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.util.HashSet;
-import java.util.Set;
-
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -40,14 +41,15 @@ public class Post extends BaseEntity {
 
     @Column(length = 999, name = "imageheader")
     String imageHeader;
-    @Column(columnDefinition= "BIGINT", nullable = false)
+
+    @Column(columnDefinition = "BIGINT", nullable = false)
     Long views;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "post_category",
+    @JoinTable(
+            name = "post_category",
             joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     Set<Categories> categories = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,6 +61,4 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonBackReference
     Account account;
-
-
 }

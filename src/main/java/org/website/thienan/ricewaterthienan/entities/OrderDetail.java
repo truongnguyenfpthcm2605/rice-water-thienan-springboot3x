@@ -1,13 +1,15 @@
 package org.website.thienan.ricewaterthienan.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.io.Serializable;
+
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.io.Serializable;
 
 @Entity
 @Table(name = "order_detail")

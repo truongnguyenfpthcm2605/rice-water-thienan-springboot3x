@@ -11,6 +11,4 @@ public enum StatusOrderEnum {
     COMPLETED,
     @JsonProperty("Cancel")
     CANCEL
-
-
 }

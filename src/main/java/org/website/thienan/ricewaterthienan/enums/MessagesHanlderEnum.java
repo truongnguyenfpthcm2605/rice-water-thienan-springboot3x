@@ -1,9 +1,8 @@
 package org.website.thienan.ricewaterthienan.enums;
 
+import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum MessagesHanlderEnum {
@@ -16,11 +15,11 @@ public enum MessagesHanlderEnum {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
-    FILE_EXCEPTION(1009,"Exception File", HttpStatus.UNSUPPORTED_MEDIA_TYPE),
-    MAIL_EXCEPTION(1010,"Mail Exception ",HttpStatus.INTERNAL_SERVER_ERROR),
+    FILE_EXCEPTION(1009, "Exception File", HttpStatus.UNSUPPORTED_MEDIA_TYPE),
+    MAIL_EXCEPTION(1010, "Mail Exception ", HttpStatus.INTERNAL_SERVER_ERROR),
     RESOURCE_EXIT(1011, "Resource Exit Error", HttpStatus.INTERNAL_SERVER_ERROR),
     NOTFOUND(1012, "The Data not Found", HttpStatus.NOT_FOUND),
-    PERMISSION(1013,"Access Denied",HttpStatus.UNAUTHORIZED),
+    PERMISSION(1013, "Access Denied", HttpStatus.UNAUTHORIZED),
     SQL_EXCEPTION(1014, "SQL ERROR INJECTION", HttpStatus.BAD_REQUEST);
 
     private final int code;
@@ -33,4 +32,3 @@ public enum MessagesHanlderEnum {
         this.statusCode = httpStatus;
     }
 }
-

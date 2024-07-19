@@ -1,11 +1,13 @@
 package org.website.thienan.ricewaterthienan.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.List;
+
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -13,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoriesPost extends  BaseEntity{
+public class CategoriesPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -23,17 +25,14 @@ public class CategoriesPost extends  BaseEntity{
 
     String link;
 
-    @Column(columnDefinition= "BIGINT", nullable = false)
+    @Column(columnDefinition = "BIGINT", nullable = false)
     Long views;
 
-    @OneToMany(mappedBy = "categoryPost",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "categoryPost", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Post> posts;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonBackReference
     Account account;
-
-
 }

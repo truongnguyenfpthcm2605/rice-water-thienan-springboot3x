@@ -1,10 +1,11 @@
 package org.website.thienan.ricewaterthienan.exceptions.customValidation;
 
+import java.util.Arrays;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
 
-import java.util.Arrays;
+import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
 
 public class StatusSubSetValidator implements ConstraintValidator<StatusSubnet, StatusOrderEnum> {
     private StatusOrderEnum[] genders;

@@ -1,14 +1,15 @@
 package org.website.thienan.ricewaterthienan.controller.apiv1;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.stream.Collectors;
+
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,10 +32,10 @@ import org.website.thienan.ricewaterthienan.security.userprincal.AccountService;
 import org.website.thienan.ricewaterthienan.services.AccountServices;
 import org.website.thienan.ricewaterthienan.services.RoleDetailService;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,116 +56,151 @@ public class AuthenticationController {
     public ResponseEntity<MessageResponse> login(@Valid @RequestBody AccountRequest accountRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(accountRequest.getEmail(), accountRequest.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(accountRequest.getEmail(), accountRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             AccountService accountService = (AccountService) authentication.getPrincipal();
             String token = jwtProvider.generateToken(accountService);
             String refreshToken = jwtProvider.generateRefreshToken(new HashMap<>(), accountService);
-            return new ResponseEntity<>(MessageResponse.builder()
-                    .code(HttpStatus.OK.value())
-                    .timeStamp(LocalDateTime.now())
-                    .message("Login Successfully")
-                    .data(AccountResponse.builder()
-                            .email(accountService.getEmail())
-                            .name(accountService.getName())
-                            .avatar(accountService.getAvatar())
-                            .token(token)
-                            .refreshToken(refreshToken)
-                            .timeToken("24H")
-                            .authorities(accountService.getAuthorities())
-                            .time(LocalDateTime.now())
-                            .build()).build(),
+            return new ResponseEntity<>(
+                    MessageResponse.builder()
+                            .code(HttpStatus.OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .message("Login Successfully")
+                            .data(AccountResponse.builder()
+                                    .email(accountService.getEmail())
+                                    .name(accountService.getName())
+                                    .avatar(accountService.getAvatar())
+                                    .token(token)
+                                    .refreshToken(refreshToken)
+                                    .timeToken("24H")
+                                    .authorities(accountService.getAuthorities())
+                                    .time(LocalDateTime.now())
+                                    .build())
+                            .build(),
                     HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<>(MessageResponse.builder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("Login Fail!")
-                    .timeStamp(LocalDateTime.now()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(
+                    MessageResponse.builder()
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                            .message("Login Fail!")
+                            .timeStamp(LocalDateTime.now())
+                            .build(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(summary = "Signup Account", description = "Sign Account Information")
     @PostMapping("/auth/log-up")
     public ResponseEntity<MessageResponse> logUp(@Valid @RequestBody AccountRequest accountRequest) {
-        if (accountServices.findByEmailAndActive(accountRequest.getEmail(), true).isPresent()) {
-            return new ResponseEntity<>(MessageResponse.builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message("Account Email existed")
-                    .timeStamp(LocalDateTime.now())
-                    .build()
-                    , HttpStatus.UNAUTHORIZED);
+        if (accountServices
+                .findByEmailAndActive(accountRequest.getEmail(), true)
+                .isPresent()) {
+            return new ResponseEntity<>(
+                    MessageResponse.builder()
+                            .code(HttpStatus.BAD_REQUEST.value())
+                            .message("Account Email existed")
+                            .timeStamp(LocalDateTime.now())
+                            .build(),
+                    HttpStatus.UNAUTHORIZED);
         }
         Account account = accountServices.save(account((accountRequest)));
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .timeStamp(LocalDateTime.now())
-                .message("Sign Up Successfully")
-                .data(account.getName())
-                .build(),
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Sign Up Successfully")
+                        .data(account.getName())
+                        .build(),
                 HttpStatus.OK);
     }
 
     @Operation(summary = "Change password Account", description = "Change password account information")
     @PatchMapping("/auth/change-password")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
-    public ResponseEntity<MessageResponse> changePassword(@RequestParam("email") String email,
-                                                          @RequestParam("new") String newPassword,
-                                                          @RequestParam("current") String currentPassword
-    ) {
-        Account account = accountServices.findByEmailAndActive(email, true).orElseThrow(() -> new ResourceNotFoundException(email));
+    public ResponseEntity<MessageResponse> changePassword(
+            @RequestParam("email") String email,
+            @RequestParam("new") String newPassword,
+            @RequestParam("current") String currentPassword) {
+        Account account = accountServices
+                .findByEmailAndActive(email, true)
+                .orElseThrow(() -> new ResourceNotFoundException(email));
         if (passwordEncoder.matches(currentPassword, account.getPassword())) {
             account.setPassword(passwordEncoder.encode(newPassword));
             Account account1 = accountServices.update(account);
-            return new ResponseEntity<>(MessageResponse.builder()
-                    .code(HttpStatus.OK.value()).message("Change Password successfully")
-                    .data(account1.getId())
-                    .timeStamp(LocalDateTime.now()).build(), HttpStatus.OK);
+            return new ResponseEntity<>(
+                    MessageResponse.builder()
+                            .code(HttpStatus.OK.value())
+                            .message("Change Password successfully")
+                            .data(account1.getId())
+                            .timeStamp(LocalDateTime.now())
+                            .build(),
+                    HttpStatus.OK);
         }
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.BAD_REQUEST.value()).message("current password invalid")
-                .timeStamp(LocalDateTime.now()).build(), HttpStatus.BAD_REQUEST);
-
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .message("current password invalid")
+                        .timeStamp(LocalDateTime.now())
+                        .build(),
+                HttpStatus.BAD_REQUEST);
     }
 
-    @Operation(summary = "remember password Account", description = "remember password account information for email confirm")
+    @Operation(
+            summary = "remember password Account",
+            description = "remember password account information for email confirm")
     @PatchMapping("/auth/remember_password")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
     public ResponseEntity<MessageResponse> remember(@RequestParam("email") String email) throws MessagingException {
-        Account account = accountServices.findByEmailAndActive(email, true).orElseThrow(() -> new ResourceNotFoundException("Not found Account with email :" + email));
+        Account account = accountServices
+                .findByEmailAndActive(email, true)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Account with email :" + email));
         String refreshPassword = randomCodeMail();
-        mailService.send(email, "Mail xác thực tài khoản từ Gạo Và Nước Thiên An",
-                "  <div style=width:80%; margin:0 auto;text-align: center ;>\n" +
-                        "    <h1 style=color:#080202 ;>Gạo Nước Thiên An</h1>\n" +
-                        "    <p>Dùng mã này để xác minh địa chỉ email của bạn trên Gạo Và Nước Thiên An </p>\n" +
-                        "    <p>Xin chào Bạn,Chúng tôi cần xác minh địa chỉ email của bạn để đảm bảo là có thể liên hệ với bạn sau khi xem xét\n" +
-                        "      ID.</p>\n" +
-                        "    <p>Chúng tôi cần xác minh địa chỉ email của bạn để đảm bảo là có thể liên hệ với bạn sau khi xem xét ID.</p>\n" +
-                        "    <h5> Mật khẩu mới của bạn</h5>" +
-                        "<h2 style=color: #116D6E;>" + refreshPassword + "</h2>" +
-                        "      <br>" +
-                        "    <p style=font-size: 15px;font-weight: 200;>Tin nhắn này được gửi tới bạn theo yêu cầu của Gạo Và Nước Thiên An.\n" +
-                        "      Gạo Và Nước Thiên An © 2024 All rights . Privacy Policy|T&C|System Status</p>\n" +
-                        "  </div>");
+        mailService.send(
+                email,
+                "Mail xác thực tài khoản từ Gạo Và Nước Thiên An",
+                "  <div style=width:80%; margin:0 auto;text-align: center ;>\n"
+                        + "    <h1 style=color:#080202 ;>Gạo Nước Thiên An</h1>\n"
+                        + "    <p>Dùng mã này để xác minh địa chỉ email của bạn trên Gạo Và Nước Thiên An </p>\n"
+                        + "    <p>Xin chào Bạn,Chúng tôi cần xác minh địa chỉ email của bạn để đảm bảo là có thể liên hệ với bạn sau khi xem xét\n"
+                        + "      ID.</p>\n"
+                        + "    <p>Chúng tôi cần xác minh địa chỉ email của bạn để đảm bảo là có thể liên hệ với bạn sau khi xem xét ID.</p>\n"
+                        + "    <h5> Mật khẩu mới của bạn</h5>"
+                        + "<h2 style=color: #116D6E;>"
+                        + refreshPassword + "</h2>" + "      <br>"
+                        + "    <p style=font-size: 15px;font-weight: 200;>Tin nhắn này được gửi tới bạn theo yêu cầu của Gạo Và Nước Thiên An.\n"
+                        + "      Gạo Và Nước Thiên An © 2024 All rights . Privacy Policy|T&C|System Status</p>\n"
+                        + "  </div>");
         account.setPassword(passwordEncoder.encode(refreshPassword));
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .timeStamp(LocalDateTime.now())
-                .message("Send refresh Password for Mail success full")
-                .data(accountServices.update(account).getName()).build(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Send refresh Password for Mail success full")
+                        .data(accountServices.update(account).getName())
+                        .build(),
+                HttpStatus.OK);
     }
-
 
     @PostMapping("/auth/logout/success")
     public ResponseEntity<MessageResponse> logout() {
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value()).timeStamp(LocalDateTime.now()).message("Logout successfully").build(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Logout successfully")
+                        .build(),
+                HttpStatus.OK);
     }
 
     @GetMapping("/auth/denied")
     public ResponseEntity<MessageResponse> accessDenied() {
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.FORBIDDEN.value()).timeStamp(LocalDateTime.now()).message("Access Denied , You Login , Please !").build(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.FORBIDDEN.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Access Denied , You Login , Please !")
+                        .build(),
+                HttpStatus.UNAUTHORIZED);
     }
 
     @Operation(summary = "RefreshToken Account", description = "Refresh Token after token expired ")
@@ -172,7 +208,8 @@ public class AuthenticationController {
     public ResponseEntity<AccountResponse> refreshToken(@RequestParam("re-fresh-token") String refreshToken) {
         try {
             String email = jwtProvider.extractUsername(refreshToken);
-            Account account = accountServices.findByEmailAndActive(email, true)
+            Account account = accountServices
+                    .findByEmailAndActive(email, true)
                     .orElseThrow(() -> new RuntimeException("Account not found or not active"));
 
             UserDetails userDetails = accountDetailService.loadUserByUsername(account.getEmail());
@@ -181,10 +218,11 @@ public class AuthenticationController {
                 String newToken = jwtProvider.generateToken(userDetails);
                 String newRefreshToken = jwtProvider.generateRefreshToken(new HashMap<>(), userDetails);
 
-                AccountResponse accountResponse = new AccountResponse();
-                accountResponse.setToken(newToken);
-                accountResponse.setRefreshToken(newRefreshToken);
-                accountResponse.setTime(LocalDateTime.now());
+                AccountResponse accountResponse = AccountResponse.builder()
+                        .token(newToken)
+                        .refreshToken(newRefreshToken)
+                        .time(LocalDateTime.now())
+                        .build();
 
                 return ResponseEntity.ok(accountResponse);
             } else {
@@ -211,11 +249,13 @@ public class AuthenticationController {
     public ResponseEntity<MessageResponse> information() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Account account = (Account) authentication.getPrincipal();
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .message("get information success")
-                .data(account)
-                .build(),HttpStatus.OK);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message("get information success")
+                        .data(account)
+                        .build(),
+                HttpStatus.OK);
     }
 
     private Account account(AccountRequest accountRequest) {
@@ -227,11 +267,9 @@ public class AuthenticationController {
         account.setViews(1L);
         account.setActive(true);
         account.setRole(accountRequest.getRoleEnum());
-        account.setRoles(
-                accountRequest.getRoleDetail().stream().map(
-                        e -> roleDetailService.findByName(e).orElseThrow()
-                ).collect(Collectors.toSet())
-        );
+        account.setRoles(accountRequest.getRoleDetail().stream()
+                .map(e -> roleDetailService.findByName(e).orElseThrow())
+                .collect(Collectors.toSet()));
         return account;
     }
 

@@ -1,13 +1,16 @@
 package org.website.thienan.ricewaterthienan.config.rateLimitConfig;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -18,9 +21,10 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
     private static final long THRESHOLD_TIME_MILLIS = 24 * 60 * 60 * 1000;
 
     @Override
-    public synchronized boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+    public synchronized boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws IOException {
         String ipAddress = request.getRemoteAddr();
-        log.info("preHandle Rate LimitApi {}",ipAddress);
+        log.info("preHandle Rate LimitApi {}", ipAddress);
         long currentTime = System.currentTimeMillis(); // get Current Time
         long count = requestCounts.getOrDefault(ipAddress, 0L); // check quantity request ip
         long lastRequestTime = requestCounts.getOrDefault(ipAddress + "_time", 0L); // get last time
@@ -41,7 +45,4 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
 
         return true;
     }
-
-
-
 }

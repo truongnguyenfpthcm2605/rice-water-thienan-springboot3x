@@ -3,7 +3,7 @@ package org.website.thienan.ricewaterthienan.exceptions.customValidation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PasswordValidation implements ConstraintValidator<PasswordRegex,String> {
+public class PasswordValidation implements ConstraintValidator<PasswordRegex, String> {
     @Override
     public void initialize(PasswordRegex constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);

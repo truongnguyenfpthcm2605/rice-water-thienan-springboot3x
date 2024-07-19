@@ -1,17 +1,18 @@
 package org.website.thienan.ricewaterthienan.security.bcrypt;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.website.thienan.ricewaterthienan.exceptions.ResourceExistingException;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.website.thienan.ricewaterthienan.exceptions.ResourceExistingException;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -24,7 +25,7 @@ public class EncryptionService {
     private SecretKeySpec secretKey;
 
     @Value("${spring.key.param.request}")
-    private String mainKey ;
+    private String mainKey;
 
     public EncryptionService() {
         setMainKey();
@@ -69,10 +70,7 @@ public class EncryptionService {
         }
     }
 
-    public Boolean compareCrypt(String requestCrypt, String resourceCrypt){
+    public Boolean compareCrypt(String requestCrypt, String resourceCrypt) {
         return decrypt(requestCrypt).equals(resourceCrypt);
     }
-
-
-
 }

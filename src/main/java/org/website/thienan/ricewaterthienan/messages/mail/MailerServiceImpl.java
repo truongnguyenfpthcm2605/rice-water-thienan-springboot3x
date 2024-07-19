@@ -1,18 +1,20 @@
 package org.website.thienan.ricewaterthienan.messages.mail;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -51,12 +53,19 @@ public class MailerServiceImpl implements MailService {
 
     @Override
     public void send(String to, String subject, String body) throws MessagingException {
-        this.send(MailModel.builder().to(to).subject(subject).content(body).from("travelbee@gmail.com").build());
+        this.send(MailModel.builder()
+                .to(to)
+                .subject(subject)
+                .content(body)
+                .from("travelbee@gmail.com")
+                .build());
     }
+
     @Override
     public void queue(MailModel mail) {
         list.add(mail);
     }
+
     @Override
     public void queue(String to, String subject, String body) {
         this.queue(MailModel.builder().to(to).subject(subject).content(body).build());
@@ -67,7 +76,6 @@ public class MailerServiceImpl implements MailService {
         while (!list.isEmpty()) {
             MailModel mail = list.remove(0);
             this.send(mail);
-
         }
     }
 }

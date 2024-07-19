@@ -1,6 +1,8 @@
 package org.website.thienan.ricewaterthienan.services.Impl;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,8 +16,7 @@ import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException
 import org.website.thienan.ricewaterthienan.repositories.OrderDetailRepository;
 import org.website.thienan.ricewaterthienan.services.OrderDetailService;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +27,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "orderDetails", allEntries = true),
-                    @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
-                    @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "orderDetails", allEntries = true),
+                @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
+                @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
+            })
     public List<OrderDetail> saveAll(List<OrderDetail> list) {
         return orderDetailRepository.saveAllAndFlush(list);
     }
@@ -38,26 +38,22 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "orderDetails", allEntries = true),
-                    @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
-                    @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "orderDetails", allEntries = true),
+                @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
+                @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
+            })
     public OrderDetail save(OrderDetail orderDetail) {
         return orderDetailRepository.save(orderDetail);
     }
 
     @Override
     @Caching(
-            put = {
-                @CachePut(cacheNames = "orderDetail" , key = "#OrderDetail.id")
-            },
+            put = {@CachePut(cacheNames = "orderDetail", key = "#OrderDetail.id")},
             evict = {
-                    @CacheEvict(cacheNames = "orderDetails", allEntries = true),
-                    @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
-                    @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "orderDetails", allEntries = true),
+                @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
+                @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
+            })
     public OrderDetail update(OrderDetail orderDetail) {
         return orderDetailRepository.save(orderDetail);
     }
@@ -65,19 +61,20 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     @Cacheable(cacheNames = "orderDetail", key = "#id", unless = "#result==null")
     public Optional<OrderDetail> findById(Integer id) {
-       OrderDetail orderDetail = orderDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found OrderDetail Id : " + id));
-       return Optional.of(orderDetail);
+        OrderDetail orderDetail = orderDetailRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found OrderDetail Id : " + id));
+        return Optional.of(orderDetail);
     }
 
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "orderDetail", key="#id"),
-                    @CacheEvict(cacheNames = "orderDetails", allEntries = true),
-                    @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
-                    @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "orderDetail", key = "#id"),
+                @CacheEvict(cacheNames = "orderDetails", allEntries = true),
+                @CacheEvict(cacheNames = "ordersDetailProduct", allEntries = true),
+                @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
+            })
     public void deleteById(Integer id) {
         orderDetailRepository.deleteById(id);
     }

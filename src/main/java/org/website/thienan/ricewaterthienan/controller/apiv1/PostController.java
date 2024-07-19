@@ -1,11 +1,12 @@
 package org.website.thienan.ricewaterthienan.controller.apiv1;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,10 @@ import org.website.thienan.ricewaterthienan.services.CategoriesService;
 import org.website.thienan.ricewaterthienan.services.PostService;
 import org.website.thienan.ricewaterthienan.utils.SortAndPage;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping(value = UrlApi.API_V1)
@@ -46,15 +48,19 @@ public class PostController {
             @NotNull @PathVariable String sort) {
         log.info("Find All Post Active");
         Page<Post> postPage = postService.findByActive(
-                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
-                        sort.equals("up") ? SortAndPage.getSortUp("createAt") :
-                                SortAndPage.getSort("createAt")), active
-        );
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .timeStamp(LocalDateTime.now())
-                .message("Get All Post")
-                .data(postPage).build(), HttpStatus.OK);
+                SortAndPage.getPage(
+                        page.orElse(0),
+                        SortAndPage.MAX_PAGE,
+                        sort.equals("up") ? SortAndPage.getSortUp("createAt") : SortAndPage.getSort("createAt")),
+                active);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Get All Post")
+                        .data(postPage)
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Find All Post Title", description = "Find All Post Title")
@@ -66,15 +72,20 @@ public class PostController {
             @NotNull @PathVariable String sort) {
         log.info("Find All Post Title");
         Page<Post> postPage = postService.findByTitle(
-                SortAndPage.getPage(page.orElse(0), SortAndPage.MAX_PAGE,
-                        sort.equals("up") ? SortAndPage.getSortUp("createAt") :
-                                SortAndPage.getSort("createAt")), title, active
-        );
-        return new ResponseEntity<>(MessageResponse.builder()
-                .code(HttpStatus.OK.value())
-                .timeStamp(LocalDateTime.now())
-                .message("Get All Post")
-                .data(postPage).build(), HttpStatus.OK);
+                SortAndPage.getPage(
+                        page.orElse(0),
+                        SortAndPage.MAX_PAGE,
+                        sort.equals("up") ? SortAndPage.getSortUp("createAt") : SortAndPage.getSort("createAt")),
+                title,
+                active);
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .message("Get All Post")
+                        .data(postPage)
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Find Post By ID", description = "Find Post By ID")
@@ -86,7 +97,9 @@ public class PostController {
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Get Post Success")
-                        .data(post).build(), HttpStatus.OK);
+                        .data(post)
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Save Post", description = "Save new post")
@@ -99,14 +112,16 @@ public class PostController {
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Save Post Success")
-                        .data(postService.save(getPost(new Post(),postRequest)).getId()).build(), HttpStatus.OK);
-
+                        .data(postService.save(getPost(new Post(), postRequest)).getId())
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Update Post", description = "update post by Id (Integer")
     @PutMapping("/post/update/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF','USER')")
-    public ResponseEntity<MessageResponse> update(@Valid @RequestBody PostRequest postRequest, @NotNull @PathVariable Integer id) {
+    public ResponseEntity<MessageResponse> update(
+            @Valid @RequestBody PostRequest postRequest, @NotNull @PathVariable Integer id) {
         log.info("Update post");
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found post"));
         return new ResponseEntity<>(
@@ -114,7 +129,9 @@ public class PostController {
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Update Post Success")
-                        .data(postService.update(getPost(post,postRequest)).getId()).build(), HttpStatus.OK);
+                        .data(postService.update(getPost(post, postRequest)).getId())
+                        .build(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Delete Post", description = "Delete post by Id (Integer")
@@ -128,10 +145,12 @@ public class PostController {
                         .code(HttpStatus.OK.value())
                         .timeStamp(LocalDateTime.now())
                         .message("Delete Post Success")
-                        .data(postService.update(post).getId()).build(), HttpStatus.OK);
+                        .data(postService.update(post).getId())
+                        .build(),
+                HttpStatus.OK);
     }
 
-    private  Post getPost(Post post,PostRequest postRequest) {
+    private Post getPost(Post post, PostRequest postRequest) {
         post.setTitle(postRequest.getTitle());
         post.setLink(postRequest.getLink());
         post.setContent(postRequest.getContent());
@@ -140,12 +159,17 @@ public class PostController {
         post.setAvatar(postRequest.getAvatar());
         post.setImageHeader(postRequest.getImageHeader());
         post.setViews(postRequest.getViews());
-        post.setAccount(accountServices.findById(postRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
-        post.setCategoryPost(categoriesPostService.findById(postRequest.getCategoriesPostId()).orElseThrow(() -> new ResourceNotFoundException("Not found Category Post")));
+        post.setAccount(accountServices
+                .findById(postRequest.getAccountId())
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Account")));
+        post.setCategoryPost(categoriesPostService
+                .findById(postRequest.getCategoriesPostId())
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Category Post")));
         post.setCategories(postRequest.getCategories().stream()
-                .map(e -> categoriesService.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not Found Category ID"))).collect(Collectors.toSet()));
-        return  post;
+                .map(e -> categoriesService
+                        .findById(e)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not Found Category ID")))
+                .collect(Collectors.toSet()));
+        return post;
     }
-
-
 }

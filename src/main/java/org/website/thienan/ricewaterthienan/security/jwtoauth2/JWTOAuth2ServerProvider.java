@@ -1,17 +1,20 @@
 package org.website.thienan.ricewaterthienan.security.jwtoauth2;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+import org.website.thienan.ricewaterthienan.security.userprincal.AccountService;
+
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.website.thienan.ricewaterthienan.security.userprincal.AccountService;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.UUID;
 
 @Component
 @Slf4j
@@ -19,17 +22,15 @@ public class JWTOAuth2ServerProvider {
 
     public final String SECRET_KEY = "AigK8h26tzmIrT5E8P5LFlIf8LYeKAOuspPH0B2WyDgJMww3+5kqNF1ieI/WY8fZ";
 
-    public String generateToken(AccountService accountService) throws Exception{
+    public String generateToken(AccountService accountService) throws Exception {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(accountService.getEmail())
                 .issuer("truong-coder")
                 .issueTime(new Date())
-                .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
-                ))
+                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope",accountService.getAuthorities())
+                .claim("scope", accountService.getAuthorities())
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);
@@ -47,9 +48,8 @@ public class JWTOAuth2ServerProvider {
                     .subject(signedJWT.getJWTClaimsSet().getSubject())
                     .issuer(signedJWT.getJWTClaimsSet().getIssuer())
                     .issueTime(new Date())
-                    .expirationTime(new Date(
-                            Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli()
-                    ))
+                    .expirationTime(
+                            new Date(Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli()))
                     .jwtID(signedJWT.getJWTClaimsSet().getJWTID())
                     .claim("scope", scope)
                     .build();
@@ -73,5 +73,4 @@ public class JWTOAuth2ServerProvider {
         SignedJWT signedJWT = SignedJWT.parse(token);
         return signedJWT.getJWTClaimsSet().getSubject();
     }
-
 }

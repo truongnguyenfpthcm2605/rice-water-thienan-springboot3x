@@ -1,6 +1,8 @@
 package org.website.thienan.ricewaterthienan.services.Impl;
 
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,8 +18,7 @@ import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException
 import org.website.thienan.ricewaterthienan.repositories.ProductRepository;
 import org.website.thienan.ricewaterthienan.services.ProductService;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -25,14 +26,12 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
-
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "products", allEntries = true),
-                    @CacheEvict(cacheNames = "productFilter", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "products", allEntries = true),
+                @CacheEvict(cacheNames = "productFilter", allEntries = true)
+            })
     public Product save(Product product) {
         Product saved = productRepository.save(product);
         return saved;
@@ -40,35 +39,32 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Caching(
-            put = {
-                    @CachePut(cacheNames = "product", key = "#ProductRequest.id")
-            },
+            put = {@CachePut(cacheNames = "product", key = "#ProductRequest.id")},
             evict = {
-                    @CacheEvict(cacheNames = "products", allEntries = true),
-                    @CacheEvict(cacheNames = "productFilter", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "products", allEntries = true),
+                @CacheEvict(cacheNames = "productFilter", allEntries = true)
+            })
     public Product update(Product product) {
         Product saved = productRepository.save(product);
         return saved;
-
     }
 
     @Override
     @Cacheable(cacheNames = "product", key = "#name", unless = "#result==null")
     public Optional<Product> findById(String id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found Product ID : " + id));
+        Product product = productRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not Found Product ID : " + id));
         return Optional.of(product);
     }
 
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "product", key = "#id"),
-                    @CacheEvict(cacheNames = "products", allEntries = true),
-                    @CacheEvict(cacheNames = "productFilter", allEntries = true)
-            }
-    )
+                @CacheEvict(cacheNames = "product", key = "#id"),
+                @CacheEvict(cacheNames = "products", allEntries = true),
+                @CacheEvict(cacheNames = "productFilter", allEntries = true)
+            })
     public void deleteById(String id) {
 
         productRepository.deleteById(id);
@@ -78,16 +74,12 @@ public class ProductServiceImpl implements ProductService {
     @Cacheable(cacheNames = "products")
     public Page<Product> findByActive(Pageable pageable, Boolean active) {
         return productRepository.findByActive(pageable, active);
-
     }
 
     @Override
     @Cacheable(cacheNames = "productFilter")
-    public Page<Product> findAllFilter(Pageable pageable, String name, Double price, Long views, Boolean active, LocalDateTime create) {
-        return productRepository
-                .findAllFilter(pageable, name, price, views, active, create);
-
+    public Page<Product> findAllFilter(
+            Pageable pageable, String name, Double price, Long views, Boolean active, LocalDateTime create) {
+        return productRepository.findAllFilter(pageable, name, price, views, active, create);
     }
-
-
 }
