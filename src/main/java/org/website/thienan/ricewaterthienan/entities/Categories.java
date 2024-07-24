@@ -2,10 +2,11 @@ package org.website.thienan.ricewaterthienan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 
 @EqualsAndHashCode(callSuper = true)

@@ -12,18 +12,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.website.thienan.ricewaterthienan.controller.UrlApi;
-import org.website.thienan.ricewaterthienan.security.jwt.JWTFilter;
-import org.website.thienan.ricewaterthienan.security.userprincal.AccountDetailService;
+import org.website.thienan.ricewaterthienan.security.AccountDetailService;
 
 import java.util.Collections;
 
@@ -35,7 +32,7 @@ import java.util.Collections;
 public class SecurityConfiguration {
 
     private final AccountDetailService accountDetailService;
-    private final JWTFilter jwtAuthFilter;
+
 
     @Bean
     PasswordEncoder getPasswordEncoder() {
@@ -60,21 +57,27 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cr -> cr.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.anyRequest().permitAll();
                 })
+                .formLogin(login -> login.loginPage("/auth/login/form")
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/auth/login/success")
+                        .failureUrl("/auth/login/failure")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                )
+                .rememberMe(remember -> remember.rememberMeParameter("remember").tokenValiditySeconds(86400))
                 .logout(httpSecurityLogoutConfigurer ->
                         httpSecurityLogoutConfigurer.invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .clearAuthentication(true)
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/api/v1/auth/logout"))
-                                .logoutSuccessUrl("/api/v1/auth/logout/success")
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                                .logoutSuccessUrl("/auth/logout/success")
+                                .addLogoutHandler(new SecurityContextLogoutHandler())
                 )
-
-                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/api/v1/auth/denied")))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
-                );
+                .exceptionHandling(ex -> ex.accessDeniedPage("/auth/access-denied"))
+                .authenticationProvider(authenticationProvider());
         return http.build();
     }
 

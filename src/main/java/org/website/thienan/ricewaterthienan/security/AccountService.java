@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.security.userprincal;
+package org.website.thienan.ricewaterthienan.security;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,4 +1,4 @@
-package org.website.thienan.ricewaterthienan.config.aspectConfig;
+package org.website.thienan.ricewaterthienan.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
