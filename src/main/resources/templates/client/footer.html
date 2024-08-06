@@ -1,14 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Page</title>
+
+</head>
+<body>
 <footer class="footer spad">
+    <div class="footer__image">
+        <img th:src="@{/assets/img/logothienan/background-footer.png}" alt="Footer Background">
     <div class="container">
-<div class="row">
-<div class="col-lg-6 col-md-6 col-sm-6">
-</div>
-<div class="col-lg-6 col-md-6 col-sm-6 custom-footer">
-    <img src="img/logothienan/logo_footer_1692625454.png.webp" alt="">
-    <p>"Nước sạch thiên nhiên - Gạo ngon từ tâm - Nâng tầm khẩu vị"</p>
-</div>
-</div>
-<br>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 custom-footer">
+                <img th:src="@{/assets/img/logothienan/logo_footer_1692625454.png.webp}" alt="">
+                <p>"Nước sạch thiên nhiên - Gạo ngon từ tâm - Nâng tầm khẩu vị"</p>
+            </div>
+        </div>
+        <br>
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="footer__about">
@@ -32,7 +41,7 @@
                     <ul>
                         <li><i class="fas fa-circle "></i> Giới thiệu</li>
                         <li><i class="fas fa-circle "></i> Hướng dẫn mua hàng</li>
-                       
+
                     </ul>
                 </div>
             </div>
@@ -46,7 +55,7 @@
                     <ul>
                         <li><i class="fas fa-circle "></i> Điều khoản sử dụng</li>
                         <li><i class="fas fa-circle "></i> Chính sách bảo mật</li>
-                       
+
                     </ul>
                 </div>
             </div>
@@ -67,8 +76,13 @@
                 </div>
             </div>
         </div>
-        
+
 
     </div>
     </div>
+    </div>
 </footer>
+</body>
+</html>
+
+

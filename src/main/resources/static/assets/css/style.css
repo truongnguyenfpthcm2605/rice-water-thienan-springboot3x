@@ -2642,7 +2642,7 @@ ol {
 -----------------------*/
 
 .footer {
-	background-image: url(/img/logothienan/background-footer\ \(1\).png) ;
+	background-image: url('[[${#httpServletRequest.contextPath}/assets/img/logothienan/background-footer.png]]');
 	background-position: top; /* Căn giữa hình nền */
     background-size: cover; /* Điều chỉnh kích thước hình nền để bao phủ toàn bộ phần tử */
     background-repeat: no-repeat; /* Không lặp lại hình nền */

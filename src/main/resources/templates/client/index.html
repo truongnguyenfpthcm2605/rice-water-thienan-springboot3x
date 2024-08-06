@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.thymeleaf.org" >
 
 <head>
     <meta charset="UTF-8">
@@ -32,313 +32,14 @@
 </head>
 
 <body >
-    
-
-<section class="youtube">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <img th:src="@{/assets/img/logothienan/5cach.jpg}" alt="Mô tả hình ảnh">
-
-            </div>
-            <div class="col-lg-6">
-                <div class="hero__search">
-                    <iframe width="100%" height="520" src="https://www.youtube.com/embed/17y53MnLq8Q"
-                        title="Thiên An tự hào nhà phân phối chính thức các sản phẩm gạo, nước của các doanh nghiệp uy tín tại VN"
-                        frameborder="2"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                </div>
-
-            </div>
-</section>
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="lydo">
-                <img th:src="@{assets/img/logothienan/5cach.jpg}" alt="" >
-            </div>
-            </div>
+<header th:replace="~{client/header.html}"></header>
 
 
-        </div>
-</section><br>
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="cach">
-                <img th:src="@{assets/img/logothienan/5cach.jpg}" alt="" >
-            </div>
-            </div>
+<main th:replace="~{client/home.html}"></main>
 
-
-        </div>
-</section>
-
-
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="horizontal-line-with-border">
-                    <p class="centered-text">Sản phẩm tại Thiên An 2024</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="banner">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-6">
-                <div class="banner__pic">
-                    <a href="header.html"> <img th:src="@{/assets/img/logothienan/gao.png}" width="250px" alt=""></a>
-                    <p>Gạo/Tấm/Nếp</p>
-                </div>
-            </div>
-            <div class="col-lg-6 col-6">
-                <div class="banner__pic">
-                    <img th:src="@{assets/img/logothienan/nuoc.png}" width="250px" alt="">
-                    <p>Nước Tinh Khiết/Nước Khoán/Nước Ion Kiềm</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="horizontal-line-with-border">
-                    <p class="centered-text">Sản phẩm Gạo/Tấm/Nếp</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<div class="container">
-    <div class="row">
-        <div class="col-lg-3 col-6">
-            <div class="product__item">
-                <div class="product__item__pic set-bg">
-                    <a href="/product-details.html"><img th:src="@{assets/img/logothienan/huong-lai-sua_0_1702183149.jpg.webp}" alt=""></a>
-                    <br>
-                    <div>
-                        <p><a href="/product-details.html">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
-                       
-                    </div><hr><br>
-                    <div>
-                    <span class="original-price">23.000đ</span>
-                    <span class="discounted-price">20.000đ</span>
-                </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="product__item">
-                <div class="product__item__pic set-bg">
-                    <a href=""><img th:src="@{assets/img/logothienan/huong-lai-sua_0_1702183149.jpg.webp}" alt=""></a>
-                    <br>
-                    <div>
-                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
-                       
-                    </div><hr><br>
-                    <div>
-                    <span class="original-price">23.000đ</span>
-                    <span class="discounted-price">20.000đ</span>
-                </div>
-                </div>
-                
-               
-              
-                    
-                
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="product__item">
-                <div class="product__item__pic set-bg">
-                    <a href=""><img th:src="@{assets/img/logothienan/huong-lai-sua_0_1702183149.jpg.webp}" alt=""></a>
-                    <br>
-                    <div>
-                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
-                       
-                    </div><hr><br>
-                    <div>
-                    <span class="original-price">23.000đ</span>
-                    <span class="discounted-price">20.000đ</span>
-                </div>
-                </div>
-                
-               
-              
-                    
-                
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="product__item">
-                <div class="product__item__pic set-bg">
-                    <a href=""><img th:src="@{assets/img/logothienan/huong-lai-sua_0_1702183149.jpg.webp}" alt=""></a>
-                    <br>
-                    <div>
-                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
-                       
-                    </div><hr><br>
-                    <div>
-                    <span class="original-price">23.000đ</span>
-                    <span class="discounted-price">20.000đ</span>
-                </div>
-                </div>
-                
-               
-              
-                    
-                
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Banner End -->
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="horizontal-line-with-border">
-                    <p class="centered-text">Sản phẩm Nước Tinh Khiết/Nước Khoán/Nước Ion Kiềm</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<div class="container">
-    <div class="row">
-        <div class="col-lg-3 col-6">
-            <div class="product__item">
-                <div class="product__item__pic set-bg">
-                    <a href=""><img th:src="@{/assets/img/logothienan/satori_0_1696323491.jpg.webp}" alt=""></a>
-                    <br>
-                    <div>
-                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
-                       
-                    </div><hr><br>
-                    <div>
-                    <span class="original-price">23.000đ</span>
-                    <span class="discounted-price">20.000đ</span>
-                </div>
-                </div>
-                
-               
-              
-                    
-                
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="product__item">
-                <div class="product__item__pic set-bg">
-                    <a href=""><img th:src="@{/assets/img/logothienan/satori_0_1696323491.jpg.webp}" alt=""></a>
-                    <br>
-                    <div>
-                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
-                       
-                    </div><hr><br>
-                    <div>
-                    <span class="original-price">23.000đ</span>
-                    <span class="discounted-price">20.000đ</span>
-                </div>
-                </div>
-                
-               
-              
-                    
-                
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="product__item">
-                <div class="product__item__pic set-bg">
-                    <a href=""><img th:src="@{/assets/img/logothienan/satori_0_1696323491.jpg.webp}" alt=""></a>
-                    <br>
-                    <div>
-                        <p><a href="#">Nước uống đóng bình Viva (18.5 lít) có vòi </a></p>
-                       
-                    </div><hr><br>
-                    <div>
-                    <span class="original-price">23.000đ</span>
-                    <span class="discounted-price">20.000đ</span>
-                </div>
-                </div>
-                
-               
-              
-                    
-                
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="product__item">
-                <div class="product__item__pic set-bg">
-                    <a href=""><img th:src="@{/assets/img/logothienan/satori_0_1696323491.jpg.webp}" alt=""></a>
-                    <br>
-                    <div>
-                        <p><a href="#">Nước khoáng thiên nhiên La Vie 19L (Bình) không vòi </a></p>
-                       
-                    </div><hr><br>
-                    <div>
-                    <span class="original-price">23.000đ</span>
-                    <span class="discounted-price">20.000đ</span>
-                </div>
-                </div>
-                
-               
-              
-                    
-                
-            </div>
-        </div>
-    </div>
-</div>
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="horizontal-line-with-border">
-                    <p class="centered-text">Bản tin Thiên An</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="horizontal-line-with-border">
-                    <p class="centered-text">Sức khỏe và Gia đình</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="horizontal-line-with-border">
-                    <p class="centered-text">Chỉ đường đến Thiên An</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
+<nav>
+    <div th:replace="~{client/footer.html}"></div>
+</nav>
 
 
     <!-- Js Plugins -->
@@ -364,7 +65,7 @@
 
 
 
-    <!-- <script>
+<script>
     function showDropdown(menuId) {
     var dropdownMenu = document.getElementById(menuId);
     dropdownMenu.classList.add('show');
@@ -375,20 +76,20 @@ function hideDropdown(menuId) {
     dropdownMenu.classList.remove('show');
 }
 
-</script> -->
+</script>
 
-<!--<script>-->
-<!--    $(document).ready(function() {-->
-<!--        $('.dropdown').hover(-->
-<!--            function() {-->
-<!--                $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeIn();-->
-<!--            },-->
-<!--            function() {-->
-<!--                $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeOut();-->
-<!--            }-->
-<!--        );-->
-<!--    });-->
-<!--    </script>-->
+<script>
+    $(document).ready(function() {
+        $('.dropdown').hover(
+            function() {
+                $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeIn();
+            },
+            function() {
+                $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeOut();
+            }
+        );
+    });
+    </script>
 
     
 
