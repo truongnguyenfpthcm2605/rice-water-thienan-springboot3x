@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Table(name = "product")
+@Entity(name = "tbl_product")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -66,8 +65,12 @@ public class Product extends BaseEntity {
     @JsonManagedReference
     List<OrderDetail> orderDetails;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    List<Notification> notifications;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "product_category",
+    @JoinTable(name = "tbl_product_category",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )

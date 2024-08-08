@@ -14,8 +14,7 @@ import org.website.thienan.ricewaterthienan.enums.StatusOrderEnum;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Table(name = "orders")
+@Entity(name = "tbl_orders")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -47,6 +46,11 @@ public class Orders extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     List<OrderDetail> orderDetails;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    List<Notification> notifications;
+
 
 
 }

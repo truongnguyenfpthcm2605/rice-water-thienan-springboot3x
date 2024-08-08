@@ -25,6 +25,4 @@ public class PerformanceAspect {
         log.info("Execution of function {} took {} ms", methodName, TimeUnit.NANOSECONDS.toMillis(end - start));
         return returnValue;
     }
-
-
 }

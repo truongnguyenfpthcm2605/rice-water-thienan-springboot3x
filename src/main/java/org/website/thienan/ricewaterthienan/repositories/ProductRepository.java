@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public interface ProductRepository extends JpaRepository<Product, String> {
 
     @Query(
-            "select o from Product o " +
+            "select o from tbl_product o " +
                     "where o.name like %:name% " +
                     "or (o.price between :price - 100000 and :price + 100000) " +
                     "or (o.createAt >= :create ) " +

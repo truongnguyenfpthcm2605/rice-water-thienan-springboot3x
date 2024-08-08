@@ -1,40 +1,45 @@
 package org.website.thienan.ricewaterthienan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
+import org.hibernate.annotations.NaturalId;
+import org.website.thienan.ricewaterthienan.enums.NotificationEnum;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity(name = "tbl_branch")
+@Entity(name = "tbl_notification")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Branch extends  BaseEntity {
+public class Notification extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(length = 100, nullable = false, unique = true)
-    String name;
+    String message;
 
-    @Column(columnDefinition= "BIGINT", nullable = false)
-    Long views;
-
-    String link;
+    @Enumerated(EnumType.STRING)
+    @NaturalId
+    NotificationEnum status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonBackReference
     Account account;
 
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
-    @JsonManagedReference
-    List<Product> products;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JsonBackReference
+    Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orders_id", referencedColumnName = "id")
+    @JsonBackReference
+    Orders order;
+
 }

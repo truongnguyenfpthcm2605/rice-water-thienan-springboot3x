@@ -22,5 +22,6 @@ public class OrdersDetailRequest implements Serializable {
     Double price;
     @NotBlank
     String productId;
+    @NotBlank
     String orderId;
 }

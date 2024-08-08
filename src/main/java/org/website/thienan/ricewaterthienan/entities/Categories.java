@@ -10,8 +10,7 @@ import lombok.experimental.FieldDefaults;
 
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Table(name = "categories")
+@Entity(name = "tbl_categories")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)

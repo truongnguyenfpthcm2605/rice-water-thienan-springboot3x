@@ -2,10 +2,15 @@ package org.website.thienan.ricewaterthienan.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.website.thienan.ricewaterthienan.dto.response.MessageResponse;
+import org.website.thienan.ricewaterthienan.enums.MessagesHanlderEnum;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -23,9 +28,13 @@ public class GlobalExceptionHandling {
     }
 
     @ExceptionHandler({FileException.class, IOException.class})
-    public String handlingFileException(FileException ex){
+    @ResponseBody
+    public ResponseEntity<MessageResponse> handlingFileException(FileException ex){
         log.info("File Exception {}:", ex.getMessage());
-        return "errors/404";
+        return new ResponseEntity<>(MessageResponse.builder()
+                .code(MessagesHanlderEnum.FILE_EXCEPTION.getCode())
+                .message(MessagesHanlderEnum.FILE_EXCEPTION.getMessage() + ":" + ex.getMessage())
+                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MailException.class)

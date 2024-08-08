@@ -1,33 +1,35 @@
 package org.website.thienan.ricewaterthienan.entities;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @MappedSuperclass
-@Data
-@EntityListeners(AuditingEntityListener.class)
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public class BaseEntity implements Serializable {
 
     @Column(name = "create_at")
-    @CreatedDate
-    LocalDateTime createAt;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    Date createAt;
 
     @Column(name = "update_at")
-    @LastModifiedDate
-    LocalDateTime updateAt;
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    Date updateAt;
 
     Boolean active;
-
 
 }

@@ -2,7 +2,10 @@ package org.website.thienan.ricewaterthienan.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.NaturalId;
 import org.website.thienan.ricewaterthienan.enums.RoleEnum;
@@ -12,8 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Table(name = "account")
+@Entity(name = "tbl_account")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -43,7 +45,7 @@ public class Account extends BaseEntity {
     RoleEnum role;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "authorities",
+    @JoinTable(name = "tbl_authorities",
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "roledetail_id")
     )
@@ -80,6 +82,10 @@ public class Account extends BaseEntity {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
     List<CategoriesPost> categoriesPosts;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
+    @JsonManagedReference
+    List<Notification> notifications;
 
 
 

@@ -13,6 +13,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     Page<Post> findByActive(Pageable pageable, Boolean active);
 
-    @Query("select o from Post  o where o.title like :title and o.active = :Active")
+    @Query("select o from tbl_post  o where o.title like :title and o.active = :Active")
     Page<Post> findByTitle(Pageable pageable, @Param("title") String title,@Param("Active") boolean Active);
 }

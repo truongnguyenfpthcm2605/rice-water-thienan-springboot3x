@@ -33,7 +33,6 @@ public class SecurityConfiguration {
 
     private final AccountDetailService accountDetailService;
 
-
     @Bean
     PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(10);

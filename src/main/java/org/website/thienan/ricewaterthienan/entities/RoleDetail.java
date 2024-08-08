@@ -8,8 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Table(name = "role_detail")
+@Entity(name = "tbl_role_detail")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)

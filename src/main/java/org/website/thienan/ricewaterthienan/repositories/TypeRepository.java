@@ -13,6 +13,6 @@ public interface TypeRepository extends JpaRepository<Type, Integer> {
 
     Page<Type> findByActive(Pageable pageable, Boolean active);
 
-    @Query("select o from Type  o where o.title like :title and o.active = :Active")
+    @Query("select o from tbl_type  o where o.title like :title and o.active = :Active")
     Page<Type> findByTitle(Pageable pageable, @Param("title") String title, @Param("Active") boolean Active);
 }

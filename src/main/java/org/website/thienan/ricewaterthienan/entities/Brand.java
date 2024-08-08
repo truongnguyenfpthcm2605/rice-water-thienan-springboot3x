@@ -12,8 +12,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Table(name = "brand")
+@Entity(name = "tbl_brand")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)

@@ -9,8 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
-@Entity
-@Table(name = "order_detail")
+@Entity(name = "tbl_order_detail")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)

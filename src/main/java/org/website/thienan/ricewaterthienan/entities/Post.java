@@ -13,8 +13,7 @@ import java.util.Set;
 
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Table(name = "post")
+@Entity(name = "tbl_post")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -44,7 +43,7 @@ public class Post extends BaseEntity {
     Long views;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "post_category",
+    @JoinTable(name = "tbl_post_category",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )

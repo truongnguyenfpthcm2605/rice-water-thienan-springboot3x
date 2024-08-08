@@ -4,71 +4,64 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 import java.time.Duration;
-import java.util.Locale;
-import java.util.logging.Logger;
 
 @Configuration
+@Slf4j
 public class RedisConfiguration {
-    private final Logger log = Logger.getLogger(this.getClass().getName());
+
     @Value("${spring.data.redis.host}")
     private String redisHost;
+
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
     @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
+    public RedisConnectionFactory redisConnectionFactory() {
         log.info("Connecting to Redis");
-        JedisConnectionFactory jedisConFactory
-                = new JedisConnectionFactory();
-        jedisConFactory.setHostName(redisHost);
-        jedisConFactory.setPort(redisPort);
-        return jedisConFactory;
+        return new LettuceConnectionFactory(redisHost, redisPort);
     }
 
     @Bean
-    RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
-        log.info("RedisTemplate");
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectMapper objectMapper) {
+        log.info("Configuring RedisTemplate");
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         return redisTemplate;
     }
 
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        log.info("Creating Redis cache manager");
+    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        log.info("Creating Redis CacheManager");
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10))
                 .disableCachingNullValues();
 
-        return RedisCacheManager.builder(connectionFactory)
+        return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(cacheConfiguration)
                 .build();
     }
 
     @Bean
     public ObjectMapper objectMapper() {
-        log.info("Creating ObjectMapper Config");
+        log.info("Configuring ObjectMapper");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -76,6 +69,5 @@ public class RedisConfiguration {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return objectMapper;
     }
-
-
 }
+

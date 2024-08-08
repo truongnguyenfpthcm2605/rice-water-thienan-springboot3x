@@ -1,21 +1,20 @@
 package org.website.thienan.ricewaterthienan.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
-import java.util.logging.Logger;
 
 @Configuration
+@Slf4j
 public class AsyncConfiguration implements AsyncConfigurer {
-
-    private  final Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
     public Executor getAsyncExecutor() {
-        logger.info("getAsyncExecutor");
+        log.info("getAsyncExecutor");
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(4);
         taskExecutor.setMaxPoolSize(4);
@@ -26,7 +25,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     }
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        logger.info("getAsyncUncaughtExceptionHandler");
+        log.info("getAsyncUncaughtExceptionHandler");
         return AsyncConfigurer.super.getAsyncUncaughtExceptionHandler();
     }
 }

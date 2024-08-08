@@ -2,14 +2,16 @@ package org.website.thienan.ricewaterthienan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Table(name = "categories_post")
+@Entity(name = "tnl_categories_post")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
