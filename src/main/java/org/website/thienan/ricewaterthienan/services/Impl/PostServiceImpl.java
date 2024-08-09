@@ -11,19 +11,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.website.thienan.ricewaterthienan.dto.request.PostRequest;
 import org.website.thienan.ricewaterthienan.entities.Post;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
+import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
+import org.website.thienan.ricewaterthienan.repositories.CategoriesPostRepository;
+import org.website.thienan.ricewaterthienan.repositories.CategoriesRepository;
 import org.website.thienan.ricewaterthienan.repositories.PostRepository;
 import org.website.thienan.ricewaterthienan.services.PostService;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+@Transactional
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final CategoriesRepository categoriesRepository;
+    private final CategoriesPostRepository categoriesPostRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     @Caching(
@@ -32,8 +40,21 @@ public class PostServiceImpl implements PostService {
                     @CacheEvict(cacheNames = "postTitle", allEntries = true)
             }
     )
-    public Post save(Post postRequest) {
-        return postRepository.save(postRequest);
+    public Post save(PostRequest postRequest) {
+
+        return postRepository.save(Post.builder()
+                .title(postRequest.getTitle())
+                .link(postRequest.getLink())
+                .introduction(postRequest.getIntroduction())
+                .content(postRequest.getContent())
+                .avatar(postRequest.getAvatar())
+                .imageHeader(postRequest.getImageHeader())
+                .views(1L)
+                .active(Boolean.TRUE)
+                .categories(postRequest.getCategories().stream().map(e -> categoriesRepository.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found Category"))).collect(Collectors.toSet()))
+                .account(accountRepository.findById(postRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")))
+                .categoryPost(categoriesPostRepository.findById(postRequest.getCategoriesPostId()).orElseThrow(() -> new ResourceNotFoundException("Not found Category Post")))
+                .build());
     }
 
     @Override
@@ -46,8 +67,20 @@ public class PostServiceImpl implements PostService {
                     @CacheEvict(cacheNames = "postTitle", allEntries = true)
             }
     )
-    public Post update(Post postRequest) {
-        return postRepository.save(postRequest);
+    public Post update(PostRequest postRequest) {
+        return postRepository.save(Post.builder()
+                .title(postRequest.getTitle())
+                .link(postRequest.getLink())
+                .introduction(postRequest.getIntroduction())
+                .content(postRequest.getContent())
+                .avatar(postRequest.getAvatar())
+                .imageHeader(postRequest.getImageHeader())
+                .views(postRequest.getViews())
+                .active(postRequest.getActive())
+                .categories(postRequest.getCategories().stream().map(e -> categoriesRepository.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found Category"))).collect(Collectors.toSet()))
+                .account(accountRepository.findById(postRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")))
+                .categoryPost(categoriesPostRepository.findById(postRequest.getCategoriesPostId()).orElseThrow(() -> new ResourceNotFoundException("Not found Category Post")))
+                .build());
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.website.thienan.ricewaterthienan.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.website.thienan.ricewaterthienan.dto.request.ProductRequest;
 import org.website.thienan.ricewaterthienan.entities.Product;
 
 import java.time.LocalDateTime;
@@ -9,9 +10,9 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Product save(Product product);
+    Product save(ProductRequest product);
 
-    Product update(Product product);
+    Product update(ProductRequest product);
 
     Optional<Product> findById(String id);
 

@@ -4,10 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,9 +14,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PROTECTED)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseEntity implements Serializable {
 
     @Column(name = "create_at")

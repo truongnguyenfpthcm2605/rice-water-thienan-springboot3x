@@ -6,8 +6,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.website.thienan.ricewaterthienan.entities.RoleDetail;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
@@ -19,9 +17,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+@Transactional
 public class RoleDetailServiceImpl implements RoleDetailService {
     private final RoleDetailRepository roleDetailRepository;
+
+
     @Override
     @Caching(
             evict = {

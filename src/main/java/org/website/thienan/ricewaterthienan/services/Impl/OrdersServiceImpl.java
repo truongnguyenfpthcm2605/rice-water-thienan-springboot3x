@@ -8,11 +8,11 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.website.thienan.ricewaterthienan.dto.request.OrdersRequest;
 import org.website.thienan.ricewaterthienan.entities.Orders;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
+import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
 import org.website.thienan.ricewaterthienan.repositories.OrdersRepository;
 import org.website.thienan.ricewaterthienan.services.OrdersService;
 
@@ -20,9 +20,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+@Transactional
 public class OrdersServiceImpl implements OrdersService {
     private final OrdersRepository ordersRepository;
+    private final AccountRepository accountRepository;
+
     @Override
     @Caching(
             evict = {
@@ -31,14 +33,23 @@ public class OrdersServiceImpl implements OrdersService {
                     @CacheEvict(cacheNames = "ordersStatus", allEntries = true)
             }
     )
-    public Orders save(Orders orders) {
-        return ordersRepository.save(orders);
+    public Orders save(OrdersRequest ordersRequest) {
+
+        return ordersRepository.save(Orders.builder()
+                .phone(ordersRequest.getPhone())
+                .name(ordersRequest.getName())
+                .address(ordersRequest.getAddress())
+                .notes(ordersRequest.getNotes())
+                .status(ordersRequest.getStatus())
+                .active(Boolean.TRUE)
+                .account(accountRepository.findById(ordersRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")))
+                .build());
     }
 
     @Override
     @Caching(
             put = {
-                    @CachePut(cacheNames = "orders", key="#OrdersRequest.id")
+                    @CachePut(cacheNames = "orders", key = "#OrdersRequest.id")
             },
             evict = {
                     @CacheEvict(cacheNames = "ordersKeyWord", allEntries = true),
@@ -46,28 +57,37 @@ public class OrdersServiceImpl implements OrdersService {
                     @CacheEvict(cacheNames = "ordersStatus", allEntries = true)
             }
     )
-    public Orders update(Orders orders) {
-        return ordersRepository.save(orders);
+    public Orders update(OrdersRequest ordersRequest) {
+
+        return ordersRepository.save(Orders.builder()
+                .phone(ordersRequest.getPhone())
+                .name(ordersRequest.getName())
+                .address(ordersRequest.getAddress())
+                .notes(ordersRequest.getNotes())
+                .status(ordersRequest.getStatus())
+                .active(ordersRequest.getActive())
+                .account(accountRepository.findById(ordersRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")))
+                .build());
     }
 
     @Override
-    @Cacheable(cacheNames = "orders",key = "#id", unless = "#result==null")
+    @Cacheable(cacheNames = "orders", key = "#id", unless = "#result==null")
     public Optional<Orders> findById(String id) {
-        Orders orders = ordersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID : "+ id));
+        Orders orders = ordersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Orders ID : " + id));
         return Optional.of(orders);
     }
 
     @Override
-    @Cacheable(cacheNames = "orders",key = "#name", unless = "#result==null")
+    @Cacheable(cacheNames = "orders", key = "#name", unless = "#result==null")
     public Optional<Orders> findByName(String name) {
-        Orders orders = ordersRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found Orders NAME : "+ name));
+        Orders orders = ordersRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Not found Orders NAME : " + name));
         return Optional.of(orders);
     }
 
     @Override
-    @Cacheable(cacheNames = "orders",key = "#phone", unless = "#result==null")
+    @Cacheable(cacheNames = "orders", key = "#phone", unless = "#result==null")
     public Optional<Orders> findByPhone(String phone) {
-        Orders orders = ordersRepository.findByPhone(phone).orElseThrow(() -> new ResourceNotFoundException("Not found Orders PHONE : "+ phone));
+        Orders orders = ordersRepository.findByPhone(phone).orElseThrow(() -> new ResourceNotFoundException("Not found Orders PHONE : " + phone));
         return Optional.of(orders);
     }
 
@@ -87,7 +107,7 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     @Cacheable(cacheNames = "ordersKeyWord")
     public Page<Orders> findByKeyword(Pageable pageable, String keyword) {
-        return  ordersRepository.findByKeyword(pageable, "%"+keyword+"%");
+        return ordersRepository.findByKeyword(pageable, "%" + keyword + "%");
 
     }
 

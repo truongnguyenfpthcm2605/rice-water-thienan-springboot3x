@@ -40,5 +40,5 @@ public class ProductRequest extends BaseRequest {
     @NotNull
     Integer brandId;
     @NotEmpty
-    Set<String> categories = new HashSet<>();
+    Set<Integer> categories = new HashSet<>();
 }

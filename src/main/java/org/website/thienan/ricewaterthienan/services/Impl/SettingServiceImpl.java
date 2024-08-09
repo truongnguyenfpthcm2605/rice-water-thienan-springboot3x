@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.website.thienan.ricewaterthienan.dto.request.SettingRequest;
 import org.website.thienan.ricewaterthienan.entities.Setting;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.repositories.SettingRepository;
@@ -15,18 +16,26 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+@Transactional
 public class SettingServiceImpl implements SettingService {
     private final SettingRepository settingRepository;
 
     @Override
-    public Setting save(Setting setting) {
-        return settingRepository.save(setting);
+    public Setting save(SettingRequest setting) {
+        return settingRepository.save(Setting.builder()
+                .id(setting.getId())
+                .custom(setting.getCustom())
+                .active(Boolean.TRUE)
+                .build());
     }
 
     @Override
-    public Setting update(Setting setting) {
-        return settingRepository.save(setting);
+    public Setting update(SettingRequest setting) {
+        return settingRepository.save(Setting.builder()
+                .id(setting.getId())
+                .custom(setting.getCustom())
+                .active(Boolean.TRUE)
+                .build());
     }
 
     @Override

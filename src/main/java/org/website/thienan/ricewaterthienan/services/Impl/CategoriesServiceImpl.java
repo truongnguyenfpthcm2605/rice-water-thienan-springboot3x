@@ -6,11 +6,11 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.website.thienan.ricewaterthienan.dto.request.CategoriesRequest;
 import org.website.thienan.ricewaterthienan.entities.Categories;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
+import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
 import org.website.thienan.ricewaterthienan.repositories.CategoriesRepository;
 import org.website.thienan.ricewaterthienan.services.CategoriesService;
 
@@ -19,9 +19,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+@Transactional
 public class CategoriesServiceImpl implements CategoriesService{
     private final CategoriesRepository categoriesRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     @Caching(
@@ -30,8 +31,18 @@ public class CategoriesServiceImpl implements CategoriesService{
                     @CacheEvict(cacheNames = "categoriesActive", allEntries = true)
             }
     )
-    public Categories save(Categories categoriesRequest) {
-        return  categoriesRepository.save(categoriesRequest);
+    public Categories save(CategoriesRequest categoriesRequest) {
+        return categoriesRepository.save(Categories.builder()
+                .name(categoriesRequest.getName())
+                .link(categoriesRequest.getLink())
+                .introduction(categoriesRequest.getIntroduction())
+                .content(categoriesRequest.getContent())
+                .avatar(categoriesRequest.getAvatar())
+                .imageHeader(categoriesRequest.getImageHeader())
+                .views(1L)
+                .active(Boolean.TRUE)
+                .account(accountRepository.findById(categoriesRequest.getAccountId()).orElseThrow(()-> new ResourceNotFoundException("Not found Account")))
+                .build());
     }
 
     @Override
@@ -44,8 +55,19 @@ public class CategoriesServiceImpl implements CategoriesService{
                     @CacheEvict(cacheNames = "categoriesActive", allEntries = true)
             }
     )
-    public Categories update(Categories categoriesRequest) {
-        return  categoriesRepository.save(categoriesRequest);
+    public Categories update(CategoriesRequest categoriesRequest) {
+
+        return  categoriesRepository.save(Categories.builder()
+                .name(categoriesRequest.getName())
+                .link(categoriesRequest.getLink())
+                .introduction(categoriesRequest.getIntroduction())
+                .content(categoriesRequest.getContent())
+                .avatar(categoriesRequest.getAvatar())
+                .imageHeader(categoriesRequest.getImageHeader())
+                .views(categoriesRequest.getViews())
+                .active(categoriesRequest.getActive())
+                .account(accountRepository.findById(categoriesRequest.getAccountId()).orElseThrow(()-> new ResourceNotFoundException("Not found Account")))
+                .build());
     }
 
     @Override

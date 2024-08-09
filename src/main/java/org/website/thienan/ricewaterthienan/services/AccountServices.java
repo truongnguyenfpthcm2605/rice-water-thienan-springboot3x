@@ -2,14 +2,15 @@ package org.website.thienan.ricewaterthienan.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.website.thienan.ricewaterthienan.dto.request.AccountRequest;
 import org.website.thienan.ricewaterthienan.entities.Account;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface AccountServices {
-    Account save(Account account);
-    Account update(Account account);
+    Account save(AccountRequest accountRequest);
+    Account update(AccountRequest accountRequest);
     Optional<Account> findById(String id);
     void deleteById(String id);
     Page<Account> findAll(Pageable pageable,Boolean active);

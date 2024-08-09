@@ -8,21 +8,25 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.website.thienan.ricewaterthienan.dto.request.TypeRequest;
 import org.website.thienan.ricewaterthienan.entities.Type;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
+import org.website.thienan.ricewaterthienan.repositories.AccountRepository;
+import org.website.thienan.ricewaterthienan.repositories.PostRepository;
 import org.website.thienan.ricewaterthienan.repositories.TypeRepository;
 import org.website.thienan.ricewaterthienan.services.TypeService;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+@Transactional
 public class TypeServiceImpl implements TypeService {
     private final TypeRepository typeRepository;
+    private final PostRepository postRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     @Caching(
@@ -31,8 +35,20 @@ public class TypeServiceImpl implements TypeService {
                     @CacheEvict(cacheNames = "typeTitle", allEntries = true),
             }
     )
-    public Type save(Type postRequest) {
-        return typeRepository.save(postRequest);
+    public Type save(TypeRequest typeRequest) {
+
+        return typeRepository.save(Type.builder()
+                .title(typeRequest.getTitle())
+                .link(typeRequest.getLink())
+                .introduction(typeRequest.getIntroduction())
+                .content(typeRequest.getContent())
+                .avatar(typeRequest.getAvatar())
+                .imageHeader(typeRequest.getImageHeader())
+                .views(1L)
+                .active(Boolean.TRUE)
+                .posts(typeRequest.getTypePost().stream().map(e -> postRepository.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found Category"))).collect(Collectors.toSet()))
+                .account(accountRepository.findById(typeRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")))
+                .build());
     }
 
     @Override
@@ -45,8 +61,19 @@ public class TypeServiceImpl implements TypeService {
                     @CacheEvict(cacheNames = "typeTitle", allEntries = true),
             }
     )
-    public Type update(Type postRequest) {
-        return typeRepository.save(postRequest);
+    public Type update(TypeRequest typeRequest) {
+        return typeRepository.save(Type.builder()
+                .title(typeRequest.getTitle())
+                .link(typeRequest.getLink())
+                .introduction(typeRequest.getIntroduction())
+                .content(typeRequest.getContent())
+                .avatar(typeRequest.getAvatar())
+                .imageHeader(typeRequest.getImageHeader())
+                .views(typeRequest.getViews())
+                .active(typeRequest.getActive())
+                .posts(typeRequest.getTypePost().stream().map(e -> postRepository.findById(e).orElseThrow(() -> new ResourceNotFoundException("Not found Category"))).collect(Collectors.toSet()))
+                .account(accountRepository.findById(typeRequest.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Not found Account")))
+                .build());
     }
 
     @Override

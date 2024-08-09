@@ -6,22 +6,26 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.website.thienan.ricewaterthienan.dto.request.OrdersDetailRequest;
 import org.website.thienan.ricewaterthienan.entities.OrderDetail;
 import org.website.thienan.ricewaterthienan.exceptions.ResourceNotFoundException;
 import org.website.thienan.ricewaterthienan.repositories.OrderDetailRepository;
+import org.website.thienan.ricewaterthienan.repositories.OrdersRepository;
+import org.website.thienan.ricewaterthienan.repositories.ProductRepository;
 import org.website.thienan.ricewaterthienan.services.OrderDetailService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+@Transactional
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
+    private final ProductRepository productRepository;
+    private final OrdersRepository ordersRepository;
 
     @Override
     @Caching(
@@ -31,10 +35,19 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                     @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
             }
     )
-    public List<OrderDetail> saveAll(List<OrderDetail> list) {
-        return orderDetailRepository.saveAllAndFlush(list);
+    public List<OrderDetail> saveAll(List<OrdersDetailRequest> list) {
+        List<OrderDetail> orderDetails = list.stream().map(ordersDetailRequest ->
+                OrderDetail.builder()
+                        .quantity(ordersDetailRequest.getQuantity())
+                        .price(ordersDetailRequest.getPrice())
+                        .product(productRepository.findById(ordersDetailRequest.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found")))
+                        .order(ordersRepository.findById(ordersDetailRequest.getOrderId()).orElseThrow(() -> new ResourceNotFoundException("Order not found")))
+                        .build()
+        ).collect(Collectors.toList());
+        return orderDetailRepository.saveAllAndFlush(orderDetails);
     }
 
+
     @Override
     @Caching(
             evict = {
@@ -43,8 +56,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                     @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
             }
     )
-    public OrderDetail save(OrderDetail orderDetail) {
-        return orderDetailRepository.save(orderDetail);
+    public OrderDetail save(OrdersDetailRequest ordersDetailRequest) {
+        return orderDetailRepository.save(OrderDetail.builder()
+                .quantity(ordersDetailRequest.getQuantity())
+                .price(ordersDetailRequest.getPrice())
+                .product(productRepository.findById(ordersDetailRequest.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found")))
+                .order(ordersRepository.findById(ordersDetailRequest.getOrderId()).orElseThrow(() -> new ResourceNotFoundException("Order not found")))
+                .build());
     }
 
     @Override
@@ -58,8 +76,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                     @CacheEvict(cacheNames = "ordersDetailOrders", allEntries = true)
             }
     )
-    public OrderDetail update(OrderDetail orderDetail) {
-        return orderDetailRepository.save(orderDetail);
+    public OrderDetail update(OrdersDetailRequest ordersDetailRequest) {
+        return orderDetailRepository.save(OrderDetail.builder()
+                .quantity(ordersDetailRequest.getQuantity())
+                .price(ordersDetailRequest.getPrice())
+                .product(productRepository.findById(ordersDetailRequest.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found")))
+                .order(ordersRepository.findById(ordersDetailRequest.getOrderId()).orElseThrow(() -> new ResourceNotFoundException("Order not found")))
+                .build());
     }
 
     @Override
